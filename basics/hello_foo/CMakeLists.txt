@@ -8,7 +8,7 @@ set(SOURCE_LIB foo.cpp)
 
 add_library(foo STATIC ${SOURCE_LIB})
 
-add_executable(main ${SOURCE_EXE})
+add_executable(hello ${SOURCE_EXE})
 
-target_link_libraries(main foo)
+target_link_libraries(hello foo)
 
