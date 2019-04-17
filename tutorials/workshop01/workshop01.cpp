@@ -2,6 +2,7 @@
 // Created by Andrei Tatarnikov on 2019-04-14.
 //
 
+<<<<<<< HEAD
 #include <ctime>
 #include <iostream>
 #include <vector>
@@ -59,6 +60,18 @@ int main()
         Random random{k};
 
     }
+=======
+#include <iostream>
+#include <time>
+
+#include "Random.h"
+#include "Multiplicator.h"
+
+int main()
+{
+
+    Random random{3};
+>>>>>>> origin/master
 
     //std::cout << quickExp(10, 4) << std::endl;
 
