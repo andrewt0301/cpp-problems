@@ -7,11 +7,7 @@
 
 #include <random>
 
-<<<<<<< HEAD
 class Random {
-=======
-class Random  {
->>>>>>> origin/master
 private:
     std::random_device rd;
     std::mt19937 gen{rd()};

@@ -2,7 +2,6 @@
 // Created by Andrei Tatarnikov on 2019-04-14.
 //
 
-<<<<<<< HEAD
 #include <ctime>
 #include <iostream>
 #include <vector>
@@ -10,7 +9,6 @@
 #include "Number.h"
 #include "Multiplicator.h"
 #include "Random.h"
-
 
 long diffclock(clock_t start, clock_t end)
 {
@@ -60,18 +58,6 @@ int main()
         Random random{k};
 
     }
-=======
-#include <iostream>
-#include <time>
-
-#include "Random.h"
-#include "Multiplicator.h"
-
-int main()
-{
-
-    Random random{3};
->>>>>>> origin/master
 
     //std::cout << quickExp(10, 4) << std::endl;
 

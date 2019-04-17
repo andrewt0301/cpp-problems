@@ -4,11 +4,6 @@
 
 #include "Random.h"
 
-<<<<<<< HEAD
-=======
-#include <random>
-
->>>>>>> origin/master
 int quickExp(int val, int pow)
 {
     int res = 1;
