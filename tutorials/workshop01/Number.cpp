@@ -20,5 +20,7 @@ Number::SizeType Number::length()
 
 std::ostream& operator<<(std::ostream& out, const Number& number)
 {
+    for (int digit : number._digits)
+        out << digit;
     return out;
 }

@@ -48,6 +48,7 @@ struct Sample
 int main()
 {
     Number number{1,2,3,4};
+    std::cout << number << std::endl;
 
     const int MAX_K = 8;
 
