@@ -9,6 +9,9 @@
 #include "Number.h"
 #include "Multiplicator.h"
 #include "Random.h"
+#include "Time.h"
+
+#include <windows.h>
 
 long diffclock(clock_t start, clock_t end)
 {
@@ -45,6 +48,18 @@ struct Sample
     long ms3;
 };
 
+
+void test() {
+    std::cout << "Some text" << std::endl;
+    std::cout << "Some text" << std::endl;
+    std::cout << "Some text" << std::endl;
+    std::cout << "Some text" << std::endl;
+    std::cout << "Some text" << std::endl;
+    std::cout << "Some text" << std::endl;
+    std::cout << "Some text" << std::endl;
+    std::cout << "Some text" << std::endl;
+}
+
 int main()
 {
     Number number{1,2,3,4};
@@ -59,6 +74,33 @@ int main()
         Random random{k};
 
     }
+
+
+    std::cout << "**************************" << std::endl;
+    std::cout << calcExecTime(test) << std::endl;
+    std::cout << "**************************" << std::endl;
+
+    clock_t start = clock();
+    DWORD start1 = ::GetTickCount();
+
+    for (int i = 0; i < 6; ++i) {
+        std::cout << "Some text" << std::endl;
+        std::cout << "Some text" << std::endl;
+        std::cout << "Some text" << std::endl;
+        std::cout << "Some text" << std::endl;
+        std::cout << "Some text" << std::endl;
+        std::cout << "Some text" << std::endl;
+        std::cout << "Some text" << std::endl;
+        std::cout << "Some text" << std::endl;
+    }
+
+    DWORD end1 = ::GetTickCount();
+    clock_t end = clock();
+
+
+    std::cout << "start: " << start  << " " << "end: " << end  << "t = " << (end - start) << std::endl;
+    std::cout << "start: " << start1 << " " << "end: " << end1 << "t = " << (end1 - start1) << std::endl;
+
 
     //std::cout << quickExp(10, 4) << std::endl;
 
