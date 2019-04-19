@@ -19,8 +19,12 @@ private:
 
 public:
     Number(Initializer digits);
-    int operator[](SizeType index);
+
     SizeType length();
+    int operator[](SizeType index);
+
+    void add(const Number& number);
+    void shiftLeft();
 
     friend std::ostream& operator<<(std::ostream& out, const Number& number);
 };

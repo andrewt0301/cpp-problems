@@ -20,10 +20,20 @@ int quickExp(int val, int pow)
 Random::Random(int k)
 {
     int limit = quickExp(10, k) - 1;
-    dis = std::uniform_int_distribution<>{-limit, +limit};
+    dis = std::uniform_int_distribution<>{0, limit};
 }
 
 int Random::next()
 {
     return dis(gen);
+}
+
+std::vector<int> randomVector(Random& random, size_t length)
+{
+    std::vector<int> result(length);
+
+    for (int& v : result)
+        v = random.next();
+
+    return result;
 }

@@ -8,14 +8,24 @@ Number::Number(Initializer digist) : _digits(digist)
 {
 }
 
+Number::SizeType Number::length()
+{
+    return _digits.size();
+}
+
 int Number::operator[](Number::SizeType index)
 {
     return _digits[index];
 }
 
-Number::SizeType Number::length()
+void Number::add(const Number &number)
 {
-    return _digits.size();
+    // TODO
+}
+
+void Number::shiftLeft()
+{
+    // TODO
 }
 
 std::ostream& operator<<(std::ostream& out, const Number& number)

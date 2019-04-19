@@ -122,3 +122,21 @@ int Multiplicator::karatsuba(int x, int y)
     int res = ::karatsuba(x, y, sizeof(int) * 8);
     return isNeg ? -res : res;
 }
+
+Number Multiplicator::gradeSchool(const Number& x, const Number& y)
+{
+    // TODO:
+    return Number{1,2,3};
+}
+
+Number Multiplicator::divideAndConquer(const Number& x, const Number& y)
+{
+    // TODO:
+    return Number{1,2,3};
+}
+
+Number Multiplicator::karatsuba(const Number& x, const Number& y)
+{
+    // TODO:
+    return Number{1,2,3};
+}

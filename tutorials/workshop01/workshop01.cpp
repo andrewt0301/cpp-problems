@@ -2,149 +2,66 @@
 // Created by Andrei Tatarnikov on 2019-04-14.
 //
 
+#include <algorithm>
 #include <ctime>
 #include <iostream>
+#include <iterator>
 #include <vector>
 
-#include "Number.h"
 #include "Multiplicator.h"
+#include "Number.h"
 #include "Random.h"
+#include "Sorting.h"
 #include "Time.h"
 
-#include <windows.h>
-
-long diffclock(clock_t start, clock_t end)
-{
-    clock_t diff = end - start;
-    long diffms = diff / (CLOCKS_PER_SEC / 1000);
-
-    return diffms;
-}
-
-template <typename T>
-long measure(const std::vector<int>& values, T func)
-{
-    clock_t start = clock();
-
-    int result = 0;
-    for (int value : values)
-    {
-        func(value);
-    }
-
-    clock_t end = clock();
-
-    long time = diffclock(start, end);
-    long average = time / values.size();
-
-    return average;
-}
-
-struct Sample
-{
-    int  k;
-    long ms1;
-    long ms2;
-    long ms3;
-};
-
-
-void test() {
-    std::cout << "Some text" << std::endl;
-    std::cout << "Some text" << std::endl;
-    std::cout << "Some text" << std::endl;
-    std::cout << "Some text" << std::endl;
-    std::cout << "Some text" << std::endl;
-    std::cout << "Some text" << std::endl;
-    std::cout << "Some text" << std::endl;
-    std::cout << "Some text" << std::endl;
-}
+using IntVector = std::vector<int>;
 
 int main()
 {
-    Number number{1,2,3,4};
-    std::cout << number << std::endl;
+    // Test data: vectors of integers to be sorted.
+    // We need so many vectors as sorting of a single vector is done quicker than 1 millisecond.
+    std::vector<IntVector> testData(1000);
 
-    const int MAX_K = 8;
+    // Random generator of 2-digit values.
+    Random random(2);
 
-    std::vector<Sample> samples(MAX_K);
+    // We generate values in advance in order to exclude generation cost from result.
+    for (IntVector& values : testData)
+        values = randomVector(random, 150);
 
-    for (int k = 0; k < MAX_K; ++k)
+    /*
+    std::cout << "*********************************************" << std::endl;
+    std::cout << "Initial data: " << std::endl;
+
+    for (const IntVector& values : testData)
     {
-        Random random{k};
-
+        std::copy(values.cbegin(), values.cend(), std::ostream_iterator<int>(std::cout, " "));
+        std::cout << std::endl;
     }
+    */
 
+    long sortingTime = calcExecTime([&testData]()
+    {
+        for (IntVector& values : testData)
+            insertionSort(values);
+    });
 
-    std::cout << "**************************" << std::endl;
-    std::cout << calcExecTime(test) << std::endl;
-    std::cout << "**************************" << std::endl;
+    /*
+    std::cout << "*********************************************" << std::endl;
+    std::cout << "Sorted data: " << std::endl;
 
-    clock_t start = clock();
-    DWORD start1 = ::GetTickCount();
-
-    for (int i = 0; i < 6; ++i) {
-        std::cout << "Some text" << std::endl;
-        std::cout << "Some text" << std::endl;
-        std::cout << "Some text" << std::endl;
-        std::cout << "Some text" << std::endl;
-        std::cout << "Some text" << std::endl;
-        std::cout << "Some text" << std::endl;
-        std::cout << "Some text" << std::endl;
-        std::cout << "Some text" << std::endl;
+    for (const IntVector& values : testData)
+    {
+        std::copy(values.cbegin(), values.cend(), std::ostream_iterator<int>(std::cout, " "));
+        std::cout << std::endl;
     }
+    */
 
-    DWORD end1 = ::GetTickCount();
-    clock_t end = clock();
+    std::cout << "*********************************************" << std::endl;
+    std::cout << "Sorting time: "  << sortingTime << " ms." << std::endl;
 
-
-    std::cout << "start: " << start  << " " << "end: " << end  << "t = " << (end - start) << std::endl;
-    std::cout << "start: " << start1 << " " << "end: " << end1 << "t = " << (end1 - start1) << std::endl;
-
-
-    //std::cout << quickExp(10, 4) << std::endl;
-
-    /*std::cout << random.next() << std::endl;
-    std::cout << random.next() << std::endl;
-    std::cout << random.next() << std::endl;
-     */
-
-    Multiplicator mul;
-    //std::cout << mul.gradeSchool(15, 3) << std::endl;
-
-    std::cout << mul.divideAndConquer(3, 2) << std::endl;
-    std::cout << mul.divideAndConquer(15, 3) << std::endl;
-    std::cout << mul.divideAndConquer(1, 1) << std::endl;
-    std::cout << mul.divideAndConquer(2, 1) << std::endl;
-    std::cout << mul.divideAndConquer(1, 2) << std::endl;
-    std::cout << mul.divideAndConquer(3, 2) << std::endl;
-    std::cout << mul.divideAndConquer(2, 4) << std::endl;
-    std::cout << mul.divideAndConquer(16, 4) << std::endl;
-    std::cout << mul.divideAndConquer(32, 2) << std::endl;
-    std::cout << mul.divideAndConquer(3, 1) << std::endl;
-    std::cout << mul.divideAndConquer(5, 7) << std::endl;
-    std::cout << mul.divideAndConquer(-5, 7) << std::endl;
-    std::cout << mul.divideAndConquer(11, 7) << std::endl;
-    std::cout << "////////////////////////" << std::endl;
-
-#define divideAndConquer karatsuba
-
-    std::cout << mul.divideAndConquer(3, 2) << std::endl;
-    std::cout << mul.divideAndConquer(15, 3) << std::endl;
-    std::cout << mul.divideAndConquer(1, 1) << std::endl;
-    std::cout << mul.divideAndConquer(2, 1) << std::endl;
-    std::cout << mul.divideAndConquer(1, 2) << std::endl;
-    std::cout << mul.divideAndConquer(3, 2) << std::endl;
-    std::cout << mul.divideAndConquer(2, 4) << std::endl;
-    std::cout << mul.divideAndConquer(16, 4) << std::endl;
-    std::cout << mul.divideAndConquer(32, 2) << std::endl;
-    std::cout << mul.divideAndConquer(3, 1) << std::endl;
-    std::cout << mul.divideAndConquer(5, 7) << std::endl;
-    std::cout << mul.divideAndConquer(-5, 7) << std::endl;
-    std::cout << mul.divideAndConquer(11, 7) << std::endl;
-#undef divideAndConquer
-
-    //std::cout << (~(static_cast<unsigned int>(~0) << 3)) << std::endl;
+    // My computer gives:
+    // Sorting time: 39 ms.
 
     return 0;
 }

@@ -29,7 +29,6 @@ long calcExecTime(T func)
     return time;
 }
 
-
 /**
  * Executes the specified function multiple times and measures its average execution in milliseconds.
  *
