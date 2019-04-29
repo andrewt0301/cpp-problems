@@ -15,59 +15,38 @@ using IntVector = std::vector<int>;
 
 int main()
 {
-    // Test data: vectors of integers to be sorted.
-    // We need so many vectors as sorting of a single vector is done quicker than 1 millisecond.
-    std::vector<IntVector> testData(1000);
+    // Here hold our performance measures.
+    Samples<long> samples;
 
-    // Random generator of 2-digit values.
-    Random random(2);
+    // Random generator of 3-digit values we are going to sort.
+    Random random(3);
 
-    // We generate values in advance in order to exclude generation cost from result.
-    for (IntVector& values : testData)
-        values = randomVector(random, 150);
-
-    /*
-    std::cout << "*********************************************" << std::endl;
-    std::cout << "Initial data: " << std::endl;
-
-    for (const IntVector& values : testData)
+    // length is the length of array to be sorted.
+    // We increase length with step 100.
+    // We use large vector lengths because modern computers sort vectors very quickly.
+    for (long length = 100; length <= 7000; length += 100)
     {
-        std::copy(values.cbegin(), values.cend(), std::ostream_iterator<int>(std::cout, " "));
-        std::cout << std::endl;
+        // Test data: vectors of integers to be sorted.
+        // We need multiple vectors as sorting of a single vector can be done quicker than 1 millisecond.
+        std::vector<IntVector> testData(10);
+
+        // We generate values in advance in order to exclude generation cost from result.
+        for (IntVector& values : testData)
+            values = randomVector(random, length);
+
+        // We sort all vectors in test data and measure the sorting time.
+        long insertionSortTime = calcExecTime([&testData]()
+        {
+            for (IntVector& values : testData)
+                insertionSort(values);
+        });
+
+        // We add a sample to the samples vector.
+        samples.push_back({length, insertionSortTime});
     }
-    */
 
-    long sortingTime = calcExecTime([&testData]()
-                                    {
-                                        for (IntVector& values : testData)
-                                            insertionSort(values);
-                                    });
-
-    /*
-    std::cout << "*********************************************" << std::endl;
-    std::cout << "Sorted data: " << std::endl;
-
-    for (const IntVector& values : testData)
-    {
-        std::copy(values.cbegin(), values.cend(), std::ostream_iterator<int>(std::cout, " "));
-        std::cout << std::endl;
-    }
-    */
-
-    std::cout << "*********************************************" << std::endl;
-    std::cout << "Sorting time: "  << sortingTime << " ms." << std::endl;
-
-    // My computer gives:
-    // Sorting time: 39 ms.
-
-
-    std::vector<Sample<int>> samples;
-
-    samples.push_back({1, 2, 3});
-    samples.push_back({2, 4, 5});
-    samples.push_back({3, 6, 7});
-
-    generateCSV("test.csv", samples);
+    // We save samples to a CSV files.
+    generateCSV("samples.csv", samples);
 
     return 0;
 }

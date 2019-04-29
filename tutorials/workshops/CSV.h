@@ -38,15 +38,9 @@ void generateCSV(const std::string& fileName, const Samples<T>& samples)
 {
     std::ofstream out{fileName, std::ofstream::out};
 
-    size_t index = 0;
     for (const Sample<T>& sample : samples)
     {
-        // First we print the index of the sample.
-        out << ++index << ';';
-
-        // Then we print the elements.
         std::copy(sample.cbegin(), sample.cend(), std::ostream_iterator<int>(out, ";"));
-
         out << std::endl;
     }
 
