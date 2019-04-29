@@ -2,6 +2,7 @@
 // Created by Tatarnikov_A on 29.04.2019.
 //
 
+#include <algorithm>
 #include <iostream>
 #include <vector>
 
@@ -34,15 +35,28 @@ int main()
         for (IntVector& values : testData)
             values = randomVector(random, length);
 
-        // We sort all vectors in test data and measure the sorting time.
-        long insertionSortTime = calcExecTime([&testData]()
+        // We make a new copy of test data because we cannot sort the same vectors with different algorithms.
+        std::vector<IntVector> testData1 {testData};
+
+        // We sort all vectors with insertion sort and measure the sorting time.
+        long insertionSortTime = calcExecTime([&testData1]()
         {
-            for (IntVector& values : testData)
+            for (IntVector& values : testData1)
                 insertionSort(values);
         });
 
+        // We make a new copy of test data because we cannot sort the same vectors with different algorithms.
+        std::vector<IntVector> testData2 {testData};
+
+        // We sort all vectors with std::sort and measure the sorting time.
+        long stdSortTime = calcExecTime([&testData2]()
+        {
+            for (IntVector& values : testData2)
+                std::sort(values.begin(), values.end());
+        });
+
         // We add a sample to the samples vector.
-        samples.push_back({length, insertionSortTime});
+        samples.push_back({length, insertionSortTime, stdSortTime});
     }
 
     // We save samples to a CSV files.
