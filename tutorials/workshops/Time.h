@@ -5,6 +5,10 @@
 #ifndef TUTORIALS_TIME_H
 #define TUTORIALS_TIME_H
 
+/**
+ * This module provides facilities to measure execution time.
+ */
+
 #include <ctime>
 
 constexpr clock_t CLOCKS_PER_MS = CLOCKS_PER_SEC / 1000;

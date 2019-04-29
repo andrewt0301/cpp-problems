@@ -1,36 +1,16 @@
 //
-// Created by Andrei Tatarnikov on 2019-04-14.
+// Created by Tatarnikov_A on 29.04.2019.
 //
 
-#include <algorithm>
-#include <ctime>
-#include <fstream>
 #include <iostream>
-#include <iterator>
 #include <vector>
 
-#include "Multiplicator.h"
-#include "Number.h"
-#include "Random.h"
+#include "../Random.h"
+#include "../Time.h"
+
 #include "Sorting.h"
-#include "Time.h"
 
 using IntVector = std::vector<int>;
-
-using Sample = IntVector;
-
-void generateCsv(const std::vector<Sample>& samples)
-{
-    std::ofstream out{"test.csv", std::ofstream::out};
-
-    for (const Sample& sample : samples)
-    {
-        std::copy(sample.cbegin(), sample.cend(), std::ostream_iterator<int>(out, ";"));
-        out << std::endl;
-    }
-
-    out.close();
-}
 
 int main()
 {
@@ -57,10 +37,10 @@ int main()
     */
 
     long sortingTime = calcExecTime([&testData]()
-    {
-        for (IntVector& values : testData)
-            insertionSort(values);
-    });
+                                    {
+                                        for (IntVector& values : testData)
+                                            insertionSort(values);
+                                    });
 
     /*
     std::cout << "*********************************************" << std::endl;
@@ -78,14 +58,6 @@ int main()
 
     // My computer gives:
     // Sorting time: 39 ms.
-
-    std::vector<Sample> samples;
-
-    samples.push_back({1, 2, 3});
-    samples.push_back({2, 4, 5});
-    samples.push_back({3, 6, 7});
-
-    generateCsv(samples);
 
     return 0;
 }

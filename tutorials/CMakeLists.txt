@@ -8,7 +8,17 @@ endif(NOT CMAKE_BUILD_TYPE)
 set(CMAKE_CXX_STANDARD 11)
 
 add_executable(types tutorial01/types.cpp)
-add_executable(workshop01 workshop01/workshop01.cpp
-                          workshop01/Multiplicator.cpp
-                          workshop01/Random.cpp
-                          workshop01/Number.cpp)
+
+add_executable(
+        workshop01
+        workshops/Random.cpp
+        workshops/workshop01/workshop01.cpp
+        workshops/workshop01/Multiplicator.cpp
+        workshops/workshop01/Number.cpp
+        )
+
+add_executable(
+        workshop02
+        workshops/Random.cpp
+        workshops/workshop02/workshop02.cpp
+        )

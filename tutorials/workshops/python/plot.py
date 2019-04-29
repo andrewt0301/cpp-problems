@@ -1,3 +1,7 @@
+#
+# This example demonstrates how to create charts with Matplotlib.
+#
+
 import matplotlib.pyplot as plt
 import csv
 
