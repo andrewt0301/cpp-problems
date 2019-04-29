@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 
+#include "../CSV.h"
 #include "../Random.h"
 #include "../Time.h"
 
@@ -58,6 +59,15 @@ int main()
 
     // My computer gives:
     // Sorting time: 39 ms.
+
+
+    std::vector<Sample<int>> samples;
+
+    samples.push_back({1, 2, 3});
+    samples.push_back({2, 4, 5});
+    samples.push_back({3, 6, 7});
+
+    generateCSV("test.csv", samples);
 
     return 0;
 }
