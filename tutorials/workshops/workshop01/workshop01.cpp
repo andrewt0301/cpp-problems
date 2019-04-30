@@ -18,5 +18,15 @@
 int main()
 {
 
+    Number n{3,2,3};
+    Number n1{9,1};
+
+    std::cout << n << std::endl;
+    std::cout << n1 << std::endl;
+
+    n += n1;
+
+    std::cout << n << std::endl;
+
     return 0;
 }

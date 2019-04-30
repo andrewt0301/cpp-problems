@@ -9,23 +9,37 @@
 #include <iostream>
 #include <vector>
 
+/**
+ * The Number class implements numbers that consist of an arbitrary number of digits.
+ */
 class Number {
 private:
     using Digits = std::vector<int>;
-    using SizeType = std::vector<int>::size_type;
     using Initializer = std::initializer_list<int>;
 
     Digits _digits;
-
 public:
+    /** Creates a number from a list of digits. */
     Number(Initializer digits);
 
-    SizeType length();
-    int operator[](SizeType index);
+    /** Creates a number of the specified number of digits. All digits are equal to 0. */
+    explicit Number(size_t length);
 
-    void add(const Number& number);
+    /** Returns the number of digits in the number. */
+    size_t length() const;
+
+    /** Returns a reference to a digit by its index. */
+    int operator[](size_t index) const;
+
+    /** Returns a digit by its index. */
+    int& operator[](size_t index);
+
+    /** Adds a number for the current number. */
+    Number& operator+=(const Number& number);
+
     void shiftLeft();
 
+    //friend Number operator+(const Number& lhs, const Number& rhs);
     friend std::ostream& operator<<(std::ostream& out, const Number& number);
 };
 
