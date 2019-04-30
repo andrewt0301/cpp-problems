@@ -38,7 +38,7 @@ Number& Number::operator+=(const Number& number)
 
     for (; index < len; ++index)
     {
-        int& digit = _digits[index];
+        int& digit = (*this)[index];
 
         digit += (carry + number[index]);
         carry = digit / 10;
@@ -47,10 +47,10 @@ Number& Number::operator+=(const Number& number)
 
     if (index < length())
         // Adds overflow digit to the next digit.
-        _digits[index] += carry;
+        (*this)[index] += carry;
     else
         // Returns overflow digit back to the last digit.
-        _digits[index - 1] += 10 * carry;
+        (*this)[index - 1] += 10 * carry;
 
     return *this;
 }
