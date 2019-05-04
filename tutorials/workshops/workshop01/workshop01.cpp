@@ -27,6 +27,7 @@ int main()
     n += n1;
 
     std::cout << n << std::endl;
+    std::cout << n + n << std::endl;
 
     return 0;
 }

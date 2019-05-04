@@ -9,6 +9,9 @@
 // Printing facilities.
 #include <iostream>
 
+// Customization of output.
+#include <iomanip>
+
 // Type limits.
 #include <climits>
 
@@ -60,7 +63,7 @@ void booleanDemo()
     bool var04 = 0;
 
     // Normally, boolean values have size of 1 byte.
-    cout << "sizeof(bool) = " << sizeof(bool) << endl;
+    cout << "sizeof(bool) = " << sizeof(bool) << " bytes" << endl;
 
     // By default, boolean values are printed as integers.
     cout << "bool values (as ints):  ";
@@ -82,7 +85,7 @@ void characterDemo()
 
     // The 'char' type is used to store ASCII characters.
     // It has a size of 1 byte and encodes ASCII characters with values from 0 to 255.
-    cout << "sizeof(char) = " << sizeof(char) << endl;
+    cout << "sizeof(char) = " << sizeof(char) << " bytes" << endl;
 
     // 'char' variables can be assigned character values.
     char var01 = 'A';
@@ -107,7 +110,7 @@ void wideCharacterDemo()
 
     // The 'wchar_t' type is used to store UNICODE characters.
     // Therefore, it has larger size than 'char':
-    cout << "sizeof(wchar_t) = " << sizeof(wchar_t) << endl;
+    cout << "sizeof(wchar_t) = " << sizeof(wchar_t) << " bytes" << endl;
 
     // UNICODE values must have prefix 'L'.
     wchar_t var01 = L'Щ';
@@ -135,13 +138,13 @@ void integerDemo()
     // They are machine-dependent and their size depends in the machine.
 
     // Commonly, 16 bits.
-    cout << "sizeof(short)     = " << sizeof(short) << endl;
+    cout << "sizeof(short)     = " << sizeof(short) << " bytes" << endl;
     // Commonly, 32 bits.
-    cout << "sizeof(int)       = " << sizeof(int) << endl;
+    cout << "sizeof(int)       = " << sizeof(int) << " bytes" << endl;
     // Commonly, 32 or 64 bits.
-    cout << "sizeof(long)      = " << sizeof(long) << endl;
+    cout << "sizeof(long)      = " << sizeof(long) << " bytes" << endl;
     // Commonly, 64 bits.
-    cout << "sizeof(long long) = " << sizeof(long long) << endl;
+    cout << "sizeof(long long) = " << sizeof(long long) << " bytes" << endl;
 
     // Limits on integer values are provided in the 'climits' library file.
     cout << "short     range: ["  << SHRT_MIN << ", " << SHRT_MAX << "]" << endl;
@@ -185,14 +188,34 @@ void integerDemo()
     // To print them in hexadecimal, the std::hex marker needs to be used:
     cout << "Integer values (hex): " << std::hex;
     cout << var09 << ", " << var10 << ", " << var11 << endl;
-
 }
 
 
 /**
  * Demonstrates the use of the floating-point data types in C++.
+ * Details on floating-point numbers, see here:
+ *   https://en.wikipedia.org/wiki/Floating-point_arithmetic
  */
 void floatingPointDemo()
 {
-    // TODO
+    cout << "****** Float demo ******" << endl;
+
+    // C++ supports single-precision floating-point type: float
+    //         and  double-precision floating-point type: double
+
+    // 32 bits.
+    cout << "sizeof(float)  = " << sizeof(float)  << " bytes" << endl;
+    // 64 bits.
+    cout << "sizeof(double) = " << sizeof(double) << " bytes" << endl;
+
+
+    // Floating-point variables are initialized with constants:
+    float   floatPi = 3.14159265358979323846264338327950288419f;
+    double doublePi = 3.14159265358979323846264338327950288419;
+
+    cout << "Floating-point values: ";
+    // Setting no limits on floating-point values being printed.
+    cout << std::setprecision(100) << endl;
+    cout << floatPi << endl;
+    cout << doublePi << endl;
 }

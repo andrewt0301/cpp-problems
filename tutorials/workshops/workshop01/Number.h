@@ -25,6 +25,9 @@ public:
     /** Creates a number of the specified number of digits. All digits are equal to 0. */
     explicit Number(size_t length);
 
+    /** Creates a copy of the specified number. */
+    Number(const Number& number);
+
     /** Returns the number of digits in the number. */
     size_t length() const;
 
@@ -34,12 +37,13 @@ public:
     /** Returns a digit by its index. */
     int& operator[](size_t index);
 
-    /** Adds a number for the current number. */
+    /** Adds a number to the current number. */
     Number& operator+=(const Number& number);
 
-    void shiftLeft();
+    /** Adds two numbers. */
+    friend Number operator+(const Number& lhs, const Number& rhs);
 
-    //friend Number operator+(const Number& lhs, const Number& rhs);
+    /** Prints the number to a stream. */
     friend std::ostream& operator<<(std::ostream& out, const Number& number);
 };
 

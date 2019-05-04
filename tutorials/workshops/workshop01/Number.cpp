@@ -11,7 +11,12 @@ Number::Number(Initializer digits) : _digits{std::rbegin(digits), std::rend(digi
 {
 }
 
-Number::Number(size_t length) : _digits(length, 0) {
+Number::Number(size_t length) : _digits(length, 0)
+{
+}
+
+Number::Number(const Number& number) : _digits(number._digits)
+{
 }
 
 size_t Number::length() const
@@ -55,9 +60,11 @@ Number& Number::operator+=(const Number& number)
     return *this;
 }
 
-void Number::shiftLeft()
+Number operator+(const Number& lhs, const Number& rhs)
 {
-    // TODO
+    Number number{lhs};
+    number += rhs;
+    return number;
 }
 
 std::ostream& operator<<(std::ostream& out, const Number& number)
