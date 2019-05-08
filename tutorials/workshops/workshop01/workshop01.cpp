@@ -17,11 +17,9 @@
 
 int main()
 {
-    Number n{3,2,3,1};
-    Number n1{9,1};
 
-    std::shared_ptr<int> d{new int[1]{1}, [](int*p) {delete[] p;} };
-    //std::default_delete
+    Number n{3,2,3};
+    Number n1{9,1};
 
     std::cout << n << std::endl;
     std::cout << n1 << std::endl;
