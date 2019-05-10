@@ -217,10 +217,7 @@ std::ostream& operator<<(std::ostream& out, const Number& number)
         out << '-';
 
     for (size_t i = length; i > 0; --i)
-    {
-        Number::Digit digit = number[i - 1];
-        out << digit;
-    }
+        out << number[i - 1];
 
     return out;
 }
