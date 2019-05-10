@@ -68,21 +68,46 @@ inline bool Number::isNegative() const
     return _negative;
 }
 
+std::pair<Number, Number> Number::split() const
+{
+    Number lo{*this};
+    Number hi{*this};
+
+    lo._start = _start;
+    lo._length = _length / 2;
+
+    hi._start = _start + lo._length;
+    hi._length = _length - lo._length;
+
+    if (_nonZeroLength > lo._length)
+    {
+        lo._nonZeroLength = lo._length;
+        hi._nonZeroLength = _nonZeroLength - lo._length;
+    }
+    else
+    {
+        lo._nonZeroLength = _nonZeroLength;
+        hi._nonZeroLength = 0;
+    }
+
+    return std::make_pair(lo, hi);
+}
+
 Number::Digit Number::operator[](size_t index) const
 {
-    size_t i = _start + index;
-    if (i > _length)
+    if (index > _length)
         throw std::out_of_range("Index out of bounds.");
 
+    size_t i = _start + index;
     return (*_digits)[i];
 }
 
 Number::Digit& Number::operator[](size_t index)
 {
-    size_t i = _start + index;
-    if (i > _length)
+    if (index > _length)
         throw std::out_of_range("Index out of bounds.");
 
+    size_t i = _start + index;
     return (*_digits)[i];
 }
 

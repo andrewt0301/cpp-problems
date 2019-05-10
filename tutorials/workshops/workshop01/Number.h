@@ -42,14 +42,14 @@ public:
     /** Checks whether the number is negative. */
     inline bool isNegative() const;
 
+    /** Splits a number into two equal parts. */
+    std::pair<Number, Number> split() const;
+
     /** Returns a reference to a digit by its index. */
     Digit operator[](size_t index) const;
 
     /** Returns a digit by its index. Write access is private. */
     Digit& operator[](size_t index);
-
-    /** Splits a number into two equal parts. */
-    std::pair<Number, Number> split() const;
 
     /** Returns a negated copy of the current number. */
     Number operator-() const;
@@ -83,6 +83,9 @@ Number operator+(const Number& lhs, const Number& rhs);
 
 /** Subtracts one number from another. */
 Number operator-(const Number& lhs, const Number& rhs);
+
+/** Multiplies one number by another using the Grade School algorithm. */
+Number operator*(const Number& lhs, const Number& rhs);
 
 /** Prints the number to an output stream. */
 std::ostream& operator<<(std::ostream& out, const Number& number);

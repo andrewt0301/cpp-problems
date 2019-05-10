@@ -39,5 +39,12 @@ int main()
     std::cout <<  x << std::endl;
     std::cout << mx << std::endl;
 
+    Number nn{1,3,4,5, 6};
+    std::cout << nn << std::endl;
+    std::pair<Number, Number> pair = nn.split();
+
+    std::cout << pair.first << std::endl;
+    std::cout << pair.second << std::endl;
+
     return 0;
 }
