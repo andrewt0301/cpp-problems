@@ -7,8 +7,8 @@
 
 #include <initializer_list>
 #include <iostream>
-#include <memory>
 #include <vector>
+#include <string>
 
 /**
  * The Number class implements numbers that consist of an arbitrary number of digits.
@@ -16,28 +16,28 @@
 class Number {
 public:
     /** Digits are stored using the int type. */
-    using Digit = int;
+    using Digit = int8_t;
 
     /** Digits are stored in a vector. */
     using Digits = std::vector<Digit>;
 
-    /** Vector of digits is stored in a shared pointer to apply the copy-on-write strategy. */
-    using DigitsPtr = std::shared_ptr<Digits>;
+    /** Digit length. */
+    static constexpr Digit DIGIT_LEN = 10;
 
     /** Constructs a number from a list of digits. */
-    Number(std::initializer_list<Digit> digits);
+    Number(const std::initializer_list<Digit>& digits);
 
     /** Constructs a number from a vector of digits. */
-    explicit Number(Digits digits);
+    Number(Digits digits, bool negative);
 
-    /** Constructs a number of the specified number of digits. All digits are equal to 0. */
-    explicit Number(size_t length);
+    /** Constructs a number from a string. */
+    Number(const std::string &str);
+
+    /** Constructs an empty zero number. */
+    Number();
 
     /** Returns the number of digits in the number. */
     inline size_t length() const;
-
-    /** Returns the number of digits excluding zeros in high positions. */
-    inline size_t nonZeroLength() const;
 
     /** Checks whether the number is negative. */
     inline bool isNegative() const;
@@ -51,41 +51,29 @@ public:
     /** Returns a digit by its index. Write access is private. */
     Digit& operator[](size_t index);
 
+    /** Checks equality of two numbers. */
+    bool operator==(const Number& number) const;
+
     /** Returns a negated copy of the current number. */
     Number operator-() const;
 
-    /** Adds a number to the current number. */
-    Number& operator+=(const Number& number);
+    /** Adds one number to another. */
+    friend Number operator+(const Number& lhs, const Number& rhs);
 
-    /** Subtracts a number from the current number. */
-    Number& operator-=(const Number& number);
+    /** Subtracts one number from another. */
+    friend Number operator-(const Number& lhs, const Number& rhs);
+
+    /** Multiplies one number by another using the Grade School algorithm. */
+    friend Number operator*(const Number& lhs, const Number& rhs);
 
 private:
 
-    /** Vector that stores digits. */
-    DigitsPtr _digits;
-
-    /** Start position in the vector. */
-    size_t _start;
-
-    /** The number of digits. */
-    size_t _length;
-
-    /** The number of digits excluding zeros in high positions. */
-    size_t _nonZeroLength;
+    /** Vector that stores digits. Digits are stored from low to high. */
+    Digits _digits;
 
     /** Flag that shows that the number is negative or positive. */
     bool _negative;
 };
-
-/** Adds one number to another. */
-Number operator+(const Number& lhs, const Number& rhs);
-
-/** Subtracts one number from another. */
-Number operator-(const Number& lhs, const Number& rhs);
-
-/** Multiplies one number by another using the Grade School algorithm. */
-Number operator*(const Number& lhs, const Number& rhs);
 
 /** Prints the number to an output stream. */
 std::ostream& operator<<(std::ostream& out, const Number& number);

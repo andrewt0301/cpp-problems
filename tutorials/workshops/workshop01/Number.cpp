@@ -7,60 +7,190 @@
 #include <algorithm>
 #include <iterator>
 
+/**
+ * Copies digits starting from lower digits and skipping leading zeros (e.g. 001 is copied as 1).
+ */
 template <typename ISrc, typename IDest>
-size_t copyDigits(ISrc begin, ISrc end, IDest dest)
+void copyDigits(ISrc begin, ISrc end, IDest dest)
 {
-    size_t nonZeroLenght = 0;
-
-    for (ISrc it = begin; it != end; ++it)
+    const ISrc nonZeroBegin = std::find_if(begin, end, [](auto x) { return x != 0; });
+    while (end != nonZeroBegin)
     {
-        auto digit = *it;
-        *dest++ = digit;
+        *dest++ = *(--end);
+    }
+}
 
-        if (digit != 0 || nonZeroLenght != 0)
-            nonZeroLenght++;
+/**
+ * Checks whether one of digit vector is larger than another.
+ * If their length is equal, the highest digit is compared.
+ */
+bool isGreater(const Number::Digits& lhs, const Number::Digits& rhs)
+{
+    if (lhs.size() > rhs.size())
+        return true;
+
+    if (lhs.size() < rhs.size())
+        return false;
+
+    return lhs[lhs.size() - 1] > rhs[rhs.size() - 1];
+}
+
+/**
+ * Adds two vectors of digits.
+ */
+Number::Digits add(const Number::Digits& lhs, const Number::Digits& rhs)
+{
+    if (lhs.size() < rhs.size())
+        return add(rhs, lhs);
+
+    const Number::Digits& src = rhs;
+    Number::Digits       dest = lhs;
+
+    for (size_t index = 0; index < src.size(); ++index)
+        dest[index] += src[index];
+
+    Number::Digit carry = 0;
+    for (Number::Digit& digit : dest)
+    {
+        digit += carry;
+        carry = 0;
+
+        if (digit >= Number::DIGIT_LEN)
+        {
+            carry = 1;
+            digit -= Number::DIGIT_LEN;
+        }
     }
 
-    return nonZeroLenght;
+    if (carry != 0)
+        dest.push_back(carry);
+
+    return dest;
 }
 
-Number::Number(std::initializer_list<Digit> digits)
-    : _digits(new Digits(digits.size())),
-      _start{0},
-      _length(digits.size()),
-      _nonZeroLength{0},
+/**
+ * Subtracts one digit vector from another. Requires that the first vector is larger.
+ */
+Number::Digits sub(const Number::Digits& lhs, const Number::Digits& rhs)
+{
+    const Number::Digits& src = rhs;
+    Number::Digits       dest = lhs;
+
+    for (size_t index = 0; index < src.size(); ++index)
+        dest[index] -= src[index];
+
+    Number::Digit carry = 0;
+    for (Number::Digit& digit : dest)
+    {
+        digit -= carry;
+        carry = 0;
+
+        if (digit < 0)
+        {
+            carry = 1;
+            digit += Number::DIGIT_LEN;
+        }
+    }
+
+    return dest;
+}
+
+/**
+ * Multiplies two vectors of digits.
+ */
+Number::Digits mul(const Number::Digits& lhs, const Number::Digits& rhs)
+{
+    if (lhs.size() < rhs.size())
+        return mul(rhs, lhs);
+
+    Number::Digits dest(lhs.size() + rhs.size());
+
+    for (int i = 0; i < rhs.size(); ++i)
+    {
+        const Number::Digit digit1 = rhs[i];
+        if (digit1 != 0)
+        {
+            for (int j = 0; j < lhs.size(); ++j)
+            {
+                Number::Digit digit2 = lhs[j];
+                dest[j + i] += digit1 * digit2;
+            }
+
+            Number::Digit carry = 0;
+            for (int k = i; k < dest.size(); ++k)
+            {
+                Number::Digit& digit = dest[k];
+
+                digit += carry;
+                carry = 0;
+
+                if (digit >= Number::DIGIT_LEN)
+                {
+                    carry = digit / Number::DIGIT_LEN;
+                    digit = digit % Number::DIGIT_LEN;
+                }
+            }
+        }
+    }
+
+    return dest;
+}
+
+Number::Number(const std::initializer_list<Digit>& digits)
+    : _digits(),
       _negative{false}
 {
-    _nonZeroLength = copyDigits(std::crbegin(digits), std::crend(digits), (*_digits).begin());
+    _digits.reserve(digits.size());
+    copyDigits(digits.begin(), digits.end(), std::back_inserter(_digits));
 }
 
-Number::Number(Digits digits)
-    : _digits(new Digits(digits.size())),
-      _start{0},
-      _length(digits.size()),
-      _nonZeroLength{0},
+Number::Number(Digits digits, bool negative)
+    : _digits(),
+      _negative{negative}
+{
+    _digits.reserve(digits.size());
+    copyDigits(digits.rbegin(), digits.rend(), std::back_inserter(_digits));
+
+    if (length() == 0)
+        _negative = false;
+}
+
+Number::Number(const std::string &str)
+    : _digits(),
       _negative{false}
 {
-    _nonZeroLength = copyDigits(digits.begin(), digits.end(), (*_digits).begin());
+    if (str.empty())
+        return;
+
+    size_t skip = 0;
+
+    for (; skip < str.length() && str[skip] == '-'; ++skip)
+        _negative = !_negative;
+
+    for (; skip < str.length() && str[skip] == '0'; ++skip)
+        ;
+
+    _digits.reserve(str.length() - skip);
+    for (size_t index = str.length(); index > skip; --index)
+    {
+        char ch = str[index - 1];
+        if ('0' <= ch && ch <= '9')
+            _digits.push_back(ch - '0');
+    }
+
+    if (length() == 0)
+        _negative = false;
 }
 
-Number::Number(size_t length)
-    : _digits{new Digits(length, 0)},
-      _start{0},
-      _length{length},
-      _nonZeroLength{0},
+Number::Number()
+    : _digits(),
       _negative(false)
 {
 }
 
 inline size_t Number::length() const
 {
-    return _length;
-}
-
-inline size_t Number::nonZeroLength() const
-{
-    return _nonZeroLength;
+    return _digits.size();
 }
 
 inline bool Number::isNegative() const
@@ -70,143 +200,112 @@ inline bool Number::isNegative() const
 
 std::pair<Number, Number> Number::split() const
 {
-    Number lo{*this};
-    Number hi{*this};
+    size_t loLength = length() / 2;
 
-    lo._start = _start;
-    lo._length = _length / 2;
+    Number lo;
+    copyDigits(_digits.rbegin() + loLength, _digits.rend(), std::back_inserter(lo._digits));
 
-    hi._start = _start + lo._length;
-    hi._length = _length - lo._length;
+    if (lo.length() > 0)
+        lo._negative = _negative;
 
-    if (_nonZeroLength > lo._length)
-    {
-        lo._nonZeroLength = lo._length;
-        hi._nonZeroLength = _nonZeroLength - lo._length;
-    }
-    else
-    {
-        lo._nonZeroLength = _nonZeroLength;
-        hi._nonZeroLength = 0;
-    }
+    Number hi;
+    copyDigits(_digits.rbegin(), _digits.rbegin() + loLength, std::back_inserter(hi._digits));
 
-    return std::make_pair(lo, hi);
+    if (hi.length() > 0)
+        hi._negative = _negative;
+
+    return {hi, lo};
 }
 
 Number::Digit Number::operator[](size_t index) const
 {
-    if (index > _length)
-        throw std::out_of_range("Index out of bounds.");
-
-    size_t i = _start + index;
-    return (*_digits)[i];
+    return _digits[index];
 }
 
 Number::Digit& Number::operator[](size_t index)
 {
-    if (index > _length)
-        throw std::out_of_range("Index out of bounds.");
+    return _digits[index];
+}
 
-    size_t i = _start + index;
-    return (*_digits)[i];
+bool Number::operator==(const Number& number) const
+{
+    return _negative == number._negative && _digits == number._digits;
 }
 
 Number Number::operator-() const
 {
     Number number{*this};
 
-    if (number.nonZeroLength() > 0)
+    if (number.length() > 0)
         number._negative = !_negative;
-    else
-        number._negative = false;
 
     return number;
 }
 
-void add(Number& lhs, const Number& rhs)
-{
-    const size_t length = std::min(lhs.length(), rhs.nonZeroLength());
-
-    int carry = 0;
-    size_t index = 0;
-
-    for (; index < length; ++index)
-    {
-        Number::Digit& digit = lhs[index];
-
-        digit += (carry + rhs[index]);
-        carry = digit / 10;
-        digit %= 10;
-    }
-
-    if (index < lhs.length())
-        // Adds overflow digit to the next digit.
-        lhs[index] += carry;
-    else
-        // Returns overflow digit back to the last digit.
-        lhs[index - 1] += 10 * carry;
-}
-
-Number& Number::operator+=(const Number& number)
-{
-    if (number.nonZeroLength() == 0)
-    {
-        // number == 0;
-        return *this;
-    }
-
-    if (nonZeroLength() == 0) {
-        // this == 0.
-        *this = number;
-    }
-    else if (isNegative() == number.isNegative())
-    {
-        // this and number have equal sign.
-        if (_digits.use_count() > 1)
-            _digits = Number::DigitsPtr(new Digits(*_digits));
-
-        add(*this, number);
-    }
-    else if (_digits.get() == number._digits.get())
-    {
-        // this == -number.
-        *this = Number(length());
-    }
-    else if (!isNegative())
-    {
-        // this is positive, number is negative.
-        add(*this, number);
-    }
-    else
-    {
-        // this is negative, number is positive.
-        add(*this, number);
-    }
-
-    return *this;
-}
-
-Number& Number::operator-=(const Number& number)
-{
-    return *this += -number;
-}
-
 Number operator+(const Number& lhs, const Number& rhs)
 {
-    if (lhs.nonZeroLength() > rhs.nonZeroLength())
-        return Number{lhs} += rhs;
+    if (lhs.length() == 0)
+        return rhs;
+
+    if (rhs.length() == 0)
+        return lhs;
+
+    if (lhs.isNegative() == rhs.isNegative())
+    {
+        Number::Digits digits = add(lhs._digits, rhs._digits);
+        return Number{digits, lhs.isNegative()};
+    }
+
+    if (isGreater(lhs._digits, rhs._digits))
+    {
+        Number::Digits digits = sub(lhs._digits, rhs._digits);
+        return Number{digits, lhs.isNegative()};
+    }
     else
-        return Number{rhs} += lhs;
+    {
+        Number::Digits digits = sub(rhs._digits, lhs._digits);
+        return Number{digits, !lhs.isNegative()};
+    }
 }
 
 Number operator-(const Number& lhs, const Number& rhs)
 {
-    return lhs + (-rhs);
+    if (lhs.length() == 0)
+        return rhs;
+
+    if (rhs.length() == 0)
+        return -lhs;
+
+    if (lhs.isNegative() != rhs.isNegative())
+    {
+        Number::Digits digits = add(lhs._digits, rhs._digits);
+        return Number{digits, lhs.isNegative()};
+    }
+
+    if (isGreater(lhs._digits, rhs._digits))
+    {
+        Number::Digits digits = sub(lhs._digits, rhs._digits);
+        return Number{digits, lhs.isNegative()};
+    }
+    else
+    {
+        Number::Digits digits = sub(rhs._digits, lhs._digits);
+        return Number{digits, !lhs.isNegative()};
+    }
+}
+
+Number operator*(const Number& lhs, const Number& rhs)
+{
+    if (lhs.length() == 0 || rhs.length() == 0)
+        return Number{};
+
+    Number::Digits digits = mul(rhs._digits, lhs._digits);
+    return Number{digits, lhs.isNegative() != rhs.isNegative()};
 }
 
 std::ostream& operator<<(std::ostream& out, const Number& number)
 {
-    size_t length = number.nonZeroLength();
+    size_t length = number.length();
 
     if (length == 0) {
         out << '0';
@@ -217,7 +316,7 @@ std::ostream& operator<<(std::ostream& out, const Number& number)
         out << '-';
 
     for (size_t i = length; i > 0; --i)
-        out << number[i - 1];
+        out << static_cast<int64_t>(number[i - 1]);
 
     return out;
 }
