@@ -125,14 +125,37 @@ int Multiplicator::karatsuba(int x, int y)
 
 Number Multiplicator::gradeSchool(const Number& x, const Number& y)
 {
-    // TODO:
-    return Number{1,2,3};
+    return x * y;
 }
 
 Number Multiplicator::divideAndConquer(const Number& x, const Number& y)
 {
-    // TODO:
-    return Number{1,2,3};
+    if (x.length() < y.length())
+        return divideAndConquer(y, x);
+
+    if (y.length() == 0)
+        return Number{};
+
+    if (y.length() == 1)
+        return x * y;
+
+    std::pair<Number, Number> xSplit = x.split();
+    std::pair<Number, Number> ySplit = y.split();
+
+    Number& xl = xSplit.first;
+    Number& xr = xSplit.second;
+    size_t xs = x.length() - xl.length();
+
+    Number& yl = ySplit.first;
+    Number& yr = ySplit.second;
+    size_t ys = y.length() - yl.length();
+
+    Number p1 = divideAndConquer(xl, yl);
+    Number p2 = divideAndConquer(xr, yr);
+    Number p3 = divideAndConquer(xl, yr);
+    Number p4 = divideAndConquer(xr, yl);
+
+    return (p1 << (xs + ys)) + (p3 << xs) + (p4 << ys) + p2;
 }
 
 Number Multiplicator::karatsuba(const Number& x, const Number& y)
