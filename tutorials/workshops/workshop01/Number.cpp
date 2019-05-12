@@ -188,16 +188,6 @@ Number::Number()
 {
 }
 
-inline size_t Number::length() const
-{
-    return _digits.size();
-}
-
-inline bool Number::isNegative() const
-{
-    return _negative;
-}
-
 std::pair<Number, Number> Number::split() const
 {
     size_t loLength = length() / 2;
@@ -244,8 +234,12 @@ Number Number::operator-() const
 
 Number Number::operator<<(size_t shift)
 {
+    if (length() == 0)
+        return *this;
+
     Digits digits(length() + shift);
     std::copy(_digits.begin(), _digits.end(), digits.begin() + shift);
+
     return Number{digits, isNegative()};
 }
 

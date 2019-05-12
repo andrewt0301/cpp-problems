@@ -110,6 +110,8 @@ void testAddSub()
  */
 void testMul()
 {
+    assert(( Number{1,0,0}) * ( Number{1,0,0}) == ( Number{1,0,0,0,0}));
+
     assert(( Number{1,2,3}) * ( Number{1,2}) == ( Number{1,4,7,6}));
     assert((-Number{1,2,3}) * ( Number{1,2}) == (-Number{1,4,7,6}));
     assert(( Number{1,2,3}) * (-Number{1,2}) == (-Number{1,4,7,6}));
@@ -120,6 +122,7 @@ void testMul()
     assert(( Number{2,0,0}) * ( Number{3,0})    == ( Number{6,0,0,0}));
 
     assert(( Number{9,9})     * ( Number{9,9})   == ( Number{9,8,0,1}));
+    assert(( Number{9,9,0})   * ( Number{9,9})   == ( Number{9,8,0,1,0}));
     assert(( Number{9,9,9,9}) * ( Number{7,7,7}) == ( Number{7,7,6,9,2,2,3}));
 }
 
@@ -132,6 +135,7 @@ void testShift()
 {
     assert(( Number{1,2,3}) << 3 == ( Number{1,2,3,0,0,0}));
     assert((-Number{1,2,3}) << 3 == (-Number{1,2,3,0,0,0}));
+    assert((      Number{}) << 3 == ( Number{}));
 }
 
 /**
