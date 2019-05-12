@@ -101,6 +101,9 @@ void testAddSub()
     assert((-Number{1,0,0}) - (Number{9,9})   == (-Number{1,9,9}));
     assert((   Number{9,9}) + (Number{1,0,0}) == ( Number{1,9,9}));
     assert(   (Number{9,9}) - (Number{1,0,0}) == (-Number{1}));
+
+    assert(( Number{1,2,0}) - (Number{1,1,0})   == ( Number{1,0}));
+    assert(( Number{1,1,0}) - (Number{1,2,0})   == (-Number{1,0}));
 }
 
 /**

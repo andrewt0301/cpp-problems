@@ -32,7 +32,19 @@ bool isGreater(const Number::Digits& lhs, const Number::Digits& rhs)
     if (lhs.size() < rhs.size())
         return false;
 
-    return lhs[lhs.size() - 1] > rhs[rhs.size() - 1];
+    for (size_t index = lhs.size(); index > 0; --index)
+    {
+        Number::Digit dlhs = lhs[index - 1];
+        Number::Digit drhs = rhs[index - 1];
+
+        if (dlhs > drhs)
+            return true;
+
+        if (dlhs < drhs)
+            return false;
+    }
+
+    return false;
 }
 
 /**

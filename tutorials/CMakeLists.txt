@@ -15,6 +15,8 @@ add_executable(
         workshops/workshop01/workshop01.cpp
         workshops/workshop01/Multiplicator.cpp
         workshops/workshop01/Number.cpp
+        workshops/workshop01/NumberTests.cpp
+        workshops/workshop01/MultiplicatorTests.cpp
         )
 
 add_executable(
