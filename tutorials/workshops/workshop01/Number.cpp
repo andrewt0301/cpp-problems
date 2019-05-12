@@ -242,6 +242,13 @@ Number Number::operator-() const
     return number;
 }
 
+Number Number::operator<<(size_t shift)
+{
+    Digits digits(length() + shift);
+    std::copy(_digits.begin(), _digits.end(), digits.begin() + shift);
+    return Number{digits, isNegative()};
+}
+
 Number operator+(const Number& lhs, const Number& rhs)
 {
     if (lhs.length() == 0)

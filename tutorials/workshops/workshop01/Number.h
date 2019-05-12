@@ -57,6 +57,9 @@ public:
     /** Returns a negated copy of the current number. */
     Number operator-() const;
 
+    /** Shifts the number to the left by the specified number of digits. */
+    Number operator<<(size_t shift);
+
     /** Adds one number to another. */
     friend Number operator+(const Number& lhs, const Number& rhs);
 

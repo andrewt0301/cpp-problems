@@ -124,6 +124,17 @@ void testMul()
 }
 
 /**
+ * Tests whether this operator work:
+ *
+ *  Number operator<<(size_t shift)
+ */
+void testShift()
+{
+    assert(( Number{1,2,3}) << 3 == ( Number{1,2,3,0,0,0}));
+    assert((-Number{1,2,3}) << 3 == (-Number{1,2,3,0,0,0}));
+}
+
+/**
  * Checks the correctness of the Number implementation.
  */
 void runNumberTests()
@@ -135,4 +146,5 @@ void runNumberTests()
     testSplit();
     testAddSub();
     testMul();
+    testShift();
 }
