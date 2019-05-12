@@ -272,10 +272,10 @@ Number operator+(const Number& lhs, const Number& rhs)
 Number operator-(const Number& lhs, const Number& rhs)
 {
     if (lhs.length() == 0)
-        return rhs;
+        return -rhs;
 
     if (rhs.length() == 0)
-        return -lhs;
+        return lhs;
 
     if (lhs.isNegative() != rhs.isNegative())
     {
