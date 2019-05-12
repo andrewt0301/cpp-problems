@@ -57,23 +57,23 @@ int main()
     // This Random generates digits.
     Random random{1};
 
-    for (size_t length = 1; length <= 128; ++length)
+    for (size_t length = 1; length <= 1024; length *= 2)
     {
-        NumberVector testData = randomNumberVector(random, length, 20 * 2);
+        const NumberVector testData = randomNumberVector(random, length, 5 * 2);
 
-        long gradeSchoolTime = calcExecTime([testData]()
+        long gradeSchoolTime = calcExecTime([&testData]()
         {
             for (size_t index = 0; index < testData.size() / 2; ++index)
                 Multiplicator::gradeSchool(testData[index], testData[index * 2]);
         });
 
-        long divideAndConquerTime = calcExecTime([testData]()
+        long divideAndConquerTime = calcExecTime([&testData]()
         {
             for (size_t index = 0; index < testData.size() / 2; ++index)
                 Multiplicator::divideAndConquer(testData[index], testData[index * 2]);
         });
 
-        long karatsubaTime = calcExecTime([testData]()
+        long karatsubaTime = calcExecTime([&testData]()
         {
             for (size_t index = 0; index < testData.size() / 2; ++index)
                 Multiplicator::karatsuba(testData[index], testData[index * 2]);
