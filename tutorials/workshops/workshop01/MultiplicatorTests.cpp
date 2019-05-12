@@ -50,8 +50,8 @@ void testRandomData(TMulOp mulOp)
                 for (size_t i = 0; i < rhsData.size(); ++i)
                     digitsRhs[i] = rhsData[i];
 
-                Number lhs{digitsLhs, false};
-                Number rhs{digitsRhs, false};
+                Number lhs{digitsLhs, random.next() % 2 == 0};
+                Number rhs{digitsRhs, random.next() % 2 == 0};
 
                 Number etalon = lhs * rhs;
                 Number result = mulOp(lhs, rhs);
