@@ -57,7 +57,7 @@ int main()
     // This Random generates digits.
     Random random{1};
 
-    for (size_t length = 1; length <= 1024; length *= 2)
+    for (size_t length = 1; length <= 2048; length *= 2)
     {
         const NumberVector testData = randomNumberVector(random, length, 5 * 2);
 
