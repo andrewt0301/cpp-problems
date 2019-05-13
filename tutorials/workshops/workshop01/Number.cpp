@@ -107,47 +107,6 @@ Number::Digits sub(const Number::Digits& lhs, const Number::Digits& rhs)
     return dest;
 }
 
-/**
- * Multiplies two vectors of digits.
- */
-Number::Digits mul(const Number::Digits& lhs, const Number::Digits& rhs)
-{
-    if (lhs.size() < rhs.size())
-        return mul(rhs, lhs);
-
-    Number::Digits dest(lhs.size() + rhs.size());
-
-    for (int i = 0; i < rhs.size(); ++i)
-    {
-        const Number::Digit digit1 = rhs[i];
-        if (digit1 != 0)
-        {
-            for (int j = 0; j < lhs.size(); ++j)
-            {
-                Number::Digit digit2 = lhs[j];
-                dest[j + i] += digit1 * digit2;
-            }
-
-            Number::Digit carry = 0;
-            for (int k = i; k < dest.size(); ++k)
-            {
-                Number::Digit& digit = dest[k];
-
-                digit += carry;
-                carry = 0;
-
-                if (digit >= Number::DIGIT_LEN)
-                {
-                    carry = digit / Number::DIGIT_LEN;
-                    digit = digit % Number::DIGIT_LEN;
-                }
-            }
-        }
-    }
-
-    return dest;
-}
-
 Number::Number(const std::initializer_list<Digit>& digits)
     : _digits(),
       _negative{false}
@@ -197,6 +156,12 @@ Number::Number(const std::string &str)
 Number::Number()
     : _digits(),
       _negative(false)
+{
+}
+
+Number::Number(size_t length)
+        : _digits(length),
+          _negative(false)
 {
 }
 
@@ -312,8 +277,51 @@ Number operator*(const Number& lhs, const Number& rhs)
     if (lhs.length() == 0 || rhs.length() == 0)
         return Number{};
 
-    Number::Digits digits = mul(rhs._digits, lhs._digits);
-    return Number{digits, lhs.isNegative() != rhs.isNegative()};
+    if (lhs.length() < rhs.length())
+        return rhs * lhs;
+
+    Number dest(lhs.length() + rhs.length());
+    size_t zeroDigits = 0;
+
+    for (int i = 0; i < rhs.length(); ++i)
+    {
+        const Number::Digit digit1 = rhs[i];
+        if (digit1 != 0)
+        {
+            for (int j = 0; j < lhs.length(); ++j)
+            {
+                Number::Digit digit2 = lhs[j];
+                dest[j + i] += digit1 * digit2;
+            }
+
+            Number::Digit carry = 0;
+            for (int k = i; k < dest.length(); ++k)
+            {
+                Number::Digit& digit = dest[k];
+
+                digit += carry;
+                carry = 0;
+
+                if (digit >= Number::DIGIT_LEN)
+                {
+                    carry = digit / Number::DIGIT_LEN;
+                    digit = digit % Number::DIGIT_LEN;
+                }
+
+                if (digit == 0)
+                    zeroDigits++;
+                else
+                    zeroDigits = 0;
+            }
+        }
+    }
+
+    // Deletes zeros from the high part if there are any.
+    if (zeroDigits > 0)
+        dest._digits.resize(dest.length() - zeroDigits);
+
+    dest._negative = lhs.isNegative() != rhs.isNegative();
+    return dest;
 }
 
 std::ostream& operator<<(std::ostream& out, const Number& number)

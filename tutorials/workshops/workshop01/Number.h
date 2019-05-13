@@ -70,6 +70,8 @@ public:
     friend Number operator*(const Number& lhs, const Number& rhs);
 
 private:
+    /** Constructs an empty number with the specified size. */
+    explicit Number(size_t length);
 
     /** Vector that stores digits. Digits are stored from low to high. */
     Digits _digits;
