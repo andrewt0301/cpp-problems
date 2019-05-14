@@ -3,6 +3,7 @@
 //
 
 #include <algorithm>
+#include <functional>
 #include <iostream>
 #include <vector>
 
@@ -14,12 +15,43 @@
 
 using IntVector = std::vector<int>;
 
+/**
+ * Creates a copy of test data and sorts each vector in the test data with the specified function.
+ */
+long calcExecTime(std::vector<IntVector> testData, std::function<void(IntVector&)> func)
+{
+    return calcExecTime([&testData, func]()
+    {
+        for (IntVector& values : testData)
+            func(values);
+    });
+}
+
+/**
+ * Generates test data represented by a vector of vectors of the specified length
+ * each filled with random values.
+ *
+ * @param random Random value generator.
+ * @param length Length of vectors of random values.
+ * @param count Number of vectors.
+ * @return Vectors of random values.
+ */
+std::vector<IntVector> randomTestData(Random& random, size_t length, size_t count)
+{
+    std::vector<IntVector> testData(count);
+
+    for (IntVector& values : testData)
+        values = randomVector(random, length);
+
+    return testData;
+}
+
 int main()
 {
-    // Here hold our performance measures.
+    // Here we hold our performance measures.
     Samples<long> samples;
 
-    // Random generator of 3-digit values we are going to sort.
+    // Random generator of 3-digit values.
     Random random(3);
 
     // length is the length of array to be sorted.
@@ -29,30 +61,19 @@ int main()
     {
         // Test data: vectors of integers to be sorted.
         // We need multiple vectors as sorting of a single vector can be done quicker than 1 millisecond.
-        std::vector<IntVector> testData(10);
-
         // We generate values in advance in order to exclude generation cost from result.
-        for (IntVector& values : testData)
-            values = randomVector(random, length);
-
-        // We make a new copy of test data because we cannot sort the same vectors with different algorithms.
-        std::vector<IntVector> testData1 {testData};
+        std::vector<IntVector> testData = randomTestData(random, length, 10);
 
         // We sort all vectors with insertion sort and measure the sorting time.
-        long insertionSortTime = calcExecTime([&testData1]()
+        const long insertionSortTime = calcExecTime(testData, [](IntVector& values)
         {
-            for (IntVector& values : testData1)
-                insertionSort(values);
+            insertionSort(values);
         });
 
-        // We make a new copy of test data because we cannot sort the same vectors with different algorithms.
-        std::vector<IntVector> testData2 {testData};
-
         // We sort all vectors with std::sort and measure the sorting time.
-        long stdSortTime = calcExecTime([&testData2]()
+        const long stdSortTime = calcExecTime(testData, [](IntVector& values)
         {
-            for (IntVector& values : testData2)
-                std::sort(values.begin(), values.end());
+            std::sort(values.begin(), values.end());
         });
 
         // We add a sample to the samples vector.
@@ -60,7 +81,7 @@ int main()
     }
 
     // We save samples to a CSV files.
-    generateCSV("samples.csv", samples);
+    generateCSV("sorting.csv", samples);
 
     return 0;
 }
