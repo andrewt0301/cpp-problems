@@ -20,7 +20,7 @@ using IntVector = std::vector<int>;
  */
 long calcExecTime(std::vector<IntVector> testData, std::function<void(IntVector&)> func)
 {
-    return calcExecTime([&testData, func]()
+    return calcExecTime([&testData, &func]()
     {
         for (IntVector& values : testData)
             func(values);
