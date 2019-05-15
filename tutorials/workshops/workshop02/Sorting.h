@@ -42,7 +42,7 @@ void selectionSort(std::vector<T>& data)
 {
     const size_t size = data.size();
 
-    if (size < 1)
+    if (size <= 1)
         return;
 
     for (size_t i = 0; i < size; ++i)
@@ -65,6 +65,44 @@ void selectionSort(std::vector<T>& data)
             data[minIdx] = data[i];
             data[i] = min;
         }
+    }
+}
+
+/**
+  * Sorts an array of integers into ascending numerical order using the bubble sort algorithm.
+  *
+  * Time complexity: {@code O(N^2)}, where N is the length of the array.
+  *
+  * @param data Vector of values to be sorted.
+  */
+template <typename T>
+void bubbleSort(std::vector<T>& data)
+{
+    const size_t size = data.size();
+
+    if (size <= 1)
+        return;
+
+    for (size_t i = 0; i < size - 1; ++i)
+    {
+        bool noSwaps = true;
+
+        for (size_t j = size - 1; j > i; --j)
+        {
+            const size_t k = j - 1;
+
+            const T valJ = data[j];
+            const T valK = data[k];
+
+            if (valJ < valK) {
+                data[j] = valK;
+                data[k] = valJ;
+                noSwaps = false;
+            }
+        }
+
+        if (noSwaps)
+            break;
     }
 }
 
