@@ -70,6 +70,12 @@ int main()
             insertionSort(values);
         });
 
+        // We sort all vectors with selection sort and measure the sorting time.
+        const long selectionSortTime = calcExecTime(testData, [](IntVector& values)
+        {
+            selectionSort(values);
+        });
+
         // We sort all vectors with std::sort and measure the sorting time.
         const long stdSortTime = calcExecTime(testData, [](IntVector& values)
         {
@@ -77,7 +83,7 @@ int main()
         });
 
         // We add a sample to the samples vector.
-        samples.push_back({length, insertionSortTime, stdSortTime});
+        samples.push_back({length, insertionSortTime, selectionSortTime, stdSortTime});
     }
 
     // We save samples to a CSV files.
