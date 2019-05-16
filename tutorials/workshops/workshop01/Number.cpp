@@ -163,7 +163,9 @@ Number Number::operator<<(size_t shift)
         return *this;
 
     Number number(length() + shift, isNegative());
-    std::copy(_digits.begin(), _digits.end(), number._digits.begin() + shift);
+
+    for (size_t i = 0; i < length(); ++i)
+        number[i + shift] = (*this)[i];
 
     return number;
 }
