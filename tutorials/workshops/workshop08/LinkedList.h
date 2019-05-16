@@ -1,0 +1,80 @@
+//
+// Created by Tatarnikov_A on 16.05.2019.
+//
+
+#ifndef TUTORIALS_LINKEDLIST_H
+#define TUTORIALS_LINKEDLIST_H
+
+#include <iostream>
+
+template <typename T>
+class LinkedList {
+public:
+    struct Node
+    {
+        T     _value;
+        Node* _prev;
+        Node* _next;
+
+        Node(T value, Node* prev, Node* next) : _value{value}, _prev{prev}, _next{next} {}
+    };
+
+    LinkedList() : _head{nullptr}, _tail{nullptr}
+    {}
+
+    ~LinkedList()
+    {
+        Node* p = _head;
+        while (p != nullptr)
+        {
+            Node* tmp = p;
+            p = p->_next;
+            delete tmp;
+        }
+    }
+
+    void push_front(T value)
+    {
+        Node* node = new Node(value, nullptr, _head);
+
+        if (_head != nullptr)
+            _head->_prev = node;
+
+        _head = node;
+
+        if (_tail == nullptr)
+            _tail = node;
+    }
+
+    void push_back(T value)
+    {
+        Node* node = new Node(value, _tail, nullptr);
+
+        if (_tail != nullptr)
+            _tail->_next = node;
+
+        _tail = node;
+
+        if (_head == nullptr)
+            _head = node;
+    }
+
+    friend std::ostream& operator<<(std::ostream& out, const LinkedList& list)
+    {
+        out << '{';
+        for (LinkedList<T>::Node* p = list._head; p != nullptr; p = p->_next)
+        {
+            out << p->_value;
+            if (p->_next != nullptr)
+                out << ", ";
+        }
+        out << '}';
+        return out;
+    }
+
+private:
+    Node* _head;
+    Node* _tail;
+};
+
+#endif //TUTORIALS_LINKEDLIST_H
