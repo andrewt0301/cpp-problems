@@ -38,6 +38,9 @@ public:
     Number();
 
 private:
+    /** Constructs a deep copy of the specified number with the increased length. */
+    Number(const Number& number, size_t grow);
+
     /** Constructs an empty number with the specified size. */
     Number(size_t length, bool negative);
 
@@ -78,6 +81,9 @@ public:
 private:
     /** Reduces the length of the number by the specified number of digits. */
     void shrink(size_t delta);
+
+    /** Adds one number to another. */
+    friend Number add(const Number& lhs, const Number& rhs);
 
     /** Subtracts one number from another. Requires that the number is larger. */
     friend Number sub(const Number& lhs, const Number& rhs);

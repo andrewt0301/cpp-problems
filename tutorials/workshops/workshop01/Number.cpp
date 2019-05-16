@@ -47,39 +47,6 @@ bool isGreaterUnsigned(const Number &lhs, const Number &rhs)
     return false;
 }
 
-/**
- * Adds two vectors of digits.
- */
-Number::Digits add(const Number::Digits& lhs, const Number::Digits& rhs)
-{
-    if (lhs.size() < rhs.size())
-        return add(rhs, lhs);
-
-    const Number::Digits& src = rhs;
-    Number::Digits       dest = lhs;
-
-    for (size_t index = 0; index < src.size(); ++index)
-        dest[index] += src[index];
-
-    Number::Digit carry = 0;
-    for (Number::Digit& digit : dest)
-    {
-        digit += carry;
-        carry = 0;
-
-        if (digit >= Number::DIGIT_LEN)
-        {
-            carry = 1;
-            digit -= Number::DIGIT_LEN;
-        }
-    }
-
-    if (carry != 0)
-        dest.push_back(carry);
-
-    return dest;
-}
-
 Number::Number(const std::initializer_list<Digit>& digits)
     : _digits(),
       _negative{false}
@@ -130,6 +97,13 @@ Number::Number()
     : _digits(),
       _negative(false)
 {
+}
+
+Number::Number(const Number& number, size_t grow)
+    : _digits(number.length() + grow),
+      _negative{number.isNegative()}
+{
+    std::copy(number._digits.begin(), number._digits.end(), _digits.begin());
 }
 
 Number::Number(size_t length, bool negative)
@@ -202,10 +176,7 @@ Number operator+(const Number& lhs, const Number& rhs)
         return lhs;
 
     if (lhs.isNegative() == rhs.isNegative())
-    {
-        Number::Digits digits = add(lhs._digits, rhs._digits);
-        return Number{digits, lhs.isNegative()};
-    }
+        return add(lhs, rhs);
 
     if (isGreaterUnsigned(lhs, rhs))
         return sub(lhs, rhs);
@@ -222,10 +193,7 @@ Number operator-(const Number& lhs, const Number& rhs)
         return lhs;
 
     if (lhs.isNegative() != rhs.isNegative())
-    {
-        Number::Digits digits = add(lhs._digits, rhs._digits);
-        return Number{digits, lhs.isNegative()};
-    }
+        return add(lhs, rhs);
 
     if (isGreaterUnsigned(lhs, rhs))
         return sub(lhs, rhs);
@@ -266,6 +234,46 @@ void Number::shrink(size_t delta)
 {
     if (delta < length())
         _digits.resize(length() - delta);
+}
+
+Number add(const Number& lhs, const Number& rhs)
+{
+    if (lhs.length() < rhs.length())
+        return add(rhs, lhs);
+
+    const Number& src{rhs};
+    Number       dest{lhs, 1};
+
+    for (size_t index = 0; index < src.length(); ++index)
+        dest[index] += src[index];
+
+    Number::Digit carry = 0;
+    size_t zeroDigits = 0;
+
+    for (size_t index = 0; index < dest.length(); ++index)
+    {
+        Number::Digit& digit = dest[index];
+
+        digit += carry;
+        carry = 0;
+
+        if (digit >= Number::DIGIT_LEN)
+        {
+            carry = 1;
+            digit -= Number::DIGIT_LEN;
+        }
+
+        if (digit == 0)
+            zeroDigits++;
+        else
+            zeroDigits = 0;
+    }
+
+    // Deletes zeros from the high part if there are any.
+    if (zeroDigits > 0)
+        dest.shrink(zeroDigits);
+
+    return dest;
 }
 
 Number sub(const Number& lhs, const Number& rhs)
