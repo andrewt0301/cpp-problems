@@ -39,9 +39,6 @@ Number::Number(Digits digits, bool negative)
 {
     _digits.reserve(digits.size());
     copyDigits(digits.rbegin(), digits.rend(), std::back_inserter(_digits));
-
-    if (length() == 0)
-        _negative = false;
 }
 
 Number::Number(const std::string &str)
@@ -66,9 +63,6 @@ Number::Number(const std::string &str)
         if ('0' <= ch && ch <= '9')
             _digits.push_back(ch - '0');
     }
-
-    if (length() == 0)
-        _negative = false;
 }
 
 Number::Number()
@@ -122,16 +116,13 @@ std::pair<Number, Number> Number::split() const
 
 bool Number::operator==(const Number& number) const
 {
-    return _negative == number._negative && _digits == number._digits;
+    return isNegative() == number.isNegative() && _digits == number._digits;
 }
 
 Number Number::operator-() const
 {
     Number number{*this};
-
-    if (number.length() > 0)
-        number._negative = !_negative;
-
+    number._negative = !_negative;
     return number;
 }
 

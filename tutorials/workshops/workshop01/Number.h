@@ -55,7 +55,7 @@ public:
     inline size_t length() const { return _digits.size(); }
 
     /** Checks whether the number is negative. */
-    inline bool isNegative() const { return _negative; }
+    inline bool isNegative() const { return _negative && length() != 0; }
 
     /** Splits a number into two equal parts. */
     std::pair<Number, Number> split() const;
