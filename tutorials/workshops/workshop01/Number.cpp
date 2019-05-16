@@ -26,19 +26,21 @@ size_t copyDigits(ISrc begin, ISrc end, IDest dest)
 }
 
 Number::Number(const std::initializer_list<Digit>& digits)
-    : _digits(),
+    : _digits(digits.size()),
       _negative{false}
 {
-    _digits.reserve(digits.size());
-    copyDigits(digits.begin(), digits.end(), std::back_inserter(_digits));
+    size_t count = copyDigits(digits.begin(), digits.end(), _digits.begin());
+    if (count < digits.size())
+        shrink(length() - count);
 }
 
 Number::Number(Digits digits, bool negative)
-    : _digits(),
+    : _digits(digits.size()),
       _negative{negative}
 {
-    _digits.reserve(digits.size());
-    copyDigits(digits.rbegin(), digits.rend(), std::back_inserter(_digits));
+    size_t count = copyDigits(digits.rbegin(), digits.rend(), _digits.begin());
+    if (count < digits.size())
+        shrink(length() - count);
 }
 
 Number::Number(const std::string &str)
@@ -97,19 +99,19 @@ Number::Digit Number::operator[](size_t index) const
 
 std::pair<Number, Number> Number::split() const
 {
-    size_t loLength = length() / 2;
+    size_t hiLength = length() / 2;
 
-    Number lo;
-    copyDigits(_digits.rbegin() + loLength, _digits.rend(), std::back_inserter(lo._digits));
+    Number lo(length() - hiLength, _negative);
+    size_t copied = copyDigits(_digits.rbegin() + hiLength, _digits.rend(), lo._digits.begin());
 
-    if (lo.length() > 0)
-        lo._negative = _negative;
+    if (copied < lo.length())
+        lo.shrink(lo.length() - copied);
 
-    Number hi;
-    copyDigits(_digits.rbegin(), _digits.rbegin() + loLength, std::back_inserter(hi._digits));
+    Number hi(hiLength, _negative);
+    copied = copyDigits(_digits.rbegin(), _digits.rbegin() + hiLength, hi._digits.begin());
 
-    if (hi.length() > 0)
-        hi._negative = _negative;
+    if (copied < hi.length())
+        hi.shrink(hi.length() - copied);
 
     return {hi, lo};
 }
@@ -186,7 +188,7 @@ Number operator*(const Number& lhs, const Number& rhs)
 
 void Number::shrink(size_t delta)
 {
-    if (delta < length())
+    if (delta <= length())
         _digits.resize(length() - delta);
 }
 
