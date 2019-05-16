@@ -19,6 +19,24 @@ public:
         Node(T value, Node* prev, Node* next) : _value{value}, _prev{prev}, _next{next} {}
     };
 
+    // TODO
+    class Iterator
+    {
+    public:
+        T operator*();
+
+        /** Prefix increment. */
+        Iterator& operator++();
+        /** Postfix increment. */
+        Iterator operator++(int);
+
+        /** Prefix decrement */
+        Iterator& operator--();
+        /** Postfix decrement. */
+        Iterator operator--(int);
+    };
+
+public:
     LinkedList() : _head{nullptr}, _tail{nullptr}
     {}
 
@@ -46,6 +64,12 @@ public:
             _tail = node;
     }
 
+    T pop_front()
+    {
+        // TODO
+        return 0;
+    }
+
     void push_back(T value)
     {
         Node* node = new Node(value, _tail, nullptr);
@@ -59,10 +83,27 @@ public:
             _head = node;
     }
 
+    T pop_back()
+    {
+        // TODO
+        return 0;
+    }
+
+    T operator[](size_t index) const
+    {
+        // TODO
+        return 0;
+    }
+
+    void reverse()
+    {
+        // TODO
+    }
+
     friend std::ostream& operator<<(std::ostream& out, const LinkedList& list)
     {
         out << '{';
-        for (LinkedList<T>::Node* p = list._head; p != nullptr; p = p->_next)
+        for (Node* p = list._head; p != nullptr; p = p->_next)
         {
             out << p->_value;
             if (p->_next != nullptr)
