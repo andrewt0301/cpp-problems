@@ -24,6 +24,7 @@ public:
     /** Digit length. */
     static constexpr Digit DIGIT_LEN = 10;
 
+public:
     /** Constructs a number from a list of digits. */
     Number(const std::initializer_list<Digit>& digits);
 
@@ -31,10 +32,21 @@ public:
     Number(Digits digits, bool negative);
 
     /** Constructs a number from a string. */
-    Number(const std::string &str);
+    explicit Number(const std::string &str);
 
     /** Constructs an empty zero number. */
     Number();
+
+private:
+    /** Constructs an empty number with the specified size. */
+    Number(size_t length, bool negative);
+
+    /** Returns a digit by its index. Write access is private. */
+    Digit& operator[](size_t index);
+
+public:
+    /** Returns a reference to a digit by its index. */
+    Digit operator[](size_t index) const;
 
     /** Returns the number of digits in the number. */
     inline size_t length() const { return _digits.size(); }
@@ -44,12 +56,6 @@ public:
 
     /** Splits a number into two equal parts. */
     std::pair<Number, Number> split() const;
-
-    /** Returns a reference to a digit by its index. */
-    Digit operator[](size_t index) const;
-
-    /** Returns a digit by its index. Write access is private. */
-    Digit& operator[](size_t index);
 
     /** Checks equality of two numbers. */
     bool operator==(const Number& number) const;
@@ -70,8 +76,14 @@ public:
     friend Number operator*(const Number& lhs, const Number& rhs);
 
 private:
-    /** Constructs an empty number with the specified size. */
-    explicit Number(size_t length);
+    /** Reduces the length of the number by the specified number of digits. */
+    void shrink(size_t delta);
+
+    /** Subtracts one number from another. Requires that the number is larger. */
+    friend Number sub(const Number& lhs, const Number& rhs);
+
+    /** Multiplies one number by another using the Grade School algorithm. */
+    friend Number mul(const Number& lhs, const Number& rhs);
 
     /** Vector that stores digits. Digits are stored from low to high. */
     Digits _digits;
