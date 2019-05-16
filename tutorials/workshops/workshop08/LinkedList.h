@@ -23,7 +23,11 @@ public:
     class Iterator
     {
     public:
-        T operator*();
+        T  operator*() const;
+        T& operator*();
+
+        bool operator==(const Iterator&) const;
+        bool operator!=(const Iterator&) const;
 
         /** Prefix increment. */
         Iterator& operator++();
@@ -89,6 +93,12 @@ public:
         return 0;
     }
 
+    size_t size()
+    {
+        // TODO
+        return 0;
+    }
+
     T operator[](size_t index) const
     {
         // TODO
@@ -96,6 +106,33 @@ public:
     }
 
     void reverse()
+    {
+        // TODO
+    }
+
+    void clear()
+    {
+        // TODO
+    }
+
+    Iterator begin()
+    {
+        // TODO
+        return 0;
+    }
+
+    Iterator end()
+    {
+        // TODO
+        return 0;
+    }
+
+    void remove(Iterator& it)
+    {
+        // TODO
+    }
+
+    void swap(Iterator& lhs, Iterator& rhs)
     {
         // TODO
     }
