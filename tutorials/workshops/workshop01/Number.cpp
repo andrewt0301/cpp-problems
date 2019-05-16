@@ -11,40 +11,18 @@
  * Copies digits starting from lower digits and skipping leading zeros (e.g. 001 is copied as 1).
  */
 template <typename ISrc, typename IDest>
-void copyDigits(ISrc begin, ISrc end, IDest dest)
+size_t copyDigits(ISrc begin, ISrc end, IDest dest)
 {
+    size_t copied = 0;
+
     const ISrc nonZeroBegin = std::find_if(begin, end, [](auto x) { return x != 0; });
     while (end != nonZeroBegin)
     {
         *dest++ = *(--end);
-    }
-}
-
-/**
- * Checks whether one number is larger than another. Sign is ignored.
- * If their length is equal, their digits are compared from high to low.
- */
-bool isGreaterUnsigned(const Number &lhs, const Number &rhs)
-{
-    if (lhs.length() > rhs.length())
-        return true;
-
-    if (lhs.length() < rhs.length())
-        return false;
-
-    for (size_t index = lhs.length(); index > 0; --index)
-    {
-        Number::Digit dlhs = lhs[index - 1];
-        Number::Digit drhs = rhs[index - 1];
-
-        if (dlhs > drhs)
-            return true;
-
-        if (dlhs < drhs)
-            return false;
+        copied++;
     }
 
-    return false;
+    return copied;
 }
 
 Number::Number(const std::initializer_list<Digit>& digits)
@@ -215,24 +193,6 @@ Number operator*(const Number& lhs, const Number& rhs)
         return mul(lhs, rhs);
 }
 
-std::ostream& operator<<(std::ostream& out, const Number& number)
-{
-    size_t length = number.length();
-
-    if (length == 0) {
-        out << '0';
-        return out;
-    }
-
-    if (number.isNegative())
-        out << '-';
-
-    for (size_t i = length; i > 0; --i)
-        out << static_cast<int64_t>(number[i - 1]);
-
-    return out;
-}
-
 void Number::shrink(size_t delta)
 {
     if (delta < length())
@@ -359,4 +319,45 @@ Number mul(const Number& lhs, const Number& rhs)
         dest.shrink(zeroDigits);
 
     return dest;
+}
+
+std::ostream& operator<<(std::ostream& out, const Number& number)
+{
+    size_t length = number.length();
+
+    if (length == 0) {
+        out << '0';
+        return out;
+    }
+
+    if (number.isNegative())
+        out << '-';
+
+    for (size_t i = length; i > 0; --i)
+        out << static_cast<int64_t>(number[i - 1]);
+
+    return out;
+}
+
+bool isGreaterUnsigned(const Number &lhs, const Number &rhs)
+{
+    if (lhs.length() > rhs.length())
+        return true;
+
+    if (lhs.length() < rhs.length())
+        return false;
+
+    for (size_t index = lhs.length(); index > 0; --index)
+    {
+        Number::Digit dlhs = lhs[index - 1];
+        Number::Digit drhs = rhs[index - 1];
+
+        if (dlhs > drhs)
+            return true;
+
+        if (dlhs < drhs)
+            return false;
+    }
+
+    return false;
 }

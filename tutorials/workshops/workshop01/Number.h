@@ -101,4 +101,10 @@ private:
 /** Prints the number to an output stream. */
 std::ostream& operator<<(std::ostream& out, const Number& number);
 
+/**
+ * Checks whether one number is larger than another. Sign is ignored.
+ * If their length is equal, their digits are compared from high to low.
+ */
+bool isGreaterUnsigned(const Number &lhs, const Number &rhs);
+
 #endif //TUTORIALS_NUMBER_H
