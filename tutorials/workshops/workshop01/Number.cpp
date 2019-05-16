@@ -103,7 +103,8 @@ Number::Number(const Number& number, size_t grow)
     : _digits(number.length() + grow),
       _negative{number.isNegative()}
 {
-    std::copy(number._digits.begin(), number._digits.end(), _digits.begin());
+    for (size_t i = 0; i < number.length(); ++i)
+        (*this)[i] = number[i];
 }
 
 Number::Number(size_t length, bool negative)
