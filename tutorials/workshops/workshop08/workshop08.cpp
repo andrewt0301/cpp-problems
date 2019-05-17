@@ -8,16 +8,28 @@
 
 int main()
 {
-    LinkedList<int> list;
+    LinkedList<int> list1;
 
-    list.push_front(1);
-    list.push_front(2);
-    list.push_front(3);
-    list.push_back(5);
-    list.push_back(6);
-    list.push_back(7);
+    list1.pushFront(1);
+    list1.pushFront(2);
+    list1.pushFront(3);
+    list1.pushBack(5);
+    list1.pushBack(6);
+    list1.pushBack(7);
 
-    std::cout << list;
+    LinkedList<int> list2;
+
+    list2.pushBack(8);
+    list2.pushBack(9);
+    list2.pushBack(10);
+
+    std::cout << list1 << std::endl;
+    std::cout << list2 << std::endl;
+
+    list1.pushAllBack(std::move(list2));
+
+    std::cout << list1 << std::endl;
+    std::cout << list2 << std::endl;
 
     return 0;
 }

@@ -55,7 +55,7 @@ public:
         }
     }
 
-    void push_front(T value)
+    void pushFront(T value)
     {
         Node* node = new Node(value, nullptr, _head);
 
@@ -68,13 +68,13 @@ public:
             _tail = node;
     }
 
-    T pop_front()
+    T popFront()
     {
         // TODO
         return 0;
     }
 
-    void push_back(T value)
+    void pushBack(T value)
     {
         Node* node = new Node(value, _tail, nullptr);
 
@@ -87,13 +87,33 @@ public:
             _head = node;
     }
 
-    T pop_back()
+    T popBack()
     {
         // TODO
         return 0;
     }
 
-    void mergeBack(LinkedList&& list)
+
+    void pushAllFront(LinkedList&& list)
+    {
+        if (_head == nullptr)
+        {
+            _head = list._head;
+            _tail = list._tail;
+        }
+        else
+        {
+            _head->_prev = list._tail;
+            if (list._tail != nullptr)
+                list._tail->_next = _head;
+            _head = list._head;
+        }
+
+        list._head = nullptr;
+        list._tail = nullptr;
+    }
+
+    void pushAllBack(LinkedList&& list)
     {
         if (_tail == nullptr)
         {
