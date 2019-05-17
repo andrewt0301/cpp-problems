@@ -93,6 +93,25 @@ public:
         return 0;
     }
 
+    void mergeBack(LinkedList&& list)
+    {
+        if (_tail == nullptr)
+        {
+            _head = list._head;
+            _tail = list._tail;
+        }
+        else
+        {
+            _tail->_next = list._head;
+            if (list._head != nullptr)
+                list._head->_prev = _tail;
+            _tail = list._tail;
+        }
+
+        list._head = nullptr;
+        list._tail = nullptr;
+    }
+
     size_t size()
     {
         // TODO
