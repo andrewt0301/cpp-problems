@@ -6,6 +6,7 @@
 #define TUTORIALS_LINKEDLIST_H
 
 #include <iostream>
+#include <stdexcept>
 
 template <typename T>
 class LinkedList {
@@ -41,7 +42,7 @@ public:
     };
 
 public:
-    LinkedList() : _head{nullptr}, _tail{nullptr}
+    LinkedList() : _head{nullptr}, _tail{nullptr}, _size{0}
     {}
 
     ~LinkedList()
@@ -55,6 +56,11 @@ public:
         }
     }
 
+    size_t size()
+    {
+        return _size;
+    }
+
     void pushFront(T value)
     {
         Node* node = new Node(value, nullptr, _head);
@@ -66,6 +72,8 @@ public:
 
         if (_tail == nullptr)
             _tail = node;
+
+        _size++;
     }
 
     T popFront()
@@ -85,6 +93,8 @@ public:
 
         if (_head == nullptr)
             _head = node;
+
+        _size++;
     }
 
     T popBack()
@@ -111,6 +121,8 @@ public:
 
         list._head = nullptr;
         list._tail = nullptr;
+
+        _size += list.size();
     }
 
     void pushAllBack(LinkedList&& list)
@@ -130,18 +142,21 @@ public:
 
         list._head = nullptr;
         list._tail = nullptr;
+
+        _size += list.size();
     }
 
-    size_t size()
-    {
-        // TODO
-        return 0;
-    }
 
     T operator[](size_t index) const
     {
-        // TODO
-        return 0;
+        if (index >= size())
+            throw std::out_of_range("Index out of bounds!");
+
+        Node* node = _head;
+        for (size_t i = 0; i < index; ++i)
+            node = node->_next;
+
+        return node->_value;
     }
 
     void reverse()
@@ -190,8 +205,9 @@ public:
     }
 
 private:
-    Node* _head;
-    Node* _tail;
+    Node*  _head;
+    Node*  _tail;
+    size_t _size;
 };
 
 #endif //TUTORIALS_LINKEDLIST_H
