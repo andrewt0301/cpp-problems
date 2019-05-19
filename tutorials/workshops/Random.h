@@ -17,6 +17,14 @@ private:
 public:
 
     /**
+     * Constructs a generator of digit beloging to the specified range.
+     *
+     * @param start Range start.
+     * @param end Range end.
+     */
+    Random(int start, int end);
+
+    /**
      * Constructs a generator of k-digit random numbers.
      *
      * E.g. 3-digit numbers are numbers in the range [0, 999].

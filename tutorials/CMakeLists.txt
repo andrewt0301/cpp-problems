@@ -29,3 +29,9 @@ add_executable(
         workshop08
         workshops/workshop08/workshop08.cpp
         )
+
+add_executable(
+        workshop09
+        workshops/Random.cpp
+        workshops/workshop09/workshop09.cpp
+        )

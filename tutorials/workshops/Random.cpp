@@ -17,6 +17,11 @@ int quickExp(int val, int pow)
     return res;
 }
 
+Random::Random(int start, int end)
+{
+    dis = std::uniform_int_distribution<>{start, end};
+}
+
 Random::Random(int k)
 {
     int limit = quickExp(10, k) - 1;
