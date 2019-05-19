@@ -5,8 +5,6 @@
 #ifndef TUTORIALS_HEAP_H
 #define TUTORIALS_HEAP_H
 
-namespace heap {
-
 inline size_t parent(size_t i)
 {
     return (i - 1) / 2;
@@ -70,7 +68,5 @@ void heapsort(T& a, size_t size, TPred pred)
         heapify(a, size, 0, pred);
     }
 }
-
-} // heap
 
 #endif //TUTORIALS_HEAP_H
