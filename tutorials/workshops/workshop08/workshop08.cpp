@@ -31,5 +31,8 @@ int main()
     std::cout << list1 << std::endl;
     std::cout << list2 << std::endl;
 
+    list1.reverse();
+    std::cout << list1 << std::endl;
+
     return 0;
 }

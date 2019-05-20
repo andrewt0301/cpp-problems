@@ -47,13 +47,7 @@ public:
 
     ~LinkedList()
     {
-        Node* p = _head;
-        while (p != nullptr)
-        {
-            Node* tmp = p;
-            p = p->_next;
-            delete tmp;
-        }
+        clear();
     }
 
     size_t size()
@@ -146,7 +140,6 @@ public:
         _size += list.size();
     }
 
-
     T operator[](size_t index) const
     {
         if (index >= size())
@@ -161,12 +154,43 @@ public:
 
     void reverse()
     {
-        // TODO
+        Node* newHead = nullptr;
+        Node* newTail = nullptr;
+
+        while (_head != nullptr)
+        {
+            Node* curr = _head;
+            _head = _head->_next;
+
+            curr->_next = newHead;
+            curr->_prev = nullptr;
+
+            if (newHead != nullptr)
+                newHead->_prev = curr;
+
+            newHead = curr;
+
+            if (newTail == nullptr)
+                newTail = curr;
+        }
+
+        _head = newHead;
+        _tail = newTail;
     }
 
     void clear()
     {
-        // TODO
+        Node* p = _head;
+
+        _head = nullptr;
+        _tail = nullptr;
+
+        while (p != nullptr)
+        {
+            Node* tmp = p;
+            p = p->_next;
+            delete tmp;
+        }
     }
 
     Iterator begin()
