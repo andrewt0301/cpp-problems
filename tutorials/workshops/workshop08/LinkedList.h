@@ -20,25 +20,49 @@ public:
         Node(T value, Node* prev, Node* next) : _value{value}, _prev{prev}, _next{next} {}
     };
 
-    // TODO
     class Iterator
     {
     public:
-        T  operator*() const;
-        T& operator*();
+        explicit Iterator(Node* node) : _node(node) {}
 
-        bool operator==(const Iterator&) const;
-        bool operator!=(const Iterator&) const;
+        T  operator*() const { return _node->_value; }
+        T& operator*()       { return _node->_value; }
+
+        bool operator==(const Iterator& other) const { return this->_node == other._node; }
+        bool operator!=(const Iterator& other) const { return this->_node != other._node; }
 
         /** Prefix increment. */
-        Iterator& operator++();
+        Iterator& operator++()
+        {
+            _node = _node->_next;
+            return *this;
+        }
+
         /** Postfix increment. */
-        Iterator operator++(int);
+        Iterator operator++(int)
+        {
+            Iterator prev = *this;
+            ++(*this);
+            return prev;
+        }
 
         /** Prefix decrement */
-        Iterator& operator--();
+        Iterator& operator--()
+        {
+            _node = _node->_prev;
+            return *this;
+        }
+
         /** Postfix decrement. */
-        Iterator operator--(int);
+        Iterator operator--(int)
+        {
+            Iterator prev = *this;
+            --(*this);
+            return prev;
+        }
+
+    private:
+       Node* _node;
     };
 
 public:
@@ -96,7 +120,6 @@ public:
         // TODO
         return 0;
     }
-
 
     void pushAllFront(LinkedList&& list)
     {
@@ -195,14 +218,12 @@ public:
 
     Iterator begin()
     {
-        // TODO
-        return 0;
+        return Iterator{_head};
     }
 
     Iterator end()
     {
-        // TODO
-        return 0;
+        return Iterator{nullptr};
     }
 
     void remove(Iterator& it)
@@ -213,6 +234,37 @@ public:
     void swap(Iterator& lhs, Iterator& rhs)
     {
         // TODO
+    }
+
+    void insertionSort()
+    {
+        Node* i = _head->_next;
+        while (i != nullptr)
+        {
+            Node* next = i->_next;
+
+            const T key = i->_value;
+            Node* j = i->_prev;
+
+            while (j->_prev != nullptr && j->_value > key)
+                j = j->_prev;
+
+            if (i->_prev != nullptr)
+                i->_prev->_next = i->_next;
+
+            if (i->_next != nullptr)
+                i->_next->_prev = i->_prev;
+
+            /*
+            i->_prev = j->_prev;
+            i->_next = j;
+
+            if (j->_prev != nullptr)
+                j->_prev->_next = i;
+            j->_prev = i;*/
+
+            i = next;
+        }
     }
 
     friend std::ostream& operator<<(std::ostream& out, const LinkedList& list)
@@ -233,5 +285,6 @@ private:
     Node*  _tail;
     size_t _size;
 };
+
 
 #endif //TUTORIALS_LINKEDLIST_H
