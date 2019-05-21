@@ -23,6 +23,8 @@ public:
     class Iterator
     {
     public:
+        friend class LinkedList;
+
         explicit Iterator(Node* node) : _node(node) {}
 
         T  operator*() const { return _node->_value; }
@@ -231,22 +233,18 @@ public:
         // TODO
     }
 
-    void remove(Iterator& it)
+    Iterator remove(const Iterator& it)
     {
-        // TODO
-    }
+        if (it == end())
+            throw std::out_of_range("No element to delete!");
 
-    void unlink(Node* node)
-    {
-        if (node->_prev != nullptr)
-            node->_prev->_next = node->_next;
-        else
-            _head = node->_next;
+        Node* curr = it._node;
+        Node* next = curr->_next;
 
-        if (node->_next != nullptr)
-            node->_next->_prev = node->_prev;
-        else
-            _tail = node->_prev;
+        unlink(curr);
+        delete curr;
+
+        return Iterator(next);
     }
 
     void insertionSort()
@@ -254,23 +252,20 @@ public:
         Node* i = _head->_next;
         while (i != nullptr)
         {
+            const T key = i->_value;
             Node* next = i->_next;
 
-            const T key = i->_value;
             Node* j = i->_prev;
-
             while (j->_prev != nullptr && j->_value > key)
                 j = j->_prev;
 
-            unlink(i);
+            if (i != j)
+            {
+                unlink(i);
 
-
-            i->_prev = j->_prev;
-            i->_next = j;
-
-            if (j->_prev != nullptr)
-                j->_prev->_next = i;
-            j->_prev = i;
+                // TODO
+                insertAt(j, i);
+            }
 
             i = next;
         }
@@ -290,10 +285,23 @@ public:
     }
 
 private:
+
+    void unlink(Node* node)
+    {
+        if (node->_prev != nullptr)
+            node->_prev->_next = node->_next;
+        else
+            _head = node->_next;
+
+        if (node->_next != nullptr)
+            node->_next->_prev = node->_prev;
+        else
+            _tail = node->_prev;
+    }
+
     Node*  _head;
     Node*  _tail;
     size_t _size;
 };
-
 
 #endif //TUTORIALS_LINKEDLIST_H
