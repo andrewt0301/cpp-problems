@@ -226,14 +226,27 @@ public:
         return Iterator{nullptr};
     }
 
+    void swap(Iterator& lhs, Iterator& rhs)
+    {
+        // TODO
+    }
+
     void remove(Iterator& it)
     {
         // TODO
     }
 
-    void swap(Iterator& lhs, Iterator& rhs)
+    void unlink(Node* node)
     {
-        // TODO
+        if (node->_prev != nullptr)
+            node->_prev->_next = node->_next;
+        else
+            _head = node->_next;
+
+        if (node->_next != nullptr)
+            node->_next->_prev = node->_prev;
+        else
+            _tail = node->_prev;
     }
 
     void insertionSort()
@@ -249,19 +262,15 @@ public:
             while (j->_prev != nullptr && j->_value > key)
                 j = j->_prev;
 
-            if (i->_prev != nullptr)
-                i->_prev->_next = i->_next;
+            unlink(i);
 
-            if (i->_next != nullptr)
-                i->_next->_prev = i->_prev;
 
-            /*
             i->_prev = j->_prev;
             i->_next = j;
 
             if (j->_prev != nullptr)
                 j->_prev->_next = i;
-            j->_prev = i;*/
+            j->_prev = i;
 
             i = next;
         }
