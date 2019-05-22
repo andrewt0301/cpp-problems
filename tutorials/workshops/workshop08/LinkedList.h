@@ -37,6 +37,13 @@ public:
             pushBack(value);
     }
 
+    LinkedList(const LinkedList& list)
+        : _head{nullptr}, _tail{nullptr}, _size{0}
+    {
+        for (Node* node = list._head; node != nullptr; node = node->next)
+            pushBack(node->value);
+    }
+
     ~LinkedList()
     {
         clear();
