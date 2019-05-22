@@ -8,6 +8,10 @@
 #include <iostream>
 #include <stdexcept>
 
+#include <iostream>
+
+using namespace std;
+
 template <typename T>
 class LinkedList {
 public:
@@ -20,56 +24,18 @@ public:
         Node(T v, Node* p, Node* n) : value{v}, prev{p}, next{n} {}
     };
 
-    class Iterator
-    {
-    public:
-        friend class LinkedList;
-
-        explicit Iterator(Node* node) : _node(node) {}
-
-        T  operator*() const { return _node->value; }
-        T& operator*()       { return _node->value; }
-
-        bool operator==(const Iterator& other) const { return this->_node == other._node; }
-        bool operator!=(const Iterator& other) const { return this->_node != other._node; }
-
-        /** Prefix increment. */
-        Iterator& operator++()
-        {
-            _node = _node->next;
-            return *this;
-        }
-
-        /** Postfix increment. */
-        Iterator operator++(int)
-        {
-            Iterator prev = *this;
-            ++(*this);
-            return prev;
-        }
-
-        /** Prefix decrement */
-        Iterator& operator--()
-        {
-            _node = _node->prev;
-            return *this;
-        }
-
-        /** Postfix decrement. */
-        Iterator operator--(int)
-        {
-            Iterator prev = *this;
-            --(*this);
-            return prev;
-        }
-
-    private:
-       Node* _node;
-    };
-
 public:
-    LinkedList() : _head{nullptr}, _tail{nullptr}, _size{0}
+
+    LinkedList()
+        : _head{nullptr}, _tail{nullptr}, _size{0}
     {}
+
+    LinkedList(const std::initializer_list<T>& values)
+        : _head{nullptr}, _tail{nullptr}, _size{0}
+    {
+        for (const T& value : values)
+            pushBack(value);
+    }
 
     ~LinkedList()
     {
@@ -96,12 +62,6 @@ public:
         _size++;
     }
 
-    T popFront()
-    {
-        // TODO
-        return 0;
-    }
-
     void pushBack(T value)
     {
         Node* node = new Node(value, _tail, nullptr);
@@ -117,10 +77,28 @@ public:
         _size++;
     }
 
+    T popFront()
+    {
+        if (_head == nullptr)
+            throw std::out_of_range("List is empty!");
+
+        Node* node = _head;
+        T value = node->value;
+        erase(node);
+
+        return value;
+    }
+
     T popBack()
     {
-        // TODO
-        return 0;
+        if (_tail == nullptr)
+            throw std::out_of_range("List is empty!");
+
+        Node* node = _tail;
+        T value = node->value;
+        erase(node);
+
+        return value;
     }
 
     void pushAllFront(LinkedList&& list)
@@ -218,60 +196,21 @@ public:
         }
     }
 
-    Iterator begin()
-    {
-        return Iterator{_head};
-    }
-
-    Iterator end()
-    {
-        return Iterator{nullptr};
-    }
-
-    void swap(Iterator& lhs, Iterator& rhs)
-    {
-        // TODO
-    }
-
-    Iterator remove(const Iterator& it)
-    {
-        if (it == end())
-            throw std::out_of_range("No element to delete!");
-
-        Node* curr = it._node;
-        Node* next = curr->next;
-
-        unlink(curr);
-        delete curr;
-
-        return Iterator(next);
-    }
-
     void insertionSort()
     {
-        Node* j = _head->next;
-        while (j != nullptr)
+        for (Node* j = _head->next; j != nullptr;)
         {
             const T key = j->value;
-            Node*  next = j->next;
+            Node* const next = j->next;
 
             Node* i = j->prev;
-            while (i->prev != nullptr && i->value > key)
+            while (i != nullptr && i->value > key)
                 i = i->prev;
 
-            if (i != j)
+            if (j->prev != i)
             {
                 unlink(j);
-
-                j->prev = i->prev;
-                j->next = i;
-
-                if (i->prev != nullptr)
-                    i->prev->next = j;
-                else
-                    _head = j;
-
-                i->prev = j;
+                insertAfter(i, j);
             }
 
             j = next;
@@ -293,6 +232,12 @@ public:
 
 private:
 
+    void erase(Node* node)
+    {
+        unlink(node);
+        delete node;
+    }
+
     void unlink(Node* node)
     {
         if (node->prev != nullptr)
@@ -304,11 +249,86 @@ private:
             node->next->prev = node->prev;
         else
             _tail = node->prev;
+
+        _size--;
+    }
+
+    void insertAfter(Node* first, Node* second)
+    {
+        second->prev = first;
+
+        if (first != nullptr)
+        {
+            second->next = first->next;
+
+            first->next->prev = second;
+            first->next = second;
+        }
+        else
+        {
+            second->next = _head;
+            _head = second;
+            if (_tail == nullptr)
+                _tail = _head;
+        }
+
+        _size++;
+    }
+
+    void insertBefore(Node* first, Node* second)
+    {
+        second->next = first;
+        // TODO
     }
 
     Node*  _head;
     Node*  _tail;
     size_t _size;
 };
+
+/*
+class Iterator
+{
+public:
+    friend class LinkedList;
+
+    explicit Iterator(Node* node) : _node(node) {}
+
+    T  operator*() const { return _node->value; }
+    T& operator*()       { return _node->value; }
+
+    bool operator==(const Iterator& other) const { return this->_node == other._node; }
+    bool operator!=(const Iterator& other) const { return this->_node != other._node; }
+
+    Iterator& operator++()
+    {
+        _node = _node->next;
+        return *this;
+    }
+
+    Iterator operator++(int)
+    {
+        Iterator prev = *this;
+        ++(*this);
+        return prev;
+    }
+
+    Iterator& operator--()
+    {
+        _node = _node->prev;
+        return *this;
+    }
+
+    Iterator operator--(int)
+    {
+        Iterator prev = *this;
+        --(*this);
+        return prev;
+    }
+
+private:
+    Node* _node;
+};
+*/
 
 #endif //TUTORIALS_LINKEDLIST_H
