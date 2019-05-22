@@ -13,11 +13,11 @@ class LinkedList {
 public:
     struct Node
     {
-        T     _value;
-        Node* _prev;
-        Node* _next;
+        T     value;
+        Node* prev;
+        Node* next;
 
-        Node(T value, Node* prev, Node* next) : _value{value}, _prev{prev}, _next{next} {}
+        Node(T v, Node* p, Node* n) : value{v}, prev{p}, next{n} {}
     };
 
     class Iterator
@@ -27,8 +27,8 @@ public:
 
         explicit Iterator(Node* node) : _node(node) {}
 
-        T  operator*() const { return _node->_value; }
-        T& operator*()       { return _node->_value; }
+        T  operator*() const { return _node->value; }
+        T& operator*()       { return _node->value; }
 
         bool operator==(const Iterator& other) const { return this->_node == other._node; }
         bool operator!=(const Iterator& other) const { return this->_node != other._node; }
@@ -36,7 +36,7 @@ public:
         /** Prefix increment. */
         Iterator& operator++()
         {
-            _node = _node->_next;
+            _node = _node->next;
             return *this;
         }
 
@@ -51,7 +51,7 @@ public:
         /** Prefix decrement */
         Iterator& operator--()
         {
-            _node = _node->_prev;
+            _node = _node->prev;
             return *this;
         }
 
@@ -86,7 +86,7 @@ public:
         Node* node = new Node(value, nullptr, _head);
 
         if (_head != nullptr)
-            _head->_prev = node;
+            _head->prev = node;
 
         _head = node;
 
@@ -107,7 +107,7 @@ public:
         Node* node = new Node(value, _tail, nullptr);
 
         if (_tail != nullptr)
-            _tail->_next = node;
+            _tail->next = node;
 
         _tail = node;
 
@@ -132,9 +132,9 @@ public:
         }
         else
         {
-            _head->_prev = list._tail;
+            _head->prev = list._tail;
             if (list._tail != nullptr)
-                list._tail->_next = _head;
+                list._tail->next = _head;
             _head = list._head;
         }
 
@@ -153,9 +153,9 @@ public:
         }
         else
         {
-            _tail->_next = list._head;
+            _tail->next = list._head;
             if (list._head != nullptr)
-                list._head->_prev = _tail;
+                list._head->prev = _tail;
             _tail = list._tail;
         }
 
@@ -172,9 +172,9 @@ public:
 
         Node* node = _head;
         for (size_t i = 0; i < index; ++i)
-            node = node->_next;
+            node = node->next;
 
-        return node->_value;
+        return node->value;
     }
 
     void reverse()
@@ -185,13 +185,13 @@ public:
         while (_head != nullptr)
         {
             Node* curr = _head;
-            _head = _head->_next;
+            _head = _head->next;
 
-            curr->_next = newHead;
-            curr->_prev = nullptr;
+            curr->next = newHead;
+            curr->prev = nullptr;
 
             if (newHead != nullptr)
-                newHead->_prev = curr;
+                newHead->prev = curr;
 
             newHead = curr;
 
@@ -213,7 +213,7 @@ public:
         while (p != nullptr)
         {
             Node* tmp = p;
-            p = p->_next;
+            p = p->next;
             delete tmp;
         }
     }
@@ -239,7 +239,7 @@ public:
             throw std::out_of_range("No element to delete!");
 
         Node* curr = it._node;
-        Node* next = curr->_next;
+        Node* next = curr->next;
 
         unlink(curr);
         delete curr;
@@ -249,35 +249,42 @@ public:
 
     void insertionSort()
     {
-        Node* i = _head->_next;
-        while (i != nullptr)
+        Node* j = _head->next;
+        while (j != nullptr)
         {
-            const T key = i->_value;
-            Node* next = i->_next;
+            const T key = j->value;
+            Node*  next = j->next;
 
-            Node* j = i->_prev;
-            while (j->_prev != nullptr && j->_value > key)
-                j = j->_prev;
+            Node* i = j->prev;
+            while (i->prev != nullptr && i->value > key)
+                i = i->prev;
 
             if (i != j)
             {
-                unlink(i);
+                unlink(j);
 
-                // TODO
-                insertAt(j, i);
+                j->prev = i->prev;
+                j->next = i;
+
+                if (i->prev != nullptr)
+                    i->prev->next = j;
+                else
+                    _head = j;
+
+                i->prev = j;
             }
 
-            i = next;
+            j = next;
         }
     }
 
     friend std::ostream& operator<<(std::ostream& out, const LinkedList& list)
     {
         out << '{';
-        for (Node* p = list._head; p != nullptr; p = p->_next)
+        for (Node* p = list._head; p != nullptr; p = p->next)
         {
-            out << p->_value;
-            if (p->_next != nullptr)
+            out << p->value;
+            if (p->next != nullptr)
                 out << ", ";
         }
         out << '}';
@@ -288,15 +295,15 @@ private:
 
     void unlink(Node* node)
     {
-        if (node->_prev != nullptr)
-            node->_prev->_next = node->_next;
+        if (node->prev != nullptr)
+            node->prev->next = node->next;
         else
-            _head = node->_next;
+            _head = node->next;
 
-        if (node->_next != nullptr)
-            node->_next->_prev = node->_prev;
+        if (node->next != nullptr)
+            node->next->prev = node->prev;
         else
-            _tail = node->_prev;
+            _tail = node->prev;
     }
 
     Node*  _head;
