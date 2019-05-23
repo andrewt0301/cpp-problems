@@ -285,7 +285,23 @@ private:
     void insertBefore(Node* first, Node* second)
     {
         second->next = first;
-        // TODO
+
+        if (first != nullptr)
+        {
+            second->prev = first->prev;
+
+            first->prev->next = second;
+            first->prev = second;
+        }
+        else
+        {
+            second->prev = _tail;
+            _tail = second;
+            if (_head == nullptr)
+                _head = _tail;
+        }
+
+        _size++;
     }
 
     Node*  _head;
