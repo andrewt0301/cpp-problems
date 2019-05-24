@@ -224,6 +224,48 @@ public:
         }
     }
 
+    void mergeSort()
+    {
+        mergeSort(_head, _tail);
+    }
+
+    void mergeSort(Node*& head, Node*& tail)
+    {
+        // If there is one element, do nothing.
+        if (head == tail)
+            return;
+
+        // Split the list into two parts.
+        Node* mid1 = partition(head, tail);
+        Node* mid2 = mid1->next;
+
+        mid1->next = nullptr;
+        mid2->prev = nullptr;
+
+        // Sort each part separately.
+        mergeSort(head, mid1);
+        mergeSort(mid2, tail);
+
+        // Merge two parts.
+        merge(head, tail, mid2);
+    }
+
+    Node* partition(Node* head, Node* tail)
+    {
+        while (head != tail && head->next != tail)
+        {
+            head = head->next;
+            tail = tail->prev;
+        }
+        return head;
+    }
+
+    void merge(Node*& head, Node*& tail, Node* mid)
+    {
+        Node* newHead = nullptr;
+        // TODO
+    }
+
     friend std::ostream& operator<<(std::ostream& out, const LinkedList& list)
     {
         out << '{';
