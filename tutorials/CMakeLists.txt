@@ -7,7 +7,7 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(types tutorial01/types.cpp)
+add_executable(types tutorial01/types.cpp workshops/workshop10/workshop10.cpp)
 
 add_executable(
         workshop01
@@ -35,3 +35,9 @@ add_executable(
         workshops/Random.cpp
         workshops/workshop09/workshop09.cpp
         )
+
+add_executable(
+        workshop10
+        workshops/workshop10/workshop10.cpp
+        workshops/workshop10/RedBlackTree.h)
+
