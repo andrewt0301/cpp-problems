@@ -6,16 +6,18 @@
 #define TUTORIALS_REDBLACKTREE_H
 
 template <typename T>
-class RedBlackTree {
-
+class RedBlackTree
+{
 public:
 
-    enum Color {
+    enum Color
+    {
         RED,
         BLACK
     };
 
-    struct Node {
+    struct Node
+    {
         Node* p     = nullptr;
         Node* left  = this;
         Node* right = this;
@@ -50,18 +52,56 @@ public:
 
     Node* min() const
     {
-        Node* node = _root;
+        return min(_root);
+    }
+
+    static Node* min(Node* node)
+    {
         while (node->left != NIL)
             node = node->left;
         return node;
     }
 
+    static Node* successor(Node* node)
+    {
+        if (node->right != NIL)
+            return min(node->right);
+
+        Node* parent = node->p;
+        while (parent != NIL && node == parent->right)
+        {
+            node = parent;
+            parent = node->p;
+        }
+
+        return parent;
+    }
+
     Node* max() const
     {
-        Node* node = _root;
+        return max(_root);
+    }
+
+    static Node* max(Node* node)
+    {
         while (node->right != NIL)
             node = node->right;
         return node;
+    }
+
+    static Node* predecessor(Node* node)
+    {
+        if (node->left != NIL)
+            return max(node->left);
+
+        Node* parent = node->p;
+        while (parent != NIL && node == parent->left)
+        {
+            node = parent;
+            parent = node->p;
+        }
+
+        return parent;
     }
 
     Node* search(T key)
@@ -76,25 +116,6 @@ public:
         }
         return node;
     }
-
-    template <typename U>
-    friend std::ostream& operator<<(std::ostream& out, const RedBlackTree<U>& tree)
-    {
-        out << '{';
-        bool first = true;
-        RedBlackTree<U>::inorderWalk(tree._root, [&out, &first](Node* node)
-        {
-            if (!first)
-                out << ", ";
-            else
-                first = false;
-            out << node->key;
-        });
-        out << '}';
-        return out;
-    }
-
-private:
 
     template<typename TAct>
     static void preorderWalk(Node* node, TAct action)
@@ -129,6 +150,24 @@ private:
         }
     }
 
+    template <typename U>
+    friend std::ostream& operator<<(std::ostream& out, const RedBlackTree<U>& tree)
+    {
+        out << '{';
+        bool first = true;
+        RedBlackTree<U>::inorderWalk(tree._root, [&out, &first](Node* node)
+        {
+            if (!first)
+                out << ", ";
+            else
+                first = false;
+            out << node->key;
+        });
+        out << '}';
+        return out;
+    }
+
+private:
     Node*  _root = NIL;
     size_t _size = 0;
 };
