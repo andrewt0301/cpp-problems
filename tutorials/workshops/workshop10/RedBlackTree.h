@@ -5,8 +5,6 @@
 #ifndef TUTORIALS_REDBLACKTREE_H
 #define TUTORIALS_REDBLACKTREE_H
 
-#include <functional>
-
 template <typename T>
 class RedBlackTree {
 
@@ -19,8 +17,8 @@ public:
 
     struct Node {
         Node* p     = nullptr;
-        Node* left  = nullptr;
-        Node* right = nullptr;
+        Node* left  = this;
+        Node* right = this;
         Color color = BLACK;
         T     key;
     };
@@ -31,7 +29,7 @@ public:
 
     ~RedBlackTree()
     {
-        postorderWalk(root, [](Node* node)
+        postorderWalk(_root, [](Node* node)
         {
             delete node;
         });
@@ -40,12 +38,51 @@ public:
     RedBlackTree(const RedBlackTree&) = delete;
     RedBlackTree& operator=(const RedBlackTree&) = delete;
 
+    bool isEmpty() const
+    {
+        return _root == NIL;
+    }
+
+    size_t size() const
+    {
+        return _size;
+    }
+
+    Node* min() const
+    {
+        Node* node = _root;
+        while (node->left != NIL)
+            node = node->left;
+        return node;
+    }
+
+    Node* max() const
+    {
+        Node* node = _root;
+        while (node->right != NIL)
+            node = node->right;
+        return node;
+    }
+
+    Node* search(T key)
+    {
+        Node* node = _root;
+        while (node != NIL && node->key != key)
+        {
+            if (key < node->key)
+                node = node->left;
+            else
+                node = node->right;
+        }
+        return node;
+    }
+
     template <typename U>
     friend std::ostream& operator<<(std::ostream& out, const RedBlackTree<U>& tree)
     {
         out << '{';
         bool first = true;
-        RedBlackTree<U>::inorderWalk(tree.root, [&out, &first](Node* node)
+        RedBlackTree<U>::inorderWalk(tree._root, [&out, &first](Node* node)
         {
             if (!first)
                 out << ", ";
@@ -92,7 +129,8 @@ private:
         }
     }
 
-    Node* root = NIL;
+    Node*  _root = NIL;
+    size_t _size = 0;
 };
 
 template <typename T>
