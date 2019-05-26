@@ -13,13 +13,22 @@ int main()
 {
     RedBlackTree<int> tree;
 
+    tree.insert(5);
+    cout << tree << endl;
+    tree.insert(2);
+    cout << tree << endl;
+    tree.insert(3);
+    cout << tree << endl;
+    tree.insert(8);
+    cout << tree << endl;
+    tree.insert(9);
+    cout << tree << endl;
+    tree.insert(1);
     cout << tree << endl;
 
-    auto x = [](int a) { return 0; };
-    auto y = 10;
+    tree.remove(5);
+    cout << tree << endl;
 
-
-    cout << typeid(x).name() << endl;
 
     return 0;
 }

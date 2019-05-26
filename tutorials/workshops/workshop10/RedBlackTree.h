@@ -16,16 +16,17 @@ public:
         BLACK
     };
 
+    struct Node;
+    static Node* const NIL;
+
     struct Node
     {
-        Node* p     = nullptr;
-        Node* left  = this;
-        Node* right = this;
+        Node* p     = NIL;
+        Node* left  = NIL;
+        Node* right = NIL;
         Color color = BLACK;
         T     key;
     };
-
-    static Node* const NIL;
 
     RedBlackTree() = default;
 
@@ -115,6 +116,83 @@ public:
                 node = node->right;
         }
         return node;
+    }
+
+    void insert(T key)
+    {
+        Node* node = new Node();
+        node->key = key;
+
+        insert(node);
+        _size++;
+    }
+
+    void insert(Node* newNode)
+    {
+        Node* parent = NIL;
+        Node* node = _root;
+
+        while (node != NIL)
+        {
+            parent = node;
+            if (newNode->key < node->key)
+                node = node->left;
+            else
+                node = node->right;
+        }
+
+        newNode->p = parent;
+        if (parent == NIL)
+            _root = newNode;
+        else if (newNode->key < parent->key)
+            parent->left = newNode;
+        else
+            parent->right = newNode;
+    }
+
+    void transplant(Node* oldNode, Node* newNode)
+    {
+        if (oldNode->p == NIL)
+            _root = newNode;
+        else if (oldNode == oldNode->p->left)
+            oldNode->p->left = newNode;
+        else
+            oldNode->p->right = newNode;
+
+        if (newNode != NIL)
+            newNode->p = oldNode->p;
+    }
+
+    void remove(T key)
+    {
+        Node* node = search(key);
+        if (node != NIL)
+        {
+            remove(node);
+            delete node;
+            _size--;
+        }
+    }
+
+    void remove(Node* node)
+    {
+        if (node->left == NIL)
+            transplant(node, node->right);
+        else if (node->right == NIL)
+            transplant(node, node->left);
+        else
+        {
+            Node* sucessor = min(node->right);
+            if (sucessor->p != node)
+            {
+                transplant(sucessor, sucessor->right);
+                sucessor->right = node->right;
+                sucessor->right->p = sucessor;
+            }
+            transplant(node, sucessor);
+            sucessor->left = node->left;
+            sucessor->left->p = sucessor;
+        }
     }
 
     template<typename TAct>
