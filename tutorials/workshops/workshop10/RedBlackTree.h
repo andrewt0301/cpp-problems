@@ -248,9 +248,62 @@ public:
         _size++;
     }
 
-    void fixupInsertRB(Node* node)
+    void fixupInsertRB(Node* z)
     {
-        // TODO
+        while (z->p->color == RED)
+        {
+            // If parent is left child.
+            if (z->p == z->p->p->left)
+            {
+                // Uncle.
+                Node* y = z->p->p->right;
+
+                // Case 1.
+                if (y->color == RED)
+                {
+                    z->p->color = BLACK;
+                    y->color = BLACK;
+                    z->p->p->color = RED;
+                    z = z->p->p;
+                }
+                // Case 2.
+                else if (z == z->p->right)
+                {
+                    z = z->p;
+                    leftRotate(z);
+                }
+                // Case 3.
+                z->p->color = BLACK;
+                z->p->p->color = RED;
+                rightRotate(z->p->p);
+            }
+            // If parent is right child.
+            else
+            {
+                // Uncle.
+                Node* y = z->p->p->left;
+
+                // Case 4.
+                if (y->color == RED)
+                {
+                    z->p->color = BLACK;
+                    y->color = BLACK;
+                    z->p->p->color = RED;
+                    z = z->p->p;
+                }
+                // Case 5.
+                else if (z == z->p->left)
+                {
+                    z = z->p;
+                    rightRotate(z);
+                }
+                // Case 6.
+                z->p->color = BLACK;
+                z->p->p->color = RED;
+                leftRotate(z->p->p);
+            }
+        }
+        _root->color = BLACK;
     }
 
     void removeRB(Node* node)
@@ -296,9 +349,80 @@ public:
             fixupInsertRB(trans);
     }
 
-    void fixupRemoveRB(Node* node)
+    void fixupRemoveRB(Node* x)
     {
-        // TODO
+        while (x != _root && x->color == BLACK)
+        {
+            if (x == x->p->left)
+            {
+                Node* w = x->p->right;
+
+                // Case 1.
+                if (w->color == RED)
+                {
+                    w->color = BLACK;
+                    x->p->color = RED;
+                    leftRotate(x->p);
+                    w = x->p->right;
+                }
+
+                // Case 2.
+                if (w->left->color == BLACK && w->right->color == BLACK)
+                {
+                    w->color = RED;
+                    x = x->p;
+                }
+                // Case 3.
+                else if (w->right->color == BLACK)
+                {
+                    w->left->color = BLACK;
+                    w->color = RED;
+                    rightRotate(w);
+                    w = x->p->right;
+                }
+                // Case 4.
+                w->color = x->p->color;
+                x->p->color = BLACK;
+                w->right->color = BLACK;
+                leftRotate(x->p);
+                x = _root;
+            }
+            else
+            {
+                Node* w = x->p->left;
+
+                // Case 4.
+                if (w->color == RED)
+                {
+                    w->color = BLACK;
+                    x->p->color = RED;
+                    rightRotate(x->p);
+                    w = x->p->left;
+                }
+
+                // Case 5.
+                if (w->right->color == BLACK && w->left->color == BLACK)
+                {
+                    w->color = RED;
+                    x = x->p;
+                }
+                // Case 3.
+                else if (w->left->color == BLACK)
+                {
+                    w->right->color = BLACK;
+                    w->color = RED;
+                    leftRotate(w);
+                    w = x->p->left;
+                }
+                // Case 4.
+                w->color = x->p->color;
+                x->p->color = BLACK;
+                w->left->color = BLACK;
+                rightRotate(x->p);
+                x = _root;
+            }
+        }
+        x->color = BLACK;
     }
 
     template<typename TAct>
