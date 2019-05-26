@@ -235,6 +235,24 @@ public:
         x->p = y;
     }
 
+    void insertRB(T key)
+    {
+        Node* node = new Node();
+
+        node->key = key;
+        node->color = RED;
+
+        insert(node);
+        fixupRB(node);
+
+        _size++;
+    }
+
+    void fixupRB(Node* node)
+    {
+        // TODO
+    }
+
     template<typename TAct>
     static void preorderWalk(Node* node, TAct action)
     {
