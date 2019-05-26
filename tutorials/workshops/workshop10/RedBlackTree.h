@@ -228,6 +228,30 @@ public:
         }
     }
 
+    void printAsRBTree(std::ostream& out)
+    {
+        printAsRBTree(out, _root, 0);
+    }
+
+    static void printAsRBTree(std::ostream& out, Node* node, size_t depth)
+    {
+        if (node == NIL)
+            return;
+
+        printAsRBTree(out, node->right, depth + 1);
+
+        out << "\r\n";
+        for (size_t i = 0; i < depth; ++i)
+            out << "     ";
+
+        out << node->key;
+        out << "(";
+        out << (node->color == RED ? 'R' : 'B');
+        out << ")";
+
+        printAsRBTree(out, node->left,  depth + 1);
+    }
+
     template <typename U>
     friend std::ostream& operator<<(std::ostream& out, const RedBlackTree<U>& tree)
     {
