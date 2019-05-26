@@ -243,12 +243,60 @@ public:
         node->color = RED;
 
         insert(node);
-        fixupRB(node);
+        fixupInsertRB(node);
 
         _size++;
     }
 
-    void fixupRB(Node* node)
+    void fixupInsertRB(Node* node)
+    {
+        // TODO
+    }
+
+    void removeRB(Node* node)
+    {
+        Color origColor = node->color;
+        Node* trans = NIL;
+
+        if (node->left == NIL)
+        {
+            trans = node->right;
+            transplant(node, trans);
+        }
+        else if (node->right == NIL)
+        {
+            trans = node->left;
+            transplant(node, trans);
+        }
+        else
+        {
+            Node* successor = min(node->right);
+
+            origColor = successor->color;
+            trans = successor->right;
+
+            if (successor->p == node)
+            {
+                trans->p = successor;
+            }
+            else
+            {
+                transplant(successor, trans);
+                successor->right = node->right;
+                successor->right->p = successor;
+            }
+
+            transplant(node, successor);
+            successor->left = node->left;
+            successor->left->p = successor;
+            successor->color = node->color;
+        }
+
+        if (origColor == BLACK)
+            fixupInsertRB(trans);
+    }
+
+    void fixupRemoveRB(Node* node)
     {
         // TODO
     }
