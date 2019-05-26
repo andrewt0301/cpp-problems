@@ -195,6 +195,46 @@ public:
         }
     }
 
+    void leftRotate(Node* x)
+    {
+        Node* y = x->right;
+        x->right = y->left;
+
+        if (y->left != NIL)
+            y->left->p = x;
+
+        y->p = x->p;
+        if (x->p == NIL)
+            _root = y;
+        else if (x == x->left)
+            x->p->left = y;
+        else
+            x->p->right = y;
+
+        y->left = x;
+        x->p = y;
+    }
+
+    void rightRotate(Node* x)
+    {
+        Node* y = x->left;
+        x->left = y->right;
+
+        if (y->right != NIL)
+            y->right->p = x;
+
+        y->p = x->p;
+        if (x->p == NIL)
+            _root = y;
+        else if (x == x->left)
+            x->p->left = y;
+        else
+            x->p->right = y;
+
+        y->right = x;
+        x->p = y;
+    }
+
     template<typename TAct>
     static void preorderWalk(Node* node, TAct action)
     {
