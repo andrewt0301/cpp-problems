@@ -159,8 +159,7 @@ public:
         else
             oldNode->p->right = newNode;
 
-        if (newNode != NIL)
-            newNode->p = oldNode->p;
+        newNode->p = oldNode->p;
     }
 
     void remove(T key)
@@ -206,7 +205,7 @@ public:
         y->p = x->p;
         if (x->p == NIL)
             _root = y;
-        else if (x == x->left)
+        else if (x == x->p->left)
             x->p->left = y;
         else
             x->p->right = y;
@@ -226,7 +225,7 @@ public:
         y->p = x->p;
         if (x->p == NIL)
             _root = y;
-        else if (x == x->left)
+        else if (x == x->p->left)
             x->p->left = y;
         else
             x->p->right = y;
