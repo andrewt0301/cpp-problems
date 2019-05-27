@@ -22,11 +22,23 @@ void testRotate()
     RedBlackTree<int> tree;
 
     for (int key : {7, 4, 3, 6, 2, 11, 9, 18, 14, 12, 17, 19, 22, 20})
-        tree.insert(key);
+    {
+        tree.insertRB(key);
+        printBar();
+        cout << endl << key << " : " << endl << endl;
+        tree.printAsRBTree(cout);
+    }
 
     printBar();
     tree.printAsRBTree(cout);
 
+    auto x = tree.search(7);
+    tree.removeRB(x);
+
+    printBar();
+    tree.printAsRBTree(cout);
+
+    /*
     auto x1 = tree.search(11);
     tree.leftRotate(x1);
 
@@ -40,6 +52,7 @@ void testRotate()
     tree.printAsRBTree(cout);
 
     printBar();
+    */
 }
 
 int main()

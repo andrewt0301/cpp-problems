@@ -267,15 +267,18 @@ public:
                     z = z->p->p;
                 }
                 // Case 2.
-                else if (z == z->p->right)
+                else
                 {
-                    z = z->p;
-                    leftRotate(z);
+                    if (z == z->p->right)
+                    {
+                        z = z->p;
+                        leftRotate(z);
+                    }
+                    // Case 3.
+                    z->p->color = BLACK;
+                    z->p->p->color = RED;
+                    rightRotate(z->p->p);
                 }
-                // Case 3.
-                z->p->color = BLACK;
-                z->p->p->color = RED;
-                rightRotate(z->p->p);
             }
             // If parent is right child.
             else
@@ -292,15 +295,18 @@ public:
                     z = z->p->p;
                 }
                 // Case 5.
-                else if (z == z->p->left)
+                else
                 {
-                    z = z->p;
-                    rightRotate(z);
+                    if (z == z->p->left)
+                    {
+                        z = z->p;
+                        rightRotate(z);
+                    }
+                    // Case 6.
+                    z->p->color = BLACK;
+                    z->p->p->color = RED;
+                    leftRotate(z->p->p);
                 }
-                // Case 6.
-                z->p->color = BLACK;
-                z->p->p->color = RED;
-                leftRotate(z->p->p);
             }
         }
         _root->color = BLACK;
@@ -346,7 +352,7 @@ public:
         }
 
         if (origColor == BLACK)
-            fixupInsertRB(trans);
+            fixupRemoveRB(trans);
     }
 
     void fixupRemoveRB(Node* x)
@@ -372,24 +378,27 @@ public:
                     w->color = RED;
                     x = x->p;
                 }
-                // Case 3.
-                else if (w->right->color == BLACK)
+                else
                 {
-                    w->left->color = BLACK;
-                    w->color = RED;
-                    rightRotate(w);
-                    w = x->p->right;
+                    // Case 3.
+                    if (w->right->color == BLACK)
+                    {
+                        w->left->color = BLACK;
+                        w->color = RED;
+                        rightRotate(w);
+                        w = x->p->right;
+                    }
+                    // Case 4.
+                    w->color = x->p->color;
+                    x->p->color = BLACK;
+                    w->right->color = BLACK;
+                    leftRotate(x->p);
+                    x = _root;
                 }
-                // Case 4.
-                w->color = x->p->color;
-                x->p->color = BLACK;
-                w->right->color = BLACK;
-                leftRotate(x->p);
-                x = _root;
             }
             else
             {
-                Node* w = x->p->left;
+                Node *w = x->p->left;
 
                 // Case 4.
                 if (w->color == RED)
@@ -406,20 +415,23 @@ public:
                     w->color = RED;
                     x = x->p;
                 }
-                // Case 3.
-                else if (w->left->color == BLACK)
+                else
                 {
-                    w->right->color = BLACK;
-                    w->color = RED;
-                    leftRotate(w);
-                    w = x->p->left;
+                    // Case 3.
+                    if (w->left->color == BLACK)
+                    {
+                        w->right->color = BLACK;
+                        w->color = RED;
+                        leftRotate(w);
+                        w = x->p->left;
+                    }
+                    // Case 4.
+                    w->color = x->p->color;
+                    x->p->color = BLACK;
+                    w->left->color = BLACK;
+                    rightRotate(x->p);
+                    x = _root;
                 }
-                // Case 4.
-                w->color = x->p->color;
-                x->p->color = BLACK;
-                w->left->color = BLACK;
-                rightRotate(x->p);
-                x = _root;
             }
         }
         x->color = BLACK;
