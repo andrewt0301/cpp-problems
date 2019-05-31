@@ -52,7 +52,7 @@ public:
     Digit operator[](size_t index) const;
 
     /** Returns the number of digits in the number. */
-    inline size_t length() const { return _digits.size(); }
+    inline size_t length() const { return _length; }
 
     /** Checks whether the number is negative. */
     inline bool isNegative() const { return _negative && length() != 0; }
@@ -90,6 +90,9 @@ private:
 
     /** Multiplies one number by another using the Grade School algorithm. */
     friend Number mul(const Number& lhs, const Number& rhs);
+
+    /** Length of vector in digits. */
+    size_t _length;
 
     /** Vector that stores digits. Digits are stored from low to high. */
     Digits _digits;

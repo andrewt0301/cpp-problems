@@ -27,6 +27,7 @@ size_t copyDigits(ISrc begin, ISrc end, IDest dest)
 
 Number::Number(const std::initializer_list<Digit>& digits)
     : _digits(digits.size()),
+      _length(digits.size()),
       _negative{false}
 {
     size_t count = copyDigits(digits.begin(), digits.end(), _digits.begin());
@@ -36,6 +37,7 @@ Number::Number(const std::initializer_list<Digit>& digits)
 
 Number::Number(Digits digits, bool negative)
     : _digits(digits.size()),
+      _length(digits.size()),
       _negative{negative}
 {
     size_t count = copyDigits(digits.rbegin(), digits.rend(), _digits.begin());
@@ -45,6 +47,7 @@ Number::Number(Digits digits, bool negative)
 
 Number::Number(const std::string &str)
     : _digits(),
+      _length(str.length()),
       _negative{false}
 {
     if (str.empty())
@@ -65,16 +68,19 @@ Number::Number(const std::string &str)
         if ('0' <= ch && ch <= '9')
             _digits.push_back(ch - '0');
     }
+    _length = _digits.size();
 }
 
 Number::Number()
     : _digits(),
+      _length(0),
       _negative(false)
 {
 }
 
 Number::Number(const Number& number, size_t grow)
     : _digits(number.length() + grow),
+      _length(number.length() + grow),
       _negative{number.isNegative()}
 {
     for (size_t i = 0; i < number.length(); ++i)
@@ -83,6 +89,7 @@ Number::Number(const Number& number, size_t grow)
 
 Number::Number(size_t length, bool negative)
    : _digits(length),
+     _length(length),
      _negative{negative}
 {
 }
@@ -118,7 +125,7 @@ std::pair<Number, Number> Number::split() const
 
 bool Number::operator==(const Number& number) const
 {
-    return isNegative() == number.isNegative() && _digits == number._digits;
+    return isNegative() == number.isNegative() && _digits == number._digits && _length == number._length;
 }
 
 Number Number::operator-() const
@@ -190,6 +197,7 @@ void Number::shrink(size_t delta)
 {
     if (delta <= length())
         _digits.resize(length() - delta);
+    _length = _digits.size();
 }
 
 Number add(const Number& lhs, const Number& rhs)
