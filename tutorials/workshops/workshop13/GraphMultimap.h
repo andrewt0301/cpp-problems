@@ -74,6 +74,18 @@ public:
         }
     }
 
+    template <typename TVisitor>
+    void bfs(Node* src, TVisitor visitor)
+    {
+        // TODO
+    }
+
+    template <typename TVisitor>
+    void dfs(Node* src, TVisitor visitor)
+    {
+        // TODO
+    }
+
     friend std::ostream& operator<<(std::ostream& out, const GraphMultimap& graph)
     {
         const Multimap& nodes = graph._nodes;
