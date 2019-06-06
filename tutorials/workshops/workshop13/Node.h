@@ -5,6 +5,13 @@
 #ifndef TUTORIALS_NODE_H
 #define TUTORIALS_NODE_H
 
+enum class Color
+{
+    WRITE,
+    GRAY,
+    BLACK
+};
+
 template <typename T>
 struct Node
 {
