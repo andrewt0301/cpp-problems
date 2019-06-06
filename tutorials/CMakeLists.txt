@@ -44,6 +44,5 @@ add_executable(
 
 add_executable(
         workshop13
-        workshops/workshop13/GraphMultimap.cpp
         workshops/workshop13/workshop13.cpp
         )

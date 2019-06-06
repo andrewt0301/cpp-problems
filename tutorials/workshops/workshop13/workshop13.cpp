@@ -3,6 +3,8 @@
 //
 
 #include "Node.h"
+
+#include "GraphMap.h"
 #include "GraphMultimap.h"
 
 #include <iostream>
@@ -49,7 +51,7 @@ int main()
 
 */
 
-    using Graph = GraphMultimap<int>;
+    using Graph = GraphMap<int>;
     using Node  = Node<int>;
 
     Graph graph;
