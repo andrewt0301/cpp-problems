@@ -39,5 +39,11 @@ add_executable(
 add_executable(
         workshop10
         workshops/workshop10/workshop10.cpp
-        workshops/workshop10/RedBlackTree.h)
+        workshops/workshop10/RedBlackTree.h
+        )
 
+add_executable(
+        workshop13
+        workshops/workshop13/GraphMultimap.cpp
+        workshops/workshop13/workshop13.cpp
+        )
