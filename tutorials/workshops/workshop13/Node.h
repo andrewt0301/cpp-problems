@@ -7,7 +7,7 @@
 
 enum class Color
 {
-    WRITE,
+    WHITE,
     GRAY,
     BLACK
 };

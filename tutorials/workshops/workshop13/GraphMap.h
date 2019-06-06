@@ -10,6 +10,7 @@
 #include <iostream>
 #include <map>
 #include <set>
+#include <queue>
 #include <vector>
 
 template <typename T>
@@ -57,9 +58,50 @@ public:
     }
 
     template <typename TVisitor>
-    void bfs(Node* src, TVisitor visitor)
+    void bfs(Node* s, TVisitor visitor)
     {
-        // TODO
+        struct Vertex
+        {
+            Color  color = Color::WHITE;
+            int distance = -1;
+            Node*   prev = nullptr;
+        };
+
+        std::map<Node*, Vertex> vertices;
+        for (typename Map::const_iterator it = _nodes.begin(); it != _nodes.end(); ++it)
+            vertices.insert({it->first, Vertex()});
+
+        Vertex& sV  = vertices[s];
+        sV.color    = Color::GRAY;
+        sV.distance = 0;
+        sV.prev     = nullptr;
+
+        std::queue<Node*> queue;
+        queue.push(s);
+
+        while (!queue.empty())
+        {
+            Node* u = queue.front();
+            queue.pop();
+            Vertex& uV  = vertices[u];
+
+            visitor(u, uV.distance, uV.prev);
+
+            for (Node* v : _nodes[u])
+            {
+                Vertex& vV  = vertices[v];
+                if (vV.color == Color::WHITE)
+                {
+                    vV.color = Color::GRAY;
+                    vV.distance = uV.distance + 1;
+                    vV.prev = u;
+
+                    queue.push(v);
+                }
+            }
+
+            uV.color = Color::BLACK;
+        }
     }
 
     template <typename TVisitor>
