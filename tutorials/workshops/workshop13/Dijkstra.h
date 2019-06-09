@@ -23,7 +23,7 @@ struct PathVertex
 };
 
 template <typename T>
-bool relax(const Edge<T, int>& edge, std::map<Node<T>*, PathVertex<T>>& vertices)
+void relax(const Edge<T, int>& edge, std::map<Node<T>*, PathVertex<T>>& vertices)
 {
     using Node   = Node<T>;
     using Vertex = PathVertex<T>;
@@ -34,17 +34,11 @@ bool relax(const Edge<T, int>& edge, std::map<Node<T>*, PathVertex<T>>& vertices
     Vertex& uV = vertices.at(u);
     Vertex& vV = vertices.at(v);
 
-    std::cout << u->tag << " -> " << v->tag << " : " << edge.tag << std::endl;
-
     if (vV.dist > uV.dist + edge.tag)
     {
         vV.dist = uV.dist + edge.tag;
         vV.prev = u;
-
-        return true;
     }
-
-    return false;
 }
 
 template <typename T, typename TGraph>
@@ -81,7 +75,7 @@ std::map<Node<T>*, PathVertex<T>> dijkstra(TGraph& graph, Node<T>* s)
     {
         Vertices& _vs;
 
-        MinDist(Vertices& vs) : _vs{vs} {}
+        explicit MinDist(Vertices& vs) : _vs{vs} {}
 
         bool operator()(Node* n1, Node* n2)
         {
@@ -91,8 +85,6 @@ std::map<Node<T>*, PathVertex<T>> dijkstra(TGraph& graph, Node<T>* s)
         }
     };
 
-
-
     while (!queue.empty())
     {
         // Extract-Min
@@ -100,8 +92,6 @@ std::map<Node<T>*, PathVertex<T>> dijkstra(TGraph& graph, Node<T>* s)
 
         Node *u = *minIt;
         queue.erase(minIt);
-
-        std::cout << u->tag << std::endl;
 
         std::pair<EdgeIterator, EdgeIterator> edgeRange = graph.getEdges(u);
         for (EdgeIterator it = edgeRange.first; it != edgeRange.second; ++it)
