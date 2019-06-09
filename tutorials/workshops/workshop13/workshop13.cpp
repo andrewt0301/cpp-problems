@@ -5,6 +5,7 @@
 #include "GraphMap.h"
 #include "GraphMultimap.h"
 #include "BFS.h"
+#include "DFS.h"
 
 #include <iostream>
 
@@ -49,6 +50,24 @@ int main()
         std::cout << std::endl;
     });
 
+    std::cout << std::endl << "*************** DST: " << std::endl;
+
+    dfs(graph, node1, [](Node* node, DfsVertex<int>* vertex)
+    {
+        std::cout << node->tag;
+
+        std::cout << ": d=" << vertex->d;
+        std::cout << ": f=" << vertex->f;
+        std::cout << ", prev=";
+
+        if (vertex->prev != nullptr)
+            std::cout << vertex->prev->tag;
+        else
+            std::cout << "nullptr";
+
+        std::cout << std::endl;
+    });
+
     std::cout << std::endl << "***************" << std::endl;
 
     std::cout << graph;
@@ -69,10 +88,6 @@ int main()
     {
            std::cout << (*it)->tag << std::endl;
     }
-
-
-
-
 
     return 0;
 }
