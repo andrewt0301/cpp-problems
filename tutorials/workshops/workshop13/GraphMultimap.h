@@ -134,8 +134,35 @@ public:
 
     void removeNode(Node* node)
     {
-        std::pair<iterator, iterator> range = _nodes.equal_range(node);
-        _nodes.erase(range.first, range.second);
+        // Delete all outgoing and incoming edges.
+        Node *prevSrc = nullptr;
+        for (iterator it = _nodes.begin(); it != _nodes.end();)
+        {
+            Node* src = it->first;
+
+            // Outgoing.
+            if (src == node)
+            {
+                it = _nodes.erase(it);
+            }
+            // Incoming.
+            else if (it->second == node)
+            {
+                if (src != prevSrc)
+                    it->second = nullptr;
+                else
+                    it = _nodes.erase(it);
+            }
+            // Unrelated.
+            else
+            {
+                ++it;
+            }
+
+            prevSrc = src;
+        }
+
+        // Delete node.
         delete node;
     }
 
@@ -143,7 +170,7 @@ public:
     {
         iterator it = _nodes.find(src);
         if (it != _nodes.end() && it->second == nullptr)
-            it ->second = dest;
+            it->second = dest;
         else
             _nodes.insert({src, dest});
     }
