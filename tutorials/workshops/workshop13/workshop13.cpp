@@ -2,12 +2,58 @@
 // Created by Tatarnikov_A on 06.06.2019.
 //
 
+#include "Dijkstra.h"
 #include "GraphMap.h"
 #include "GraphMultimap.h"
 #include "BFS.h"
 #include "DFS.h"
 
 #include <iostream>
+
+void printBfsVertex(Node<int>* node, BfsVertex<int>* vertex)
+{
+    std::cout << node->tag;
+
+    std::cout << ": dist=" << vertex->distance;
+    std::cout << ", prev=";
+
+    if (vertex->prev != nullptr)
+        std::cout << vertex->prev->tag;
+    else
+        std::cout << "nullptr";
+
+    std::cout << std::endl;
+}
+
+void printDfsVertex(Node<int>* node, DfsVertex<int>* vertex)
+{
+    std::cout << node->tag;
+
+    std::cout << ": d=" << vertex->d;
+    std::cout << ": f=" << vertex->f;
+    std::cout << ", prev=";
+
+    if (vertex->prev != nullptr)
+        std::cout << vertex->prev->tag;
+    else
+        std::cout << "nullptr";
+
+    std::cout << std::endl;
+}
+
+void printDijkstraPath(Node<int>* node, PathVertex<int>* vertex)
+{
+    std::cout << node->tag;
+    std::cout << " dist=" << vertex->dist;
+    std::cout << " prev=";
+
+    if (vertex->prev != nullptr)
+        std::cout << vertex->prev;
+    else
+        std::cout << "nullptr";
+
+    std::cout << std::endl;
+}
 
 template <typename TGraph>
 void testBfsDfs()
@@ -44,46 +90,60 @@ void testBfsDfs()
     std::cout << graph;
 
     std::cout << std::endl << "*************** BFS ***************:" << std::endl;
+    std::map<Node*, BfsVertex<int>> bfsPaths = bfs(graph, node1, printBfsVertex);
 
-    bfs(graph, node1, [](Node* node, BfsVertex<int>* vertex)
-    {
-        std::cout << node->tag;
-
-        std::cout << ": dist=" << vertex->distance;
-        std::cout << ", prev=";
-
-        if (vertex->prev != nullptr)
-            std::cout << vertex->prev->tag;
-        else
-            std::cout << "nullptr";
-
-        std::cout << std::endl;
-    });
+    std::cout << std::endl << "***************" << std::endl;
+    for (auto& p : bfsPaths)
+        printBfsVertex(p.first, &p.second);
 
     std::cout << std::endl << "*************** DFS ***************:" << std::endl;
+    std::map<Node*, DfsVertex<int>> dfsPaths = dfs(graph, node1, printDfsVertex);
 
-    dfs(graph, node1, [](Node* node, DfsVertex<int>* vertex)
-    {
-        std::cout << node->tag;
+    std::cout << std::endl << "***************" << std::endl;
+    for (auto& p : dfsPaths)
+        printDfsVertex(p.first, &p.second);
 
-        std::cout << ": d=" << vertex->d;
-        std::cout << ": f=" << vertex->f;
-        std::cout << ", prev=";
+    std::cout << std::endl << "*************************************" << std::endl;
+}
 
-        if (vertex->prev != nullptr)
-            std::cout << vertex->prev->tag;
-        else
-            std::cout << "nullptr";
+template <typename TGraph>
+void testDijkstra()
+{
+    using  Graph = TGraph;
+    using  Node  = Node<int>;
+    using Vertex = PathVertex<int>;
 
-        std::cout << std::endl;
-    });
+    Graph graph;
+
+    Node* node1 = graph.addNode(1);
+    Node* node2 = graph.addNode(2);
+    Node* node3 = graph.addNode(3);
+    Node* node4 = graph.addNode(4);
+    Node* node5 = graph.addNode(5);
+
+    graph.addEdge(node1, node2, 3);
+    graph.addEdge(node1, node3, 6);
+    graph.addEdge(node3, node4, 4);
+    graph.addEdge(node4, node5, 1);
+    graph.addEdge(node5, node2, 0);
+
+    std::cout << graph;
+
+    std::cout << std::endl << "************** Dijkstra **************:" << std::endl;
+
+    std::map<Node*, Vertex> paths = dijkstra(graph, node1);
+
+    for (auto& p : paths)
+        printDijkstraPath(p.first, &p.second);
 }
 
 int main()
 {
-
     testBfsDfs<GraphMultimap<int>>();
+
     //testBfsDfs<GraphMap<int>>();
+
+    testDijkstra<GraphMultimap<int>>();
 
     return 0;
 }
