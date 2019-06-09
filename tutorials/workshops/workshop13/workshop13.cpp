@@ -4,12 +4,13 @@
 
 #include "GraphMap.h"
 #include "GraphMultimap.h"
+#include "BFS.h"
 
 #include <iostream>
 
 int main()
 {
-    using Graph = GraphMap<int>;
+    using Graph = GraphMultimap<int>;
     using Node  = Node<int>;
 
     Graph graph;
@@ -28,22 +29,20 @@ int main()
     std::cout << graph;
     std::cout << std::endl << "***************" << std::endl;
 
-    /*
     graph.removeNode(node4);
     graph.removeEdge(node1, node2);
-     */
 
-    std::cout << std::endl << "***************" << std::endl;
+    std::cout << std::endl << "*************** BST: " << std::endl;
 
-    graph.bfs(node1, [](Node* node, int distance, Node* prev)
+    bfs(graph, node1, [](Node* node, BfsVertex<int>* vertex)
     {
         std::cout << node->tag;
 
-        std::cout << ": dist=" << distance;
+        std::cout << ": dist=" << vertex->distance;
         std::cout << ", prev=";
 
-        if (prev != nullptr)
-            std::cout << prev->tag;
+        if (vertex->prev != nullptr)
+            std::cout << vertex->prev->tag;
         else
             std::cout << "nullptr";
 
@@ -53,6 +52,27 @@ int main()
     std::cout << std::endl << "***************" << std::endl;
 
     std::cout << graph;
+    std::cout << std::endl << "***************" << std::endl;
+    std::cout << graph;
+    std::cout << std::endl << "***************" << std::endl;
+
+    auto r = graph.getNodes();
+    for (auto it = r.first; it != r.second; ++it)
+    {
+        std::cout << (*it)->tag << std::endl;
+    }
+
+    std::cout << std::endl << "***************" << std::endl;
+
+    auto r1 = graph.getEdges(node1);
+    for (auto it = r1.first; it != r1.second; ++it)
+    {
+           std::cout << (*it)->tag << std::endl;
+    }
+
+
+
+
 
     return 0;
 }

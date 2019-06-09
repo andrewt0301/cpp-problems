@@ -27,17 +27,12 @@ public:
     class NodeIterator
     {
     private:
-        iterator  _it;
-        iterator _end;
+        const_iterator  _it;
+        const_iterator _end;
     public:
-        NodeIterator(iterator it, iterator end) : _it{it}, _end{end} {}
+        NodeIterator(const_iterator it, const_iterator end) : _it{it}, _end{end} {}
 
         Node* operator*()
-        {
-            return _it->first;
-        }
-
-        Node* operator->()
         {
             return _it->first;
         }
@@ -65,16 +60,11 @@ public:
     class EdgeIterator
     {
     private:
-        iterator _it;
+        const_iterator _it;
     public:
-        EdgeIterator(iterator it) : _it{it}{}
+        explicit EdgeIterator(const_iterator it) : _it{it}{}
 
         Node* operator*()
-        {
-            return _it->second;
-        }
-
-        Node* operator->()
         {
             return _it->second;
         }
@@ -114,22 +104,25 @@ public:
     GraphMultimap(const GraphMultimap&) = delete;
     GraphMultimap& operator=(const GraphMultimap&) = delete;
 
-    std::pair<EdgeIterator, EdgeIterator> getAdjacent(Node *node)
+    std::pair<NodeIterator, NodeIterator> getNodes() const
     {
-        std::pair<iterator, iterator> range = _nodes.equal_range(node);
-
-        iterator begin = range.first;
-        iterator   end = range.second;
-
-        return {EdgeIterator{begin}, EdgeIterator{end}};
-    }
-
-    std::pair<NodeIterator, NodeIterator> getNodes()
-    {
-        iterator begin = _nodes.begin();
-        iterator   end = _nodes.end();
+        const_iterator begin = _nodes.begin();
+        const_iterator   end = _nodes.end();
 
         return {NodeIterator{begin, end}, NodeIterator{end, end}};
+    }
+
+    std::pair<EdgeIterator, EdgeIterator> getEdges(Node *node) const
+    {
+        std::pair<const_iterator, const_iterator> range = _nodes.equal_range(node);
+
+        const_iterator& begin = range.first;
+        const_iterator&   end = range.second;
+
+        if (begin != end && begin->second == nullptr)
+            ++begin;
+
+        return {EdgeIterator{begin}, EdgeIterator{end}};
     }
 
     Node* addNode(const T& tag)
@@ -141,7 +134,7 @@ public:
 
     void removeNode(Node* node)
     {
-        std::pair<iterator, iterator> range = getAdjacent(node);
+        std::pair<iterator, iterator> range = _nodes.equal_range(node);
         _nodes.erase(range.first, range.second);
         delete node;
     }
@@ -165,18 +158,6 @@ public:
             else
                 ++it;
         }
-    }
-
-    template <typename TVisitor>
-    void bfs(Node* src, TVisitor visitor)
-    {
-        // TODO
-    }
-
-    template <typename TVisitor>
-    void dfs(Node* src, TVisitor visitor)
-    {
-        // TODO
     }
 
     friend std::ostream& operator<<(std::ostream& out, const GraphMultimap& graph)
@@ -204,12 +185,5 @@ public:
     }
 
 };
-
-template <typename T, typename TVisitor>
-void bfs(const GraphMultimap<T>& graph, Node<T>* src, TVisitor visitor)
-{
-    // TODO
-}
-
 
 #endif //TUTORIALS_GRAPHMULTIMAP_H

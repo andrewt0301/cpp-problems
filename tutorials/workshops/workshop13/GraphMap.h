@@ -5,13 +5,12 @@
 #ifndef TUTORIALS_GRAPHMAP_H
 #define TUTORIALS_GRAPHMAP_H
 
-#include "Node.h"
-
 #include <iostream>
 #include <map>
 #include <set>
 #include <queue>
-#include <vector>
+
+#include "Node.h"
 
 template <typename T>
 class GraphMap {
@@ -27,9 +26,9 @@ public:
     class NodeIterator
     {
     private:
-        typename Map::iterator _it;
+        typename Map::const_iterator _it;
     public:
-        explicit NodeIterator(typename Map::iterator it) : _it{it}{}
+        explicit NodeIterator(typename Map::const_iterator it) : _it{it}{}
 
         Node* operator*()
         {
@@ -69,14 +68,14 @@ public:
     GraphMap(const GraphMap&) = delete;
     GraphMap& operator=(const GraphMap&) = delete;
 
-    std::pair<NodeIterator, NodeIterator> getNodes()
+    std::pair<NodeIterator, NodeIterator> getNodes() const
     {
         return {NodeIterator{_nodes.begin()}, NodeIterator{_nodes.end()}};
     }
 
-    std::pair<EdgeIterator, EdgeIterator> getEdges(Node *node)
+    std::pair<EdgeIterator, EdgeIterator> getEdges(Node *node) const
     {
-        Nodes& adjacent = _nodes[node];
+        const Nodes& adjacent = _nodes.at(node);
         return {adjacent.begin(), adjacent.end()};
     }
 
@@ -101,59 +100,6 @@ public:
     void removeEdge(Node* src, Node* dest)
     {
         _nodes[src].erase(dest);
-    }
-
-    template <typename TVisitor>
-    void bfs(Node* s, TVisitor visitor)
-    {
-        struct Vertex
-        {
-            Color  color = Color::WHITE;
-            int distance = -1;
-            Node*   prev = nullptr;
-        };
-
-        std::map<Node*, Vertex> vertices;
-        for (typename Map::const_iterator it = _nodes.begin(); it != _nodes.end(); ++it)
-            vertices.insert({it->first, Vertex()});
-
-        Vertex& sV  = vertices[s];
-        sV.color    = Color::GRAY;
-        sV.distance = 0;
-        sV.prev     = nullptr;
-
-        std::queue<Node*> queue;
-        queue.push(s);
-
-        while (!queue.empty())
-        {
-            Node* u = queue.front();
-            queue.pop();
-            Vertex& uV  = vertices[u];
-
-            visitor(u, uV.distance, uV.prev);
-
-            for (Node* v : _nodes[u])
-            {
-                Vertex& vV  = vertices[v];
-                if (vV.color == Color::WHITE)
-                {
-                    vV.color = Color::GRAY;
-                    vV.distance = uV.distance + 1;
-                    vV.prev = u;
-
-                    queue.push(v);
-                }
-            }
-
-            uV.color = Color::BLACK;
-        }
-    }
-
-    template <typename TVisitor>
-    void dfs(Node* src, TVisitor visitor)
-    {
-        // TODO
     }
 
     friend std::ostream& operator<<(std::ostream& out, const GraphMap& graph)
