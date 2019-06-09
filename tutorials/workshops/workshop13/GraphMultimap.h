@@ -10,27 +10,26 @@
 #include <iostream>
 #include <map>
 
-template <typename T>
+template <typename T, typename U = int>
 class GraphMultimap
 {
 private:
     using     Node = Node<T>;
-    using Multimap = std::multimap<Node*, Node*>;
+    using     Edge = Edge<T, U>;
+    using    Graph = std::multimap<Node*, Edge>;
+    using Iterator = typename Graph::iterator;
 
-    using       iterator = typename Multimap::iterator;
-    using const_iterator = typename Multimap::const_iterator;
-
-    Multimap _nodes;
+    Graph _graph;
 
 public:
 
     class NodeIterator
     {
     private:
-        const_iterator  _it;
-        const_iterator _end;
+        Iterator  _it;
+        Iterator _end;
     public:
-        NodeIterator(const_iterator it, const_iterator end) : _it{it}, _end{end} {}
+        NodeIterator(Iterator it, Iterator end) : _it{it}, _end{end} {}
 
         Node* operator*()
         {
@@ -60,11 +59,11 @@ public:
     class EdgeIterator
     {
     private:
-        const_iterator _it;
+        Iterator _it;
     public:
-        explicit EdgeIterator(const_iterator it) : _it{it}{}
+        explicit EdgeIterator(Iterator it) : _it{it}{}
 
-        Node* operator*()
+        Edge& operator*()
         {
             return _it->second;
         }
@@ -91,7 +90,7 @@ public:
     ~GraphMultimap()
     {
         Node* node = nullptr;
-        for (iterator it = _nodes.begin(); it != _nodes.end(); ++it)
+        for (Iterator it = _graph.begin(); it != _graph.end(); ++it)
         {
             if (it->first != node)
             {
@@ -104,20 +103,20 @@ public:
     GraphMultimap(const GraphMultimap&) = delete;
     GraphMultimap& operator=(const GraphMultimap&) = delete;
 
-    std::pair<NodeIterator, NodeIterator> getNodes() const
+    std::pair<NodeIterator, NodeIterator> getNodes()
     {
-        const_iterator begin = _nodes.begin();
-        const_iterator   end = _nodes.end();
+        Iterator begin = _graph.begin();
+        Iterator   end = _graph.end();
 
         return {NodeIterator{begin, end}, NodeIterator{end, end}};
     }
 
-    std::pair<EdgeIterator, EdgeIterator> getEdges(Node *node) const
+    std::pair<EdgeIterator, EdgeIterator> getEdges(Node *node)
     {
-        std::pair<const_iterator, const_iterator> range = _nodes.equal_range(node);
+        std::pair<Iterator, Iterator> range = _graph.equal_range(node);
 
-        const_iterator& begin = range.first;
-        const_iterator&   end = range.second;
+        Iterator& begin = range.first;
+        Iterator&   end = range.second;
 
         if (begin != end && begin->second == nullptr)
             ++begin;
@@ -128,7 +127,7 @@ public:
     Node* addNode(const T& tag)
     {
         Node* node = new Node(tag);
-        _nodes.insert({node, nullptr});
+        _graph.insert({node, Edge{}});
         return node;
     }
 
@@ -136,22 +135,22 @@ public:
     {
         // Delete all outgoing and incoming edges.
         Node *prevSrc = nullptr;
-        for (iterator it = _nodes.begin(); it != _nodes.end();)
+        for (Iterator it = _graph.begin(); it != _graph.end();)
         {
             Node* src = it->first;
 
             // Outgoing.
             if (src == node)
             {
-                it = _nodes.erase(it);
+                it = _graph.erase(it);
             }
             // Incoming.
             else if (it->second == node)
             {
                 if (src != prevSrc)
-                    it->second = nullptr;
+                    it->second = Edge{};
                 else
-                    it = _nodes.erase(it);
+                    it = _graph.erase(it);
             }
             // Unrelated.
             else
@@ -166,45 +165,52 @@ public:
         delete node;
     }
 
-    void addEdge(Node* src, Node* dest)
+    void addEdge(Node* src, Node* dest, const U& tag = 0)
     {
-        iterator it = _nodes.find(src);
-        if (it != _nodes.end() && it->second == nullptr)
-            it->second = dest;
+        Iterator it = _graph.find(src);
+
+        Edge edge{src, dest, tag};
+
+        if (it != _graph.end() && it->second == nullptr)
+            it->second = edge;
         else
-            _nodes.insert({src, dest});
+            _graph.insert({src, edge});
     }
 
     void removeEdge(Node* src, Node* dest)
     {
-        std::pair<iterator, iterator> range = _nodes.equal_range(src);
-        for (iterator it = range.first; it != range.second;)
+        std::pair<Iterator, Iterator> range = _graph.equal_range(src);
+        for (Iterator it = range.first; it != range.second;)
         {
             if (it->second == dest)
-                it = _nodes.erase(it);
+                it = _graph.erase(it);
             else
                 ++it;
         }
     }
 
-    friend std::ostream& operator<<(std::ostream& out, const GraphMultimap& graph)
+    friend std::ostream& operator<<(std::ostream& out, GraphMultimap& graph)
     {
-        const Multimap& nodes = graph._nodes;
+        Graph& nodes = graph._graph;
 
-        Node* node = nullptr;
-        for (const_iterator it = nodes.begin(); it != nodes.end(); ++it)
+        Node* prev = nullptr;
+        for (Iterator it = nodes.begin(); it != nodes.end(); ++it)
         {
-            if (it->first != node)
+            if (it->first != prev)
             {
-                if (node != nullptr)
+                if (prev != nullptr)
                     out << std::endl;
 
-                node = it->first;
-                out << node->tag << ':';
+                prev = it->first;
+                out << prev->tag << ':';
             }
 
             if (it->second != nullptr)
-                out << " " << it->second->tag;
+            {
+                Edge& edge = it->second;
+                Node* node = edge.dest;
+                out << ' ' << node->tag << '[' << edge.tag << ']';
+            }
 
         }
 
