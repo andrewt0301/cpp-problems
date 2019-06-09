@@ -16,28 +16,74 @@
 template <typename T>
 class GraphMap {
 private:
-    using Node = Node<T>;
-    using  Set = std::set<Node*>;
-    using  Map = std::map<Node*, Set>;
+    using  Node = Node<T>;
+    using Nodes = std::set<Node*>;
+    using   Map = std::map<Node*, Nodes>;
 
     Map _nodes;
 
 public:
+
+    class NodeIterator
+    {
+    private:
+        typename Map::iterator _it;
+    public:
+        explicit NodeIterator(typename Map::iterator it) : _it{it}{}
+
+        Node* operator*()
+        {
+            return _it->first;
+        }
+
+        bool operator==(const NodeIterator& other)
+        {
+            return this->_it == other._it;
+        }
+
+        bool operator!=(const NodeIterator& other)
+        {
+            return !(*this == other);
+        }
+
+        NodeIterator& operator++()
+        {
+            ++_it;
+            return *this;
+        }
+    };
+
+    using EdgeIterator = typename Nodes::iterator;
+
     GraphMap() = default;
 
     ~GraphMap()
     {
         for (typename Map::const_iterator it = _nodes.begin(); it != _nodes.end(); ++it)
-            delete it->first;
+        {
+            Node* node = it->first;
+            delete node;
+        }
     }
 
     GraphMap(const GraphMap&) = delete;
     GraphMap& operator=(const GraphMap&) = delete;
 
+    std::pair<NodeIterator, NodeIterator> getNodes()
+    {
+        return {NodeIterator{_nodes.begin()}, NodeIterator{_nodes.end()}};
+    }
+
+    std::pair<EdgeIterator, EdgeIterator> getEdges(Node *node)
+    {
+        Nodes& adjacent = _nodes[node];
+        return {adjacent.begin(), adjacent.end()};
+    }
+
     Node* addNode(const T& tag)
     {
         Node* node = new Node(tag);
-        _nodes.insert({node, Set()});
+        _nodes.insert({node, Nodes()});
         return node;
     }
 
@@ -115,16 +161,10 @@ public:
         const Map& nodes = graph._nodes;
         for (typename Map::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
         {
-            out << it->first->tag << ": ";
-            bool start = true;
+            out << it->first->tag << ':';
+
             for (Node* node : it->second)
-            {
-                if (start)
-                    start = false;
-                else
-                    out << ", ";
-                out << node->tag;
-            }
+                out << ' ' << node->tag;
 
             out << std::endl;
         }
