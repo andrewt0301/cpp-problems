@@ -19,7 +19,7 @@ struct BfsVertex
 };
 
 template <typename T, typename TGraph, typename TVisitor>
-std::map<Node<T>*, BfsVertex<T>> bfs(const TGraph& graph, Node<T>* s, TVisitor visitor)
+std::map<Node<T>*, BfsVertex<T>> bfs(TGraph& graph, Node<T>* s, TVisitor visitor)
 {
     using   Node = Node<T>;
     using Vertex = BfsVertex<T>;

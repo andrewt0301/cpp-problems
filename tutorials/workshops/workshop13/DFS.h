@@ -19,7 +19,7 @@ struct DfsVertex
 };
 
 template <typename T, typename TGraph, typename TVisitor>
-std::map<Node<T>*, DfsVertex<T>> dfs(const TGraph& graph, Node<T>* u, TVisitor visitor)
+std::map<Node<T>*, DfsVertex<T>> dfs(TGraph& graph, Node<T>* u, TVisitor visitor)
 {
     using Node = Node<T>;
     using Vertex = DfsVertex<T>;
@@ -41,7 +41,7 @@ std::map<Node<T>*, DfsVertex<T>> dfs(const TGraph& graph, Node<T>* u, TVisitor v
 
 template <typename T, typename TGraph, typename TVisitor>
 int dfsVisit(
-        const TGraph& graph,
+        TGraph& graph,
         std::map<Node<T>*, DfsVertex<T>>& vertices,
         Node<T>* u,
         DfsVertex<T> &uV,
