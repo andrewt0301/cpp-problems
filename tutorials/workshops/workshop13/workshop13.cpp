@@ -48,7 +48,7 @@ void printDijkstraPath(Node<int>* node, PathVertex<int>* vertex)
     std::cout << " prev=";
 
     if (vertex->prev != nullptr)
-        std::cout << vertex->prev;
+        std::cout << vertex->prev->tag;
     else
         std::cout << "nullptr";
 
