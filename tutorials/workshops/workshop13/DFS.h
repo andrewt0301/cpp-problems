@@ -18,7 +18,7 @@ struct DfsVertex
     int         f = -1;
 };
 
-template <typename T, typename TGraph, typename TVisitor>
+template <typename TGraph, typename TVisitor, typename T>
 std::map<Node<T>*, DfsVertex<T>> dfs(TGraph& graph, Node<T>* u, TVisitor visitor)
 {
     using Node = Node<T>;
@@ -39,10 +39,13 @@ std::map<Node<T>*, DfsVertex<T>> dfs(TGraph& graph, Node<T>* u, TVisitor visitor
     return vertices;
 }
 
-template <typename TGraph, typename TVisitor>
-std::map<Node<typename TGraph::type>*, DfsVertex<typename TGraph::type>> dfs(TGraph& graph, TVisitor visitor)
+template <
+    typename TGraph,
+    typename TVisitor,
+    typename T = typename TGraph::type
+>
+std::map<Node<T>*, DfsVertex<T>> dfs(TGraph& graph, TVisitor visitor)
 {
-    using      T = typename TGraph::type;
     using   Node = Node<T>;
     using Vertex = DfsVertex<T>;
 
