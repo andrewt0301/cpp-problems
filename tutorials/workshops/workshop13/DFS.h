@@ -39,6 +39,35 @@ std::map<Node<T>*, DfsVertex<T>> dfs(TGraph& graph, Node<T>* u, TVisitor visitor
     return vertices;
 }
 
+template <typename TGraph, typename TVisitor>
+std::map<Node<typename TGraph::type>*, DfsVertex<typename TGraph::type>> dfs(TGraph& graph, TVisitor visitor)
+{
+    using      T = typename TGraph::type;
+    using   Node = Node<T>;
+    using Vertex = DfsVertex<T>;
+
+    using NodeIterator = typename TGraph::NodeIterator;
+    using EdgeIterator = typename TGraph::EdgeIterator;
+
+    std::pair<NodeIterator, NodeIterator> nodeRange = graph.getNodes();
+
+    std::map<Node*, Vertex> vertices;
+    for (NodeIterator it = nodeRange.first; it != nodeRange.second; ++it)
+        vertices.insert({*it, Vertex()});
+
+    int time = 0;
+    for (NodeIterator it = nodeRange.first; it != nodeRange.second; ++it)
+    {
+        Node* u = *it;
+        Vertex& uV = vertices.at(u);
+
+        if (uV.color == Color::WHITE)
+            time = dfsVisit(graph, vertices, u, uV, time, visitor);
+    }
+
+    return vertices;
+}
+
 template <typename T, typename TGraph, typename TVisitor>
 int dfsVisit(
         TGraph& graph,

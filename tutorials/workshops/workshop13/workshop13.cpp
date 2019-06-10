@@ -2,13 +2,15 @@
 // Created by Tatarnikov_A on 06.06.2019.
 //
 
+#include "BFS.h"
+#include "DFS.h"
 #include "Dijkstra.h"
 #include "GraphMap.h"
 #include "GraphMultimap.h"
-#include "BFS.h"
-#include "DFS.h"
+#include "TopologicalSort.h"
 
 #include <iostream>
+#include <string>
 
 void printBfsVertex(Node<int>* node, BfsVertex<int>* vertex)
 {
@@ -58,8 +60,9 @@ void printDijkstraPath(Node<int>* node, PathVertex<int>* vertex)
 template <typename TGraph>
 void testBfsDfs()
 {
-    using Graph = TGraph;
-    using Node  = Node<int>;
+    using  Graph = TGraph;
+    using      T = typename TGraph::type;
+    using   Node = Node<T>;
 
     Graph graph;
 
@@ -110,8 +113,9 @@ template <typename TGraph>
 void testDijkstra()
 {
     using  Graph = TGraph;
-    using  Node  = Node<int>;
-    using Vertex = PathVertex<int>;
+    using      T = typename TGraph::type;
+    using   Node = Node<T>;
+    using Vertex = PathVertex<T>;
 
     Graph graph;
 
@@ -137,13 +141,59 @@ void testDijkstra()
         printDijkstraPath(p.first, &p.second);
 }
 
+
+template <typename TGraph>
+void testTopologicalSort()
+{
+    using Graph  = TGraph;
+    using T      = typename TGraph::type;
+    using Node   = Node<T>;
+    using Vertex = DfsVertex<T>;
+
+    Graph graph;
+
+    Node* shirt       = graph.addNode("shirt");
+    Node* tie         = graph.addNode("tie");
+    Node* jacket      = graph.addNode("jacket");
+    Node* belt        = graph.addNode("belt");
+    Node* watch       = graph.addNode("watch");
+    Node* undershorts = graph.addNode("undershorts");
+    Node* pants       = graph.addNode("pants");
+    Node* shoes       = graph.addNode("shoes");
+    Node* socks       = graph.addNode("socks");
+
+    graph.addEdge(shirt,       tie    );
+    graph.addEdge(tie,         jacket );
+    graph.addEdge(shirt,       belt   );
+    graph.addEdge(belt,        jacket );
+    graph.addEdge(pants,       belt   );
+    graph.addEdge(pants,       shoes  );
+    graph.addEdge(undershorts, pants  );
+    graph.addEdge(undershorts, shoes  );
+    graph.addEdge(socks,       shoes  );
+
+    std::cout << std::endl << "******** Topological Sort ***********" << std::endl;
+    std::cout << graph;
+    std::cout << std::endl << "*************************************" << std::endl;
+
+    std::list<std::pair<Node*, Vertex>> path = topologicalSort(graph);
+    for (const std::pair<Node*, Vertex>& p : path)
+    {
+        std::cout << p.first->tag;
+        std::cout << " (" << p.second.d << '/' << p.second.f << ')';
+        std::cout << std::endl;
+    }
+}
+
 int main()
 {
     testBfsDfs<GraphMultimap<int>>();
-
-    //testBfsDfs<GraphMap<int>>();
+    // testBfsDfs<GraphMap<int>>();
 
     testDijkstra<GraphMultimap<int>>();
+
+    testTopologicalSort<GraphMultimap<std::string, int>>();
+    testTopologicalSort<GraphMap<std::string>>();
 
     return 0;
 }

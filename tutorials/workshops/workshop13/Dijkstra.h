@@ -5,6 +5,7 @@
 #ifndef TUTORIALS_DIJKSTRA_H
 #define TUTORIALS_DIJKSTRA_H
 
+#include <algorithm>
 #include <limits>
 #include <list>
 #include <map>

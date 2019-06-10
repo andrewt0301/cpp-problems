@@ -22,6 +22,7 @@ private:
     Map _nodes;
 
 public:
+    using type = T;
 
     class NodeIterator
     {

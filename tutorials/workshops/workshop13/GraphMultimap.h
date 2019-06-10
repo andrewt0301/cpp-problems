@@ -22,6 +22,7 @@ private:
     Graph _graph;
 
 public:
+    using type = T;
 
     class NodeIterator
     {

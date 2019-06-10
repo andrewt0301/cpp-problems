@@ -20,7 +20,7 @@ struct Edge
     Node<T>* dest;
     U tag;
 
-    Edge(Node<T>* s, Node<T>* d, T t) : src{s}, dest{d}, tag{t} {}
+    Edge(Node<T>* s, Node<T>* d, U t) : src{s}, dest{d}, tag{t} {}
     Edge() : src{nullptr}, dest{nullptr}, tag{0} {}
 
     operator Node<T>*() const { return dest; }
