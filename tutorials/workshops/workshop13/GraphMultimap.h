@@ -190,6 +190,20 @@ public:
         }
     }
 
+    void transpose()
+    {
+        Graph graph;
+
+        for (Iterator it = _graph.begin(); it != _graph.end(); ++it)
+        {
+            Edge& edge = it->second;
+            graph.insert({edge.dest, Edge{edge.dest, edge.src, edge.tag}});
+        }
+
+        _graph.clear();
+        _graph.swap(graph);
+    }
+
     friend std::ostream& operator<<(std::ostream& out, GraphMultimap& graph)
     {
         Graph& nodes = graph._graph;

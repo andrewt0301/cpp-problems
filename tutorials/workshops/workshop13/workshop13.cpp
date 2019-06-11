@@ -185,6 +185,38 @@ void testTopologicalSort()
     }
 }
 
+template <typename TGraph>
+void testSCC()
+{
+    using Graph  = TGraph;
+    using T      = typename TGraph::type;
+    using Node   = Node<T>;
+
+    Graph graph;
+
+    Node* node1 = graph.addNode(1);
+    Node* node2 = graph.addNode(2);
+    Node* node3 = graph.addNode(3);
+    Node* node4 = graph.addNode(4);
+    Node* node5 = graph.addNode(5);
+
+    graph.addEdge(node1, node2);
+    graph.addEdge(node1, node3);
+    graph.addEdge(node3, node4);
+    graph.addEdge(node4, node5);
+    graph.addEdge(node5, node2);
+
+    std::cout << std::endl << "*************************************" << std::endl;
+
+    std::cout << graph;
+
+    std::cout << std::endl << "**************** SCC ****************:" << std::endl;
+
+    graph.transpose();
+
+    std::cout << graph;
+}
+
 int main()
 {
     testBfsDfs<GraphMultimap<int>>();
@@ -192,8 +224,11 @@ int main()
 
     testDijkstra<GraphMultimap<int>>();
 
-    testTopologicalSort<GraphMultimap<std::string, int>>();
+    testTopologicalSort<GraphMultimap<std::string>>();
     testTopologicalSort<GraphMap<std::string>>();
+
+    testSCC<GraphMultimap<int>>();
+    testSCC<GraphMap<int>>();
 
     return 0;
 }

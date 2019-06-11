@@ -115,6 +115,21 @@ public:
         _nodes[src].erase(dest);
     }
 
+    void transpose()
+    {
+        Map nodes;
+
+        for (typename Map::const_iterator it = _nodes.begin(); it != _nodes.end(); ++it)
+        {
+            Node* dest = it->first;
+            for (Node* src : it->second)
+                nodes[src].insert(dest);
+        }
+
+        _nodes.clear();
+        _nodes.swap(nodes);
+    }
+
     friend std::ostream& operator<<(std::ostream& out, const GraphMap& graph)
     {
         const Map& nodes = graph._nodes;

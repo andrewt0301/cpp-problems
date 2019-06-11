@@ -37,7 +37,7 @@ void testHeapSort()
 
 void testPriorityQueue()
 {
-    cout << "Min Queue:" << endl;
+    cout << "Max Queue:" << endl;
     PriorityQueue<int, std::greater<>> maxQueue;
 
     maxQueue.insert(5);
@@ -47,8 +47,8 @@ void testPriorityQueue()
 
     std::cout << maxQueue << endl;
     maxQueue.setKey(1, 1);
-
     std::cout << maxQueue << endl;
+
     std::cout << maxQueue.pop() << endl;
     std::cout << maxQueue.pop() << endl;
     std::cout << maxQueue.pop() << endl;
@@ -64,8 +64,8 @@ void testPriorityQueue()
 
     std::cout << minQueue << endl;
     minQueue.setKey(1, 1);
-
     std::cout << minQueue << endl;
+
     std::cout << minQueue.pop() << endl;
     std::cout << minQueue.pop() << endl;
     std::cout << minQueue.pop() << endl;

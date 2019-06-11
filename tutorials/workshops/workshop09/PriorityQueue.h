@@ -6,6 +6,7 @@
 #define TUTORIALS_PRIORITYQUEUE_H
 
 #include <vector>
+#include <iterator>
 #include <iostream>
 
 #include "Heap.h"
@@ -14,6 +15,7 @@ template <typename T, typename TPred>
 class PriorityQueue
 {
 private:
+    TPred _pred;
     std::vector<T> _data;
 
     void resize(size_t size)
@@ -22,7 +24,11 @@ private:
     }
 
 public:
-    PriorityQueue() : _data()
+    explicit PriorityQueue(TPred pred) : _pred{pred}, _data{}
+    {
+    }
+
+    PriorityQueue() : _pred{TPred()}, _data{}
     {
     }
 
@@ -56,8 +62,7 @@ public:
     {
         _data[i] = key;
 
-        TPred pred;
-        while (i > 0 && pred(_data[i], _data[parent(i)]))
+        while (i > 0 && _pred(_data[i], _data[parent(i)]))
         {
             swap(_data, i, parent(i));
             i = parent(i);
@@ -76,6 +81,7 @@ public:
         std::copy(queue._data.begin(), queue._data.end(), std::ostream_iterator<int>(out, " "));
         return out;
     }
+
 };
 
 #endif //TUTORIALS_PRIORITYQUEUE_H
