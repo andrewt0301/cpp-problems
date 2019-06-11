@@ -188,7 +188,7 @@ void testTopologicalSort()
 int main()
 {
     testBfsDfs<GraphMultimap<int>>();
-    // testBfsDfs<GraphMap<int>>();
+    testBfsDfs<GraphMap<int>>();
 
     testDijkstra<GraphMultimap<int>>();
 
