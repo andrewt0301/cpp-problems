@@ -200,12 +200,15 @@ void testSCC()
     Node* node3 = graph.addNode(3);
     Node* node4 = graph.addNode(4);
     Node* node5 = graph.addNode(5);
+    Node* node6 = graph.addNode(6);
 
     graph.addEdge(node1, node2);
-    graph.addEdge(node1, node3);
+    graph.addEdge(node2, node3);
     graph.addEdge(node3, node4);
+    graph.addEdge(node4, node2);
     graph.addEdge(node4, node5);
-    graph.addEdge(node5, node2);
+    graph.addEdge(node5, node6);
+    graph.addEdge(node6, node5);
 
     std::cout << std::endl << "*************************************" << std::endl;
 
@@ -213,12 +216,15 @@ void testSCC()
 
     std::cout << std::endl << "**************** SCC ****************:" << std::endl;
 
-    scc(graph);
-    graph.transpose();
-
-    std::cout << graph;
-
-    scc(graph);
+    std::vector<std::vector<Node*>> connected = scc(graph);
+    for (const std::vector<Node*>& nodes : connected)
+    {
+        std::cout << std::endl;
+        for (Node* node : nodes)
+        {
+            std::cout << node->tag << " ";
+        }
+    }
 }
 
 int main()
