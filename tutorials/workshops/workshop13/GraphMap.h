@@ -90,7 +90,19 @@ public:
     void removeNode(Node* node)
     {
         delete node;
-        _nodes.erase(node);
+
+        for (typename Map::iterator it = _nodes.begin(); it != _nodes.end();)
+        {
+            if (it->first == node)
+            {
+                it = _nodes.erase(it);
+            }
+            else
+            {
+                it->second.erase(node);
+                ++it;
+            }
+        }
     }
 
     void addEdge(Node* src, Node* dest)
