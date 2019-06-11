@@ -122,6 +122,10 @@ public:
         for (typename Map::const_iterator it = _nodes.begin(); it != _nodes.end(); ++it)
         {
             Node* dest = it->first;
+
+            if (nodes.find(dest) == nodes.end())
+                nodes[dest] = Nodes();
+
             for (Node* src : it->second)
                 nodes[src].insert(dest);
         }

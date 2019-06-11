@@ -7,6 +7,7 @@
 #include "Dijkstra.h"
 #include "GraphMap.h"
 #include "GraphMultimap.h"
+#include "SCC.h"
 #include "TopologicalSort.h"
 
 #include <iostream>
@@ -212,9 +213,12 @@ void testSCC()
 
     std::cout << std::endl << "**************** SCC ****************:" << std::endl;
 
+    scc(graph);
     graph.transpose();
 
     std::cout << graph;
+
+    scc(graph);
 }
 
 int main()

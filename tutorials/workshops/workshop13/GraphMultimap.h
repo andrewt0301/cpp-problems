@@ -197,7 +197,22 @@ public:
         for (Iterator it = _graph.begin(); it != _graph.end(); ++it)
         {
             Edge& edge = it->second;
-            graph.insert({edge.dest, Edge{edge.dest, edge.src, edge.tag}});
+            Node* dest = it->first;
+            Node*  src = edge.dest;
+
+            if (graph.find(dest) == graph.end())
+                graph.insert({dest, Edge{}});
+
+            if (src != nullptr)
+            {
+                Iterator srcIt = graph.find(src);
+                Edge newEdge{src, dest, edge.tag};
+
+                if (srcIt != graph.end() && srcIt->second == nullptr)
+                    srcIt->second = newEdge;
+                else
+                    graph.insert({src, newEdge});
+            }
         }
 
         _graph.clear();
