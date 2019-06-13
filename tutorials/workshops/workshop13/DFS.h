@@ -5,7 +5,7 @@
 #ifndef TUTORIALS_DFS_H
 #define TUTORIALS_DFS_H
 
-#include <map>
+#include <unordered_map>
 
 #include "Node.h"
 
@@ -19,7 +19,7 @@ struct DfsVertex
 };
 
 template <typename TGraph, typename TVisitor, typename T>
-std::map<Node<T>*, DfsVertex<T>> dfs(TGraph& graph, Node<T>* u, TVisitor visitor)
+std::unordered_map<Node<T>*, DfsVertex<T>> dfs(TGraph& graph, Node<T>* u, TVisitor visitor)
 {
     using Node = Node<T>;
     using Vertex = DfsVertex<T>;
@@ -29,7 +29,7 @@ std::map<Node<T>*, DfsVertex<T>> dfs(TGraph& graph, Node<T>* u, TVisitor visitor
 
     std::pair<NodeIterator, NodeIterator> nodeRange = graph.getNodes();
 
-    std::map<Node*, Vertex> vertices;
+    std::unordered_map<Node*, Vertex> vertices;
     for (NodeIterator it = nodeRange.first; it != nodeRange.second; ++it)
         vertices.insert({*it, Vertex()});
 
@@ -44,7 +44,7 @@ template <
     typename TVisitor,
     typename T = typename TGraph::type
 >
-std::map<Node<T>*, DfsVertex<T>> dfs(TGraph& graph, TVisitor visitor)
+std::unordered_map<Node<T>*, DfsVertex<T>> dfs(TGraph& graph, TVisitor visitor)
 {
     using   Node = Node<T>;
     using Vertex = DfsVertex<T>;
@@ -54,7 +54,7 @@ std::map<Node<T>*, DfsVertex<T>> dfs(TGraph& graph, TVisitor visitor)
 
     std::pair<NodeIterator, NodeIterator> nodeRange = graph.getNodes();
 
-    std::map<Node*, Vertex> vertices;
+    std::unordered_map<Node*, Vertex> vertices;
     for (NodeIterator it = nodeRange.first; it != nodeRange.second; ++it)
         vertices.insert({*it, Vertex()});
 
@@ -74,7 +74,7 @@ std::map<Node<T>*, DfsVertex<T>> dfs(TGraph& graph, TVisitor visitor)
 template <typename T, typename TGraph, typename TVisitor>
 int dfsVisit(
         TGraph& graph,
-        std::map<Node<T>*, DfsVertex<T>>& vertices,
+        std::unordered_map<Node<T>*, DfsVertex<T>>& vertices,
         Node<T>* u,
         DfsVertex<T> &uV,
         int time,

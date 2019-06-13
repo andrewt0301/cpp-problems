@@ -5,8 +5,8 @@
 #ifndef TUTORIALS_BFS_H
 #define TUTORIALS_BFS_H
 
-#include <map>
 #include <queue>
+#include <unordered_map>
 
 #include "Node.h"
 
@@ -19,7 +19,7 @@ struct BfsVertex
 };
 
 template <typename T, typename TGraph, typename TVisitor>
-std::map<Node<T>*, BfsVertex<T>> bfs(TGraph& graph, Node<T>* s, TVisitor visitor)
+std::unordered_map<Node<T>*, BfsVertex<T>> bfs(TGraph& graph, Node<T>* s, TVisitor visitor)
 {
     using   Node = Node<T>;
     using Vertex = BfsVertex<T>;
@@ -27,7 +27,7 @@ std::map<Node<T>*, BfsVertex<T>> bfs(TGraph& graph, Node<T>* s, TVisitor visitor
     using NodeIterator = typename TGraph::NodeIterator;
     using EdgeIterator = typename TGraph::EdgeIterator;
 
-    std::map<Node*, Vertex> vertices;
+    std::unordered_map<Node*, Vertex> vertices;
 
     std::pair<NodeIterator, NodeIterator> nodeRange = graph.getNodes();
     for (NodeIterator it = nodeRange.first; it != nodeRange.second; ++it)

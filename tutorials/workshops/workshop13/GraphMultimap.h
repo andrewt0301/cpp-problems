@@ -61,8 +61,19 @@ public:
     {
     private:
         Iterator _it;
+        Iterator _end;
+
+        void skipUnlinkedNodes()
+        {
+            while (_it != _end && _it->second == nullptr)
+                ++_it;
+        }
+
     public:
-        explicit EdgeIterator(Iterator it) : _it{it}{}
+        explicit EdgeIterator(Iterator it, Iterator end) : _it{it}, _end(end)
+        {
+            skipUnlinkedNodes();
+        }
 
         Edge& operator*()
         {
@@ -81,7 +92,11 @@ public:
 
         EdgeIterator& operator++()
         {
-            ++_it;
+            skipUnlinkedNodes();
+
+            if (_it != _end)
+                ++_it;
+
             return *this;
         }
     };
@@ -119,10 +134,15 @@ public:
         Iterator& begin = range.first;
         Iterator&   end = range.second;
 
-        if (begin != end && begin->second == nullptr)
-            ++begin;
+        return {EdgeIterator{begin, end}, EdgeIterator{end, end}};
+    }
 
-        return {EdgeIterator{begin}, EdgeIterator{end}};
+    std::pair<EdgeIterator, EdgeIterator> getEdges()
+    {
+        Iterator begin = _graph.begin();
+        Iterator   end = _graph.end();
+
+        return {EdgeIterator{begin, end}, EdgeIterator{end, end}};
     }
 
     Node* addNode(const T& tag)

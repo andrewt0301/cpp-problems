@@ -94,14 +94,14 @@ void testBfsDfs()
     std::cout << graph;
 
     std::cout << std::endl << "*************** BFS ***************:" << std::endl;
-    std::map<Node*, BfsVertex<int>> bfsPaths = bfs(graph, node1, printBfsVertex);
+    std::unordered_map<Node*, BfsVertex<int>> bfsPaths = bfs(graph, node1, printBfsVertex);
 
     std::cout << std::endl << "***************" << std::endl;
     for (auto& p : bfsPaths)
         printBfsVertex(p.first, &p.second);
 
     std::cout << std::endl << "*************** DFS ***************:" << std::endl;
-    std::map<Node*, DfsVertex<int>> dfsPaths = dfs(graph, node1, printDfsVertex);
+    std::unordered_map<Node*, DfsVertex<int>> dfsPaths = dfs(graph, node1, printDfsVertex);
 
     std::cout << std::endl << "***************" << std::endl;
     for (auto& p : dfsPaths)
@@ -134,18 +134,25 @@ void testShortestPaths()
 
     std::cout << graph;
 
+    std::cout << std::endl << "*********** Bellman Ford ************:" << std::endl;
+
+    std::unordered_map<Node*, Vertex> paths1 = bellmanFord(graph, node1);
+
+    for (auto& p : paths1)
+        printShortestPath(p.first, &p.second);
+
     std::cout << std::endl << "********* Dag Shortest Path **********:" << std::endl;
 
-    std::map<Node*, Vertex> paths2 = dagShortestPath(graph, node1);
+    std::unordered_map<Node*, Vertex> paths2 = dagShortestPath(graph, node1);
 
     for (auto& p : paths2)
         printShortestPath(p.first, &p.second);
 
     std::cout << std::endl << "************** Dijkstra **************:" << std::endl;
 
-    std::map<Node*, Vertex> paths = dijkstra(graph, node1);
+    std::unordered_map<Node*, Vertex> paths3 = dijkstra(graph, node1);
 
-    for (auto& p : paths)
+    for (auto& p : paths3)
         printShortestPath(p.first, &p.second);
 }
 

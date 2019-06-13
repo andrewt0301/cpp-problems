@@ -18,7 +18,7 @@ std::vector<Node<T>*> getDfsSortedNodes(TGraph& graph)
     using Vertex = DfsVertex<T>;
     using Pair   = std::pair<Node*, Vertex>;
 
-    std::map<Node*, Vertex> paths = dfs(graph, [](Node*, Vertex*) {});
+    std::unordered_map<Node*, Vertex> paths = dfs(graph, [](Node*, Vertex*) {});
 
     std::vector<Pair> vertices(paths.begin(), paths.end());
 
@@ -49,7 +49,7 @@ std::vector<std::vector<Node<T>*>> scc(TGraph& graph)
     Nodes nodes = getDfsSortedNodes(graph);
     graph.transpose();
 
-    std::map<Node*, Vertex> vertices;
+    std::unordered_map<Node*, Vertex> vertices;
     for (Node* node : nodes)
         vertices.insert({node, Vertex()});
 
