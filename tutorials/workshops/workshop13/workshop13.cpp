@@ -44,7 +44,7 @@ void printDfsVertex(Node<int>* node, DfsVertex<int>* vertex)
     std::cout << std::endl;
 }
 
-void printDijkstraPath(Node<int>* node, PathVertex<int>* vertex)
+void printShortestPath(Node<int> *node, PathVertex<int> *vertex)
 {
     std::cout << node->tag;
     std::cout << " dist=" << vertex->dist;
@@ -111,7 +111,7 @@ void testBfsDfs()
 }
 
 template <typename TGraph>
-void testDijkstra()
+void testShortestPaths()
 {
     using  Graph = TGraph;
     using      T = typename TGraph::type;
@@ -134,14 +134,20 @@ void testDijkstra()
 
     std::cout << graph;
 
+    std::cout << std::endl << "********* Dag Shortest Path **********:" << std::endl;
+
+    std::map<Node*, Vertex> paths2 = dagShortestPath(graph, node1);
+
+    for (auto& p : paths2)
+        printShortestPath(p.first, &p.second);
+
     std::cout << std::endl << "************** Dijkstra **************:" << std::endl;
 
     std::map<Node*, Vertex> paths = dijkstra(graph, node1);
 
     for (auto& p : paths)
-        printDijkstraPath(p.first, &p.second);
+        printShortestPath(p.first, &p.second);
 }
-
 
 template <typename TGraph>
 void testTopologicalSort()
@@ -232,7 +238,7 @@ int main()
     testBfsDfs<GraphMultimap<int>>();
     testBfsDfs<GraphMap<int>>();
 
-    testDijkstra<GraphMultimap<int>>();
+    testShortestPaths<GraphMultimap<int>>();
 
     testTopologicalSort<GraphMultimap<std::string>>();
     testTopologicalSort<GraphMap<std::string>>();

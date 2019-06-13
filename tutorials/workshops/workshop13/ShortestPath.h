@@ -13,6 +13,7 @@
 #include <queue>
 
 #include "Node.h"
+#include "TopologicalSort.h"
 
 template <typename T>
 struct PathVertex
@@ -44,7 +45,50 @@ bool relax(const Edge<T, int>& edge, std::map<Node<T>*, PathVertex<T>>& vertices
     return false;
 }
 
-template <typename T, typename TGraph>
+template <typename TGraph, typename T = typename TGraph::type>
+std::map<Node<T>*, PathVertex<T>> initializeSingleSource(TGraph& graph, Node<T>* s)
+{
+    using         Node = Node<T>;
+    using       Vertex = PathVertex<T>;
+    using     Vertices = std::map<Node*,  Vertex>;
+    using NodeIterator = typename TGraph::NodeIterator;
+
+    Vertices vertices;
+
+    std::pair<NodeIterator, NodeIterator> nodeRange = graph.getNodes();
+    for (NodeIterator it = nodeRange.first; it != nodeRange.second; ++it)
+        vertices.insert({*it, Vertex()});
+
+    Vertex& sV = vertices.at(s);
+    sV.dist = 0;
+
+    return vertices;
+}
+
+template <typename TGraph, typename T = typename TGraph::type>
+std::map<Node<T>*, PathVertex<T>> dagShortestPath(TGraph& graph, Node<T>* s)
+{
+    using         Node = Node<T>;
+    using         Pair = std::pair<Node*, DfsVertex<T>>;
+    using     Vertices = std::map<Node*,  PathVertex<T>>;
+    using EdgeIterator = typename TGraph::EdgeIterator;
+
+    Vertices vertices = initializeSingleSource(graph, s);
+
+    std::list<Pair> paths = topologicalSort(graph);
+    for (const Pair& p : paths)
+    {
+        Node* u = p.first;
+
+        std::pair<EdgeIterator, EdgeIterator> edgeRange = graph.getEdges(u);
+        for (EdgeIterator it = edgeRange.first; it != edgeRange.second; ++it)
+            relax(*it, vertices);
+    }
+
+    return vertices;
+}
+
+template <typename TGraph, typename T = typename TGraph::type>
 std::map<Node<T>*, PathVertex<T>> dijkstra(TGraph& graph, Node<T>* s)
 {
     using     Node = Node<T>;
@@ -57,20 +101,13 @@ std::map<Node<T>*, PathVertex<T>> dijkstra(TGraph& graph, Node<T>* s)
     using NodeIterator = typename TGraph::NodeIterator;
     using EdgeIterator = typename TGraph::EdgeIterator;
 
-    Vertices vertices;
-
-    // Initialize-Single-Source
-    std::pair<NodeIterator, NodeIterator> nodeRange = graph.getNodes();
-    for (NodeIterator it = nodeRange.first; it != nodeRange.second; ++it)
-        vertices.insert({*it, Vertex()});
-
-    Vertex& sV = vertices.at(s);
-    sV.dist = 0;
+    Vertices vertices = initializeSingleSource(graph, s);
 
     // Q = G.V
     Queue queue;
     //for (typename Vertices::iterator it = vertices.begin(); it != vertices.end(); ++it)
      //   queue.push_back(Pair{it->first, &it->second});
+    std::pair<NodeIterator, NodeIterator> nodeRange = graph.getNodes();
     for (NodeIterator it = nodeRange.first; it != nodeRange.second; ++it)
         queue.push_back(*it);
 
