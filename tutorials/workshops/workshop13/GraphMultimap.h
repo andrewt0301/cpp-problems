@@ -8,7 +8,7 @@
 #include "Node.h"
 
 #include <iostream>
-#include <map>
+#include <unordered_map>
 
 template <typename T, typename U = int>
 class GraphMultimap
@@ -16,7 +16,7 @@ class GraphMultimap
 private:
     using     Node = Node<T>;
     using     Edge = Edge<T, U>;
-    using    Graph = std::multimap<Node*, Edge>;
+    using    Graph = std::unordered_multimap<Node*, Edge>;
     using Iterator = typename Graph::iterator;
 
     Graph _graph;
