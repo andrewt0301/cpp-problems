@@ -69,16 +69,16 @@ template <typename TGraph, typename T = typename TGraph::type>
 std::map<Node<T>*, PathVertex<T>> dagShortestPath(TGraph& graph, Node<T>* s)
 {
     using         Node = Node<T>;
-    using         Pair = std::pair<Node*, DfsVertex<T>>;
+    using      DfsNode = std::pair<Node*, DfsVertex<T>>;
     using     Vertices = std::map<Node*,  PathVertex<T>>;
     using EdgeIterator = typename TGraph::EdgeIterator;
 
     Vertices vertices = initializeSingleSource(graph, s);
 
-    std::list<Pair> paths = topologicalSort(graph);
-    for (const Pair& p : paths)
+    std::list<DfsNode> sortedNodes = topologicalSort(graph);
+    for (const DfsNode& node : sortedNodes)
     {
-        Node* u = p.first;
+        Node* u = node.first;
 
         std::pair<EdgeIterator, EdgeIterator> edgeRange = graph.getEdges(u);
         for (EdgeIterator it = edgeRange.first; it != edgeRange.second; ++it)
