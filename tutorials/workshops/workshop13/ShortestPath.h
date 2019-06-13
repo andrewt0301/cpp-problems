@@ -2,8 +2,8 @@
 // Created by Andrei Tatarnikov on 2019-06-09.
 //
 
-#ifndef TUTORIALS_DIJKSTRA_H
-#define TUTORIALS_DIJKSTRA_H
+#ifndef TUTORIALS_SHORTESTPATH_H
+#define TUTORIALS_SHORTESTPATH_H
 
 #include <algorithm>
 #include <limits>
@@ -14,8 +14,6 @@
 
 #include "Node.h"
 
-#include <iostream>
-
 template <typename T>
 struct PathVertex
 {
@@ -24,7 +22,7 @@ struct PathVertex
 };
 
 template <typename T>
-void relax(const Edge<T, int>& edge, std::map<Node<T>*, PathVertex<T>>& vertices)
+bool relax(const Edge<T, int>& edge, std::map<Node<T>*, PathVertex<T>>& vertices)
 {
     using Node   = Node<T>;
     using Vertex = PathVertex<T>;
@@ -39,7 +37,11 @@ void relax(const Edge<T, int>& edge, std::map<Node<T>*, PathVertex<T>>& vertices
     {
         vV.dist = uV.dist + edge.tag;
         vV.prev = u;
+
+        return true;
     }
+
+    return false;
 }
 
 template <typename T, typename TGraph>
@@ -102,4 +104,4 @@ std::map<Node<T>*, PathVertex<T>> dijkstra(TGraph& graph, Node<T>* s)
     return vertices;
 }
 
-#endif //TUTORIALS_DIJKSTRA_H
+#endif //TUTORIALS_SHORTESTPATH_H

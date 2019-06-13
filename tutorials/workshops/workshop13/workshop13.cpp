@@ -4,7 +4,7 @@
 
 #include "BFS.h"
 #include "DFS.h"
-#include "Dijkstra.h"
+#include "ShortestPath.h"
 #include "GraphMap.h"
 #include "GraphMultimap.h"
 #include "SCC.h"
