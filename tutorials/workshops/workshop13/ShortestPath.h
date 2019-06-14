@@ -96,11 +96,14 @@ std::unordered_map<Node<T>*, PathVertex<T>> bellmanFord(TGraph& graph, Node<T>* 
 
     std::pair<NodeIterator, NodeIterator> nodeRange = graph.getNodes();
 
-    for (NodeIterator nodeIt = nodeRange.first; nodeIt != nodeRange.second; ++nodeIt)
+    const size_t nodeCount = vertices.size();
+    for (size_t i = 0; i < nodeCount - 1; ++i)
     {
-        std::pair<EdgeIterator, EdgeIterator> edgeRange = graph.getEdges(*nodeIt);
-        for (EdgeIterator edgeIt = edgeRange.first; edgeIt != edgeRange.second; ++edgeIt)
-            relax(*edgeIt, vertices);
+        for (NodeIterator nodeIt = nodeRange.first; nodeIt != nodeRange.second; ++nodeIt) {
+            std::pair<EdgeIterator, EdgeIterator> edgeRange = graph.getEdges(*nodeIt);
+            for (EdgeIterator edgeIt = edgeRange.first; edgeIt != edgeRange.second; ++edgeIt)
+                relax(*edgeIt, vertices);
+        }
     }
 
     for (NodeIterator nodeIt = nodeRange.first; nodeIt != nodeRange.second; ++nodeIt)
