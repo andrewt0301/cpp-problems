@@ -45,6 +45,21 @@ bool relax(const Edge<T, int>& edge, std::unordered_map<Node<T>*, PathVertex<T>>
     return false;
 }
 
+template <typename T>
+bool canRelax(const Edge<T, int>& edge, std::unordered_map<Node<T>*, PathVertex<T>>& vertices)
+{
+    using Node   = Node<T>;
+    using Vertex = PathVertex<T>;
+
+    Node* u = edge.src;
+    Node* v = edge.dest;
+
+    Vertex& uV = vertices.at(u);
+    Vertex& vV = vertices.at(v);
+
+    return vV.dist > uV.dist + edge.tag;
+}
+
 template <typename TGraph, typename T = typename TGraph::type>
 std::unordered_map<Node<T>*, PathVertex<T>> initializeSingleSource(TGraph& graph, Node<T>* s)
 {
@@ -68,37 +83,35 @@ std::unordered_map<Node<T>*, PathVertex<T>> initializeSingleSource(TGraph& graph
 template <typename TGraph, typename T = typename TGraph::type>
 std::unordered_map<Node<T>*, PathVertex<T>> bellmanFord(TGraph& graph, Node<T>* s)
 {
-    using         Node = Node<T>;
-    using         Edge = Edge<T, int>;
-    using      DfsNode = std::pair<Node*, DfsVertex<T>>;
-    using       Vertex = PathVertex<T>;
-    using     Vertices = std::unordered_map<Node*,  Vertex>;
+    using     Node = Node<T>;
+    using     Edge = Edge<T, int>;
+    using  DfsNode = std::pair<Node*, DfsVertex<T>>;
+    using   Vertex = PathVertex<T>;
+    using Vertices = std::unordered_map<Node*,  Vertex>;
 
     using NodeIterator = typename TGraph::NodeIterator;
     using EdgeIterator = typename TGraph::EdgeIterator;
 
     Vertices vertices = initializeSingleSource(graph, s);
 
-    std::pair<EdgeIterator, EdgeIterator> edgeRange = graph.getEdges();
     std::pair<NodeIterator, NodeIterator> nodeRange = graph.getNodes();
 
-  //  for (NodeIterator nodeIt = nodeRange.first; nodeIt != nodeRange.second; ++nodeIt)
+    for (NodeIterator nodeIt = nodeRange.first; nodeIt != nodeRange.second; ++nodeIt)
     {
+        std::pair<EdgeIterator, EdgeIterator> edgeRange = graph.getEdges(*nodeIt);
         for (EdgeIterator edgeIt = edgeRange.first; edgeIt != edgeRange.second; ++edgeIt)
             relax(*edgeIt, vertices);
     }
 
-    /*
-    for (EdgeIterator it = edgeRange.first; it != edgeRange.second; ++it)
+    for (NodeIterator nodeIt = nodeRange.first; nodeIt != nodeRange.second; ++nodeIt)
     {
-        Edge& edge = *it;
-
-        Vertex& uV = vertices.at(edge.src);
-        Vertex& vV = vertices.at(edge.dest);
-
-        if (vV.dist > uV.dist + edge.tag)
-            return Vertices();
-    }*/
+        std::pair<EdgeIterator, EdgeIterator> edgeRange = graph.getEdges(*nodeIt);
+        for (EdgeIterator edgeIt = edgeRange.first; edgeIt != edgeRange.second; ++edgeIt)
+        {
+            if (canRelax(*edgeIt, vertices))
+                return Vertices();
+        }
+    }
 
     return vertices;
 }
