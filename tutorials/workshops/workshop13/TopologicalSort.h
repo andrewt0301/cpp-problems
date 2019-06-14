@@ -11,8 +11,9 @@
 
 template <
     typename TGraph,
-    typename TNode   = Node<typename TGraph::type>,
-    typename TVertex = DfsVertex<typename TGraph::type>,
+    typename T       = typename TGraph::type,
+    typename TNode   = Node<T>,
+    typename TVertex = DfsVertex<T>,
     typename TPair   = std::pair<TNode*, TVertex>
 >
 std::list<TPair> topologicalSort(TGraph& graph)
