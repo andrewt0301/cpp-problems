@@ -316,6 +316,9 @@ private:
         else
         {
             second->next = _head;
+            if (_head != nullptr)
+                _head->prev = second;
+
             _head = second;
             if (_tail == nullptr)
                 _tail = _head;
@@ -338,6 +341,9 @@ private:
         else
         {
             second->prev = _tail;
+            if (_tail != nullptr)
+                _tail->next = second;
+
             _tail = second;
             if (_head == nullptr)
                 _head = _tail;
