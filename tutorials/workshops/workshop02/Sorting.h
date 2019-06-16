@@ -109,7 +109,7 @@ void bubbleSort(std::vector<T>& data)
 /**
   * Sorts an array of integer values into ascending numerical order using the counting sort algorithm.
   *
-  * Time complexity: {@code O(N)}, where N is the length of the array.
+  * Time complexity: {@code Θ(N)}, where N is the length of the array.
   *
   * @tparam T Integer value exact type.
   * @tparam K Integer value range size.
@@ -133,6 +133,19 @@ void countingSort(std::vector<T>& data)
         const T val = input[i - 1];
         data[--counts[val]] = val;
     }
+}
+
+/**
+  * Sorts an array of values into ascending numerical order using the bubble sort algorithm.
+  *
+  * Time complexity: {@code Θ(N^2)}, where N is the length of the array.
+  *
+  * @param data Vector of values to be sorted.
+  */
+template <typename T>
+void mergeSort(std::vector<T>& data)
+{
+    // TODO
 }
 
 #endif //TUTORIALS_SORTING_H
