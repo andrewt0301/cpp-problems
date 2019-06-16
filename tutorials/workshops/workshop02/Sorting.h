@@ -6,7 +6,7 @@
 #define TUTORIALS_SORTING_H
 
 /**
-  * Sorts an array of integers into ascending numerical order using the insertion sort algorithm.
+  * Sorts an array of values into ascending numerical order using the insertion sort algorithm.
   *
   * Time complexity: {@code O(N^2)}, where N is the length of the array.
   *
@@ -31,7 +31,7 @@ void insertionSort(std::vector<T>& data)
 }
 
 /**
-  * Sorts an array of integers into ascending numerical order using the selection sort algorithm.
+  * Sorts an array of values into ascending numerical order using the selection sort algorithm.
   *
   * Time complexity: {@code O(N^2)}, where N is the length of the array.
   *
@@ -69,7 +69,7 @@ void selectionSort(std::vector<T>& data)
 }
 
 /**
-  * Sorts an array of integers into ascending numerical order using the bubble sort algorithm.
+  * Sorts an array of values into ascending numerical order using the bubble sort algorithm.
   *
   * Time complexity: {@code O(N^2)}, where N is the length of the array.
   *
@@ -103,6 +103,35 @@ void bubbleSort(std::vector<T>& data)
 
         if (noSwaps)
             break;
+    }
+}
+
+/**
+  * Sorts an array of integer values into ascending numerical order using the counting sort algorithm.
+  *
+  * Time complexity: {@code O(N)}, where N is the length of the array.
+  *
+  * @tparam T Integer value exact type.
+  * @tparam K Integer value range size.
+  * @param data Vector of integer values to be sorted.
+  */
+template <typename T, int K>
+void countingSort(std::vector<T>& data)
+{
+    std::vector<T> input(data);
+
+    size_t counts[K] = {0};
+
+    for (T val : input)
+        ++counts[val];
+
+    for (size_t i = 1; i < K; ++i)
+        counts[i] += counts[i - 1];
+
+    for (size_t i = input.size(); i >= 1; --i)
+    {
+        const T val = input[i - 1];
+        data[--counts[val]] = val;
     }
 }
 

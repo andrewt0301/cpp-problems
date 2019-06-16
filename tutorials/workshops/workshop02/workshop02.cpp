@@ -82,6 +82,12 @@ int main()
             bubbleSort(values);
         });
 
+        // We sort all vectors with counting sort and measure the sorting time.
+        const long countingSortTime = calcExecTime(testData, [](IntVector& values)
+        {
+            countingSort<int, 1000>(values);
+        });
+
         // We sort all vectors with std::sort and measure the sorting time.
         const long stdSortTime = calcExecTime(testData, [](IntVector& values)
         {
@@ -89,7 +95,7 @@ int main()
         });
 
         // We add a sample to the samples vector.
-        samples.push_back({length, insertionSortTime, selectionSortTime, bubbleSortTime, stdSortTime});
+        samples.push_back({length, insertionSortTime, selectionSortTime, bubbleSortTime, countingSortTime, stdSortTime});
     }
 
     // We save samples to a CSV files.
