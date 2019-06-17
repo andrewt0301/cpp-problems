@@ -8,10 +8,10 @@
 /**
  * Swaps two elements in a vector.
  *
- * @tparam T
- * @param data
- * @param i
- * @param j
+ * @tparam T Data type.
+ * @param data Vector.
+ * @param i First element index.
+ * @param j Second element index.
  */
 template <typename T>
 inline void swap(std::vector<T>& data, size_t i, size_t j)
@@ -166,13 +166,19 @@ void mergeSort(std::vector<T>& data)
 
 
 template <typename T>
-int partition(std::vector<T>& data, long start, long end);
+int partition(std::vector<T>& data, size_t start, size_t end);
 
 template <typename T>
-void quickSort(std::vector<T>& data, long start, long end);
+void quickSort(std::vector<T>& data, size_t start, size_t end);
 
-
-
+/**
+  * Sorts an array of values into ascending numerical order using the quick sort algorithm.
+  *
+  * Time complexity: worst case {@code O(N^2)}, expected {@code O(N log N)},
+  * where N is the length of the array.
+  *
+  * @param data Vector of values to be sorted.
+  */
 template <typename T>
 void quickSort(std::vector<T>& data)
 {
@@ -182,24 +188,27 @@ void quickSort(std::vector<T>& data)
 }
 
 template <typename T>
-void quickSort(std::vector<T>& data, long start, long end)
+void quickSort(std::vector<T>& data, size_t start, size_t end)
 {
     if (start < end)
     {
-        long split = partition(data, start, end);
+        size_t split = partition(data, start, end);
 
-        quickSort(data, start, split - 1);
-        quickSort(data, split + 1, end);
+        if (split != start)
+            quickSort(data, start, split - 1);
+
+        if (split != end)
+            quickSort(data, split + 1, end);
     }
 }
 
 template <typename T>
-int partition(std::vector<T>& data, long start, long end)
+int partition(std::vector<T>& data, size_t start, size_t end)
 {
     const T pivot = data[end];
-    long split = start;
+    size_t split = start;
 
-    for (long i = start; i < end; ++i)
+    for (size_t i = start; i < end; ++i)
     {
         if (data[i] <= pivot)
         {

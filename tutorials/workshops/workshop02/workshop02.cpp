@@ -83,6 +83,12 @@ int main()
             heapsort(values, values.size(), std::greater<>());
         });
 
+        // We sort all vectors with quick sort and measure the sorting time.
+        const long quickSortTime = calcExecTime(testData, [](IntVector& values)
+        {
+            quickSort(values);
+        });
+
         // We sort all vectors with std::sort and measure the sorting time.
         const long stdSortTime = calcExecTime(testData, [](IntVector& values)
         {
@@ -98,6 +104,7 @@ int main()
                 bubbleSortTime,
                 countingSortTime,
                 heapSortTime,
+                quickSortTime,
                 stdSortTime
             }
         );
