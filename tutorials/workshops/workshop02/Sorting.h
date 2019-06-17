@@ -6,22 +6,6 @@
 #define TUTORIALS_SORTING_H
 
 /**
- * Swaps two elements in a vector.
- *
- * @tparam T Data type.
- * @param data Vector.
- * @param i First element index.
- * @param j Second element index.
- */
-template <typename T>
-inline void swap(std::vector<T>& data, size_t i, size_t j)
-{
-    T temp = data[i];
-    data[i] = data[j];
-    data[j] = temp;
-}
-
-/**
   * Sorts an array of values into ascending numerical order using the insertion sort algorithm.
   *
   * Time complexity: {@code O(N^2)}, where N is the length of the array.
@@ -212,12 +196,12 @@ int partition(std::vector<T>& data, size_t start, size_t end)
     {
         if (data[i] <= pivot)
         {
-            swap(data, split, i);
+            std::swap(data[split], data[i]);
             split++;
         }
     }
 
-    swap(data, split, end);
+    std::swap(data[split], data[end]);
     return split;
 }
 
