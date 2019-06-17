@@ -6,6 +6,22 @@
 #define TUTORIALS_SORTING_H
 
 /**
+ * Swaps two elements in a vector.
+ *
+ * @tparam T
+ * @param data
+ * @param i
+ * @param j
+ */
+template <typename T>
+inline void swap(std::vector<T>& data, size_t i, size_t j)
+{
+    T temp = data[i];
+    data[i] = data[j];
+    data[j] = temp;
+}
+
+/**
   * Sorts an array of values into ascending numerical order using the insertion sort algorithm.
   *
   * Time complexity: {@code O(N^2)}, where N is the length of the array.
@@ -150,45 +166,40 @@ void mergeSort(std::vector<T>& data)
 
 
 template <typename T>
-int partition(std::vector<T>& data, size_t start, size_t end);
+int partition(std::vector<T>& data, long start, long end);
 
 template <typename T>
-void quickSort(std::vector<T>& data, size_t start, size_t end);
+void quickSort(std::vector<T>& data, long start, long end);
 
-template <typename T>
-void swap(std::vector<T>& data, size_t i, size_t j)
-{
-    T temp = data[i];
-    data[i] = data[j];
-    data[j] = temp;
-}
+
 
 template <typename T>
 void quickSort(std::vector<T>& data)
 {
-    if (data.size() > 1)
-        quickSort(data, 0, data.size() - 1);
+    size_t size = data.size();
+    if (size > 1)
+        quickSort(data, 0, size - 1);
 }
 
 template <typename T>
-void quickSort(std::vector<T>& data, size_t start, size_t end)
+void quickSort(std::vector<T>& data, long start, long end)
 {
-    size_t length = end - start;
-    if (length > 1)
+    if (start < end)
     {
-        size_t split = partition(data, start, end);
+        long split = partition(data, start, end);
+
         quickSort(data, start, split - 1);
         quickSort(data, split + 1, end);
     }
 }
 
 template <typename T>
-int partition(std::vector<T>& data, size_t start, size_t end)
+int partition(std::vector<T>& data, long start, long end)
 {
     const T pivot = data[end];
-    size_t split = start;
+    long split = start;
 
-    for (size_t i = start; i < end; ++i)
+    for (long i = start; i < end; ++i)
     {
         if (data[i] <= pivot)
         {
