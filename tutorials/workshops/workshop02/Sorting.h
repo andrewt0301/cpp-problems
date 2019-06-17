@@ -148,4 +148,57 @@ void mergeSort(std::vector<T>& data)
     // TODO
 }
 
+
+template <typename T>
+int partition(std::vector<T>& data, size_t start, size_t end);
+
+template <typename T>
+void quickSort(std::vector<T>& data, size_t start, size_t end);
+
+template <typename T>
+void swap(std::vector<T>& data, size_t i, size_t j)
+{
+    T temp = data[i];
+    data[i] = data[j];
+    data[j] = temp;
+}
+
+template <typename T>
+void quickSort(std::vector<T>& data)
+{
+    if (data.size() > 1)
+        quickSort(data, 0, data.size() - 1);
+}
+
+template <typename T>
+void quickSort(std::vector<T>& data, size_t start, size_t end)
+{
+    size_t length = end - start;
+    if (length > 1)
+    {
+        size_t split = partition(data, start, end);
+        quickSort(data, start, split - 1);
+        quickSort(data, split + 1, end);
+    }
+}
+
+template <typename T>
+int partition(std::vector<T>& data, size_t start, size_t end)
+{
+    const T pivot = data[end];
+    size_t split = start;
+
+    for (size_t i = start; i < end; ++i)
+    {
+        if (data[i] <= pivot)
+        {
+            swap(data, split, i);
+            split++;
+        }
+    }
+
+    swap(data, split, end);
+    return split;
+}
+
 #endif //TUTORIALS_SORTING_H
