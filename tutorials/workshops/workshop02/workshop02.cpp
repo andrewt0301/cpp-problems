@@ -12,6 +12,7 @@
 #include "../Time.h"
 
 #include "Sorting.h"
+#include "../workshop09/Heap.h"
 
 using IntVector = std::vector<int>;
 
@@ -65,27 +66,21 @@ int main()
         std::vector<IntVector> testData = randomTestData(random, length, 10);
 
         // We sort all vectors with insertion sort and measure the sorting time.
-        const long insertionSortTime = calcExecTime(testData, [](IntVector& values)
-        {
-            insertionSort(values);
-        });
+        const long insertionSortTime = calcExecTime(testData, insertionSort<int>);
 
         // We sort all vectors with selection sort and measure the sorting time.
-        const long selectionSortTime = calcExecTime(testData, [](IntVector& values)
-        {
-            selectionSort(values);
-        });
+        const long selectionSortTime = calcExecTime(testData, selectionSort<int>);
 
         // We sort all vectors with bubble sort and measure the sorting time.
-        const long bubbleSortTime = calcExecTime(testData, [](IntVector& values)
-        {
-            bubbleSort(values);
-        });
+        const long bubbleSortTime = calcExecTime(testData, bubbleSort<int>);
 
         // We sort all vectors with counting sort and measure the sorting time.
-        const long countingSortTime = calcExecTime(testData, [](IntVector& values)
+        const long countingSortTime = calcExecTime(testData, countingSort<int, 1000>);
+
+        // We sort all vectors with heap sort and measure the sorting time.
+        const long heapSortTime = calcExecTime(testData, [](IntVector& values)
         {
-            countingSort<int, 1000>(values);
+            heapsort(values, values.size(), std::greater<>());
         });
 
         // We sort all vectors with std::sort and measure the sorting time.
@@ -95,7 +90,17 @@ int main()
         });
 
         // We add a sample to the samples vector.
-        samples.push_back({length, insertionSortTime, selectionSortTime, bubbleSortTime, countingSortTime, stdSortTime});
+        samples.push_back(
+            {
+                length,
+                insertionSortTime,
+                selectionSortTime,
+                bubbleSortTime,
+                countingSortTime,
+                heapSortTime,
+                stdSortTime
+            }
+        );
     }
 
     // We save samples to a CSV files.
