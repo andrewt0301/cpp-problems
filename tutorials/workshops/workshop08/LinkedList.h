@@ -226,14 +226,17 @@ public:
 
     void mergeSort()
     {
-        mergeSort(_head, _tail);
+        std::pair<Node*, Node*> sorted = mergeSort(_head, _tail);
+
+        _head = sorted.first;
+        _tail = sorted.second;
     }
 
-    void mergeSort(Node*& head, Node*& tail)
+    std::pair<Node*, Node*> mergeSort(Node* head, Node* tail)
     {
-        // If there is one element, do nothing.
+        // If there is only one element, do nothing.
         if (head == tail)
-            return;
+            return {head, tail};
 
         // Split the list into two parts.
         Node* mid1 = partition(head, tail);
@@ -243,11 +246,11 @@ public:
         mid2->prev = nullptr;
 
         // Sort each part separately.
-        mergeSort(head, mid1);
-        mergeSort(mid2, tail);
+        std::pair<Node*, Node*> part1 = mergeSort(head, mid1);
+        std::pair<Node*, Node*> part2 = mergeSort(mid2, tail);
 
         // Merge two parts.
-        merge(head, tail, mid2);
+        return merge(part1.first, part2.first);
     }
 
     Node* partition(Node* head, Node* tail)
@@ -260,10 +263,40 @@ public:
         return head;
     }
 
-    void merge(Node*& head, Node*& tail, Node* mid)
+    std::pair<Node*, Node*> merge(Node* head1, Node* head2)
     {
-        Node* newHead = nullptr;
-        // TODO
+        Node* head = nullptr;
+        Node* tail = nullptr;
+
+        while (head1 != nullptr || head2 != nullptr)
+        {
+            Node* p;
+            if ((head1 != nullptr && head2 != nullptr && head1->value < head2->value) || head2 == nullptr) {
+                p = head1;
+                head1 = head1->next;
+            }
+            else
+            {
+                p = head2;
+                head2 = head2->next;
+            }
+
+            if (tail != nullptr)
+            {
+                p->prev = tail;
+                p->next = nullptr;
+
+                tail->next = p;
+                tail = p;
+            }
+            else
+            {
+                head = p;
+                tail = p;
+            }
+        }
+
+        return {head, tail};
     }
 
     friend std::ostream& operator<<(std::ostream& out, const LinkedList& list)
