@@ -139,7 +139,7 @@ template <typename T>
 void mergeSort(std::vector<T>& data, std::vector<T>& temp, size_t start, size_t end);
 
 template <typename T>
-void merge(std::vector<T>& data, std::vector<T>& temp, int start, int split, int end);
+void merge(std::vector<T>& data, std::vector<T>& temp, size_t start, size_t split, size_t end);
 
 /**
   * Sorts an array of values into ascending numerical order using the merge sort algorithm.
@@ -177,10 +177,10 @@ void mergeSort(std::vector<T>& data, std::vector<T>& temp, size_t start, size_t 
         size_t split = (start + end) / 2;
 
         if (split != start)
-            mergeSort(data, start, split);
+            mergeSort(data, temp, start, split);
 
         if (split != end)
-            mergeSort(data, split + 1, end);
+            mergeSort(data, temp, split + 1, end);
 
         merge(data, temp, start, split, end);
     }
@@ -196,40 +196,51 @@ void mergeSort(std::vector<T>& data, std::vector<T>& temp, size_t start, size_t 
  *              the second range (included).
  * @param end End position of the second range (included).
  */
+
+#include <iostream>
+
 template <typename T>
-void merge(std::vector<T>& data, std::vector<T>& temp, int start, int split, int end) {
+void merge(std::vector<T>& data, std::vector<T>& temp, size_t start, size_t split, size_t end) {
 
-    /*
-    // Creates a copy of the first (left) range.
-    final int leftLen = split - start + 1;
-    final int[] leftData = new int[leftLen + 1];
-    System.arraycopy(data, start, leftData, 0, leftLen);
-    leftData[leftLen] = Integer.MAX_VALUE;
+    // Copies both sorted ranges to temp.
 
-    // Creates a copy of the second (right) range.
-    final int rightLen = end - split;
-    final int[] rightData = new int[rightLen + 1];
-    System.arraycopy(data, split + 1, rightData, 0, rightLen);
-    rightData[rightLen] = Integer.MAX_VALUE;
+    std::cout << "Before merge" <<  std::endl;
+
+    for (size_t i = start, j = 0; i <= end; ++i, ++j) {
+        temp[j] = data[i];
+        if (i <= split)
+            std::cout << " L ";
+        else
+            std::cout << " R ";
+        std::cout << temp[j] << " ";
+    }
+    std::cout << std::endl;
+
+    const size_t  leftEnd = split - start;
+    const size_t rightEnd = end - start;
+
+    std::cout << "After merge" <<  std::endl;
+    std::cout << "  " << leftEnd << "  " << rightEnd <<  std::endl;
 
     // Merges the two ranges and saves the result to the data array.
-    for (int index = start, leftIndex = 0, rightIndex = 0; index <= end; ++index)
+    for (size_t i = start, l = 0, r = leftEnd + 1; i <= end; ++i)
     {
-        final int left = leftData[leftIndex];
-        final int right = rightData[rightIndex];
-
-        if (left <= right) {
-            data[index] = left;
-            leftIndex++;
-        } else {
-            data[index] = right;
-            rightIndex++;
+        if ((l <= leftEnd && r <= rightEnd && data[l] < data[r]) || r > rightEnd) {
+            std::cout << " L(" << l << ") ";
+            data[i] = temp[l++];
         }
-    }*/
+        else {
+            std::cout << " R(" << r << ") ";
+            data[i] = temp[r++];
+        }
+
+        std::cout << data[i] << " ";
+    }
+    std::cout << std::endl;
 }
 
 template <typename T>
-int partition(std::vector<T>& data, size_t start, size_t end);
+size_t partition(std::vector<T>& data, size_t start, size_t end);
 
 template <typename T>
 void quickSort(std::vector<T>& data, size_t start, size_t end);
@@ -266,7 +277,7 @@ void quickSort(std::vector<T>& data, size_t start, size_t end)
 }
 
 template <typename T>
-int partition(std::vector<T>& data, size_t start, size_t end)
+size_t partition(std::vector<T>& data, size_t start, size_t end)
 {
     const T pivot = data[end];
     size_t split = start;
