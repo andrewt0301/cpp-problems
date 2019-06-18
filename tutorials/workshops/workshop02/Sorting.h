@@ -135,19 +135,98 @@ void countingSort(std::vector<T>& data)
     }
 }
 
+template <typename T>
+void mergeSort(std::vector<T>& data, std::vector<T>& temp, size_t start, size_t end);
+
+template <typename T>
+void merge(std::vector<T>& data, std::vector<T>& temp, int start, int split, int end);
+
 /**
-  * Sorts an array of values into ascending numerical order using the bubble sort algorithm.
+  * Sorts an array of values into ascending numerical order using the merge sort algorithm.
   *
-  * Time complexity: {@code Θ(N^2)}, where N is the length of the array.
+  * Time complexity: {@code Θ(N log N)}, where N is the length of the array.
   *
   * @param data Vector of values to be sorted.
   */
 template <typename T>
 void mergeSort(std::vector<T>& data)
 {
-    // TODO
+    size_t size = data.size();
+    if (size > 1)
+    {
+        std::vector<T> temp(data);
+        mergeSort(data, temp, 0, size - 1);
+    }
 }
 
+/**
+ * Sorts the specified range in an array of values into ascending
+ * numerical order using the merge sort algorithm.
+ *
+ * Time complexity: {@code Θ(N lg N)}, where N is the length of the sorted range.
+ *
+ * @param data Vector of values to be sorted.
+ * @param start Range start index (included).
+ * @param end Range end index (included).
+ */
+template <typename T>
+void mergeSort(std::vector<T>& data, std::vector<T>& temp, size_t start, size_t end) {
+
+    if (start < end)
+    {
+        size_t split = (start + end) / 2;
+
+        if (split != start)
+            mergeSort(data, start, split);
+
+        if (split != end)
+            mergeSort(data, split + 1, end);
+
+        merge(data, temp, start, split, end);
+    }
+}
+
+/**
+ * Merges two adjacent sorted ranges in an array into a single sorted range.
+ *
+ * @param data Array to be merged.
+ * @param temp Temporary array to be used for merge.
+ * @param start Start position of the first range (included).
+ * @param split End position of the first range, followed by start position of
+ *              the second range (included).
+ * @param end End position of the second range (included).
+ */
+template <typename T>
+void merge(std::vector<T>& data, std::vector<T>& temp, int start, int split, int end) {
+
+    /*
+    // Creates a copy of the first (left) range.
+    final int leftLen = split - start + 1;
+    final int[] leftData = new int[leftLen + 1];
+    System.arraycopy(data, start, leftData, 0, leftLen);
+    leftData[leftLen] = Integer.MAX_VALUE;
+
+    // Creates a copy of the second (right) range.
+    final int rightLen = end - split;
+    final int[] rightData = new int[rightLen + 1];
+    System.arraycopy(data, split + 1, rightData, 0, rightLen);
+    rightData[rightLen] = Integer.MAX_VALUE;
+
+    // Merges the two ranges and saves the result to the data array.
+    for (int index = start, leftIndex = 0, rightIndex = 0; index <= end; ++index)
+    {
+        final int left = leftData[leftIndex];
+        final int right = rightData[rightIndex];
+
+        if (left <= right) {
+            data[index] = left;
+            leftIndex++;
+        } else {
+            data[index] = right;
+            rightIndex++;
+        }
+    }*/
+}
 
 template <typename T>
 int partition(std::vector<T>& data, size_t start, size_t end);
