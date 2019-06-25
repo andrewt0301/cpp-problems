@@ -58,12 +58,12 @@ int main()
     // length is the length of array to be sorted.
     // We increase length with step 100.
     // We use large vector lengths because modern computers sort vectors very quickly.
-    for (long length = 100; length <= 7000; length += 100)
+    for (long length = 100; length <= 10000; length += 100)
     {
         // Test data: vectors of integers to be sorted.
         // We need multiple vectors as sorting of a single vector can be done quicker than 1 millisecond.
         // We generate values in advance in order to exclude generation cost from result.
-        std::vector<IntVector> testData = randomTestData(random, length, 10);
+        std::vector<IntVector> testData = randomTestData(random, length, 15);
 
         // We sort all vectors with insertion sort and measure the sorting time.
         const long insertionSortTime = calcExecTime(testData, insertionSort<int>);
@@ -81,6 +81,12 @@ int main()
         const long heapSortTime = calcExecTime(testData, [](IntVector& values)
         {
             heapsort(values, values.size(), std::greater<>());
+        });
+
+        // We sort all vectors with merge sort and measure the sorting time.
+        const long mergeSortTime = calcExecTime(testData, [](IntVector& values)
+        {
+            mergeSort(values);
         });
 
         // We sort all vectors with quick sort and measure the sorting time.
@@ -104,6 +110,7 @@ int main()
                 bubbleSortTime,
                 countingSortTime,
                 heapSortTime,
+                mergeSortTime,
                 quickSortTime,
                 stdSortTime
             }

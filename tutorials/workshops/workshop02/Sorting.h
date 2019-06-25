@@ -197,46 +197,27 @@ void mergeSort(std::vector<T>& data, std::vector<T>& temp, size_t start, size_t 
  * @param end End position of the second range (included).
  */
 
-#include <iostream>
-
 template <typename T>
 void merge(std::vector<T>& data, std::vector<T>& temp, size_t start, size_t split, size_t end) {
 
     // Copies both sorted ranges to temp.
-
-    std::cout << "Before merge" <<  std::endl;
-
-    for (size_t i = start, j = 0; i <= end; ++i, ++j) {
+    for (size_t i = start, j = 0; i <= end; ++i, ++j)
         temp[j] = data[i];
-        if (i <= split)
-            std::cout << " L ";
-        else
-            std::cout << " R ";
-        std::cout << temp[j] << " ";
-    }
-    std::cout << std::endl;
 
     const size_t  leftEnd = split - start;
     const size_t rightEnd = end - start;
 
-    std::cout << "After merge" <<  std::endl;
-    std::cout << "  " << leftEnd << "  " << rightEnd <<  std::endl;
-
     // Merges the two ranges and saves the result to the data array.
     for (size_t i = start, l = 0, r = leftEnd + 1; i <= end; ++i)
     {
-        if ((l <= leftEnd && r <= rightEnd && data[l] < data[r]) || r > rightEnd) {
-            std::cout << " L(" << l << ") ";
-            data[i] = temp[l++];
-        }
-        else {
-            std::cout << " R(" << r << ") ";
-            data[i] = temp[r++];
-        }
+        const bool  isLeftEmpty = l > leftEnd;
+        const bool isRightEmpty = r > rightEnd;
 
-        std::cout << data[i] << " ";
+        if ((!isLeftEmpty && !isRightEmpty && temp[l] < temp[r]) || isRightEmpty)
+            data[i] = temp[l++];
+        else
+            data[i] = temp[r++];
     }
-    std::cout << std::endl;
 }
 
 template <typename T>
