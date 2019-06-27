@@ -219,6 +219,20 @@ void mergeSort(std::vector<T>& data)
     }
 }
 
+/**
+ * Partitions a range of some array into two parts.
+ *
+ * Partitioning is done in such a way that
+ * the first part contains values less or equal (<=) than the pivot element and
+ * the second part contains values greater (>) than the pivot element.
+ * The pivot element is chosen to be the last element in the range.
+ *
+ * @tparam T Value type.
+ * @param data Array to be partitioned.
+ * @param start Range start index (included).
+ * @param end Range end index (included).
+ * @return Position of the split (index of the pivot element in the rearranged array).
+ */
 template <typename T>
 size_t partition(std::vector<T>& data, size_t start, size_t end)
 {
