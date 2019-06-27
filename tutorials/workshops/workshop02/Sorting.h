@@ -10,6 +10,7 @@
   *
   * Time complexity: {@code O(N^2)}, where N is the length of the array.
   *
+  * @tparam T Value type.
   * @param data Vector of values to be sorted.
   */
 template <typename T>
@@ -35,6 +36,7 @@ void insertionSort(std::vector<T>& data)
   *
   * Time complexity: {@code O(N^2)}, where N is the length of the array.
   *
+  * @tparam T Value type.
   * @param data Vector of values to be sorted.
   */
 template <typename T>
@@ -73,6 +75,7 @@ void selectionSort(std::vector<T>& data)
   *
   * Time complexity: {@code O(N^2)}, where N is the length of the array.
   *
+  * @tparam T Value type.
   * @param data Vector of values to be sorted.
   */
 template <typename T>
@@ -111,8 +114,8 @@ void bubbleSort(std::vector<T>& data)
   *
   * Time complexity: {@code Θ(N)}, where N is the length of the array.
   *
-  * @tparam T Integer value exact type.
-  * @tparam K Integer value range size.
+  * @tparam T Value type.
+  * @tparam K Value range size.
   * @param data Vector of integer values to be sorted.
   */
 template <typename T, int K>
@@ -135,60 +138,10 @@ void countingSort(std::vector<T>& data)
     }
 }
 
-template <typename T>
-void mergeSort(std::vector<T>& data, std::vector<T>& temp, size_t start, size_t end);
-
-template <typename T>
-void merge(std::vector<T>& data, std::vector<T>& temp, size_t start, size_t split, size_t end);
-
-/**
-  * Sorts an array of values into ascending numerical order using the merge sort algorithm.
-  *
-  * Time complexity: {@code Θ(N log N)}, where N is the length of the array.
-  *
-  * @param data Vector of values to be sorted.
-  */
-template <typename T>
-void mergeSort(std::vector<T>& data)
-{
-    size_t size = data.size();
-    if (size > 1)
-    {
-        std::vector<T> temp(data);
-        mergeSort(data, temp, 0, size - 1);
-    }
-}
-
-/**
- * Sorts the specified range in an array of values into ascending
- * numerical order using the merge sort algorithm.
- *
- * Time complexity: {@code Θ(N lg N)}, where N is the length of the sorted range.
- *
- * @param data Vector of values to be sorted.
- * @param start Range start index (included).
- * @param end Range end index (included).
- */
-template <typename T>
-void mergeSort(std::vector<T>& data, std::vector<T>& temp, size_t start, size_t end) {
-
-    if (start < end)
-    {
-        size_t split = (start + end) / 2;
-
-        if (split != start)
-            mergeSort(data, temp, start, split);
-
-        if (split != end)
-            mergeSort(data, temp, split + 1, end);
-
-        merge(data, temp, start, split, end);
-    }
-}
-
 /**
  * Merges two adjacent sorted ranges in an array into a single sorted range.
  *
+ * @tparam T Value type.
  * @param data Array to be merged.
  * @param temp Temporary array to be used for merge.
  * @param start Start position of the first range (included).
@@ -196,7 +149,6 @@ void mergeSort(std::vector<T>& data, std::vector<T>& temp, size_t start, size_t 
  *              the second range (included).
  * @param end End position of the second range (included).
  */
-
 template <typename T>
 void merge(std::vector<T>& data, std::vector<T>& temp, size_t start, size_t split, size_t end) {
 
@@ -220,40 +172,50 @@ void merge(std::vector<T>& data, std::vector<T>& temp, size_t start, size_t spli
     }
 }
 
+/**
+ * Sorts the specified range in an array of values into ascending
+ * numerical order using the merge sort algorithm.
+ *
+ * Time complexity: {@code Θ(N lg N)}, where N is the length of the sorted range.
+ *
+ * @tparam T Value type.
+ * @param data Vector of values to be sorted.
+ * @param start Range start index (included).
+ * @param end Range end index (included).
+ */
 template <typename T>
-size_t partition(std::vector<T>& data, size_t start, size_t end);
+void mergeSort(std::vector<T>& data, std::vector<T>& temp, size_t start, size_t end) {
 
-template <typename T>
-void quickSort(std::vector<T>& data, size_t start, size_t end);
+    if (start < end)
+    {
+        size_t split = (start + end) / 2;
+
+        if (split != start)
+            mergeSort(data, temp, start, split);
+
+        if (split != end)
+            mergeSort(data, temp, split + 1, end);
+
+        merge(data, temp, start, split, end);
+    }
+}
 
 /**
-  * Sorts an array of values into ascending numerical order using the quick sort algorithm.
+  * Sorts an array of values into ascending numerical order using the merge sort algorithm.
   *
-  * Time complexity: worst case {@code O(N^2)}, expected {@code O(N log N)},
-  * where N is the length of the array.
+  * Time complexity: {@code Θ(N log N)}, where N is the length of the array.
   *
+  * @tparam T Value type.
   * @param data Vector of values to be sorted.
   */
 template <typename T>
-void quickSort(std::vector<T>& data)
+void mergeSort(std::vector<T>& data)
 {
     size_t size = data.size();
     if (size > 1)
-        quickSort(data, 0, size - 1);
-}
-
-template <typename T>
-void quickSort(std::vector<T>& data, size_t start, size_t end)
-{
-    if (start < end)
     {
-        size_t split = partition(data, start, end);
-
-        if (split != start)
-            quickSort(data, start, split - 1);
-
-        if (split != end)
-            quickSort(data, split + 1, end);
+        std::vector<T> temp(data);
+        mergeSort(data, temp, 0, size - 1);
     }
 }
 
@@ -274,6 +236,50 @@ size_t partition(std::vector<T>& data, size_t start, size_t end)
 
     std::swap(data[split], data[end]);
     return split;
+}
+
+/**
+ * Sorts the specified range in an array of values into ascending
+ * numerical order using the quick sort algorithm.
+  *
+  * Time complexity: worst case {@code O(N^2)}, expected {@code O(N log N)},
+  * where N is the length of the array.
+  *
+  * @tparam T Value type.
+  * @param data Vector of values to be sorted.
+  * @param start Range start index (included).
+  * @param end Range end index (included).
+  */
+template <typename T>
+void quickSort(std::vector<T>& data, size_t start, size_t end)
+{
+    if (start < end)
+    {
+        size_t split = partition(data, start, end);
+
+        if (split != start)
+            quickSort(data, start, split - 1);
+
+        if (split != end)
+            quickSort(data, split + 1, end);
+    }
+}
+
+/**
+  * Sorts an array of values into ascending numerical order using the quick sort algorithm.
+  *
+  * Time complexity: worst case {@code O(N^2)}, expected {@code O(N log N)},
+  * where N is the length of the array.
+  *
+  * @tparam T Value type.
+  * @param data Vector of values to be sorted.
+  */
+template <typename T>
+void quickSort(std::vector<T>& data)
+{
+    size_t size = data.size();
+    if (size > 1)
+        quickSort(data, 0, size - 1);
 }
 
 #endif //TUTORIALS_SORTING_H
