@@ -74,6 +74,9 @@ int main()
         // We sort all vectors with bubble sort and measure the sorting time.
         const long bubbleSortTime = calcExecTime(testData, bubbleSort<int>);
 
+        // We sort all vectors with shell sort and measure the sorting time.
+        const long shellSortTime = calcExecTime(testData, shellSort<int>);
+
         // We sort all vectors with counting sort and measure the sorting time.
         const long countingSortTime = calcExecTime(testData, countingSort<int, 1000>);
 
@@ -108,6 +111,7 @@ int main()
                 insertionSortTime,
                 selectionSortTime,
                 bubbleSortTime,
+                shellSortTime,
                 countingSortTime,
                 heapSortTime,
                 mergeSortTime,
