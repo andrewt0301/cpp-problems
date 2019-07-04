@@ -188,6 +188,44 @@ void countingSort(std::vector<T>& data)
     countingSort<T, K>(input, data);
 }
 
+/*
+ * TODO:
+ */
+template <typename T, size_t R>
+void radixSort(std::vector<T>& data)
+{
+    constexpr size_t K = (1 << R);
+
+    T mask = K - 1;
+    size_t shift = 0;
+
+    // Temporary vector for storing sorted values.
+    std::vector<T> temp(data.size());
+
+    // Input and output will be swapped at each iteration to avoid copying.
+    std::vector<T>*  input = &data;
+    std::vector<T>* output = &temp;
+
+    while (mask != 0)
+    {
+        // index is R bits of 'val' located at offset 'shift'.
+        auto index = [mask, shift](T val)
+        {
+            return (val & mask) >> shift;
+        };
+
+        countingSort<T, K>(*input, *output, index);
+        std::swap(input, output);
+
+        mask <<= R;
+        shift += R;
+    }
+
+    // If result is stored in temp, copy it into data.
+    if (output == &temp)
+        data = temp;
+}
+
 /**
  * Merges two adjacent sorted ranges in an array into a single sorted range.
  *
