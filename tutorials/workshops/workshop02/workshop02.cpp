@@ -78,8 +78,15 @@ int main()
         const long shellSortTime = calcExecTime(testData, shellSort<int>);
 
         // We sort all vectors with counting sort and measure the sorting time.
-        const long countingSortTime = calcExecTime(testData, [](IntVector& values) {
+        const long countingSortTime = calcExecTime(testData, [](IntVector& values)
+        {
             countingSort<int, 1000>(values);
+        });
+
+        // We sort all vectors with radix sort (digit size is 8 bits) and measure the sorting time.
+        const long radixSortTime = calcExecTime(testData, [](IntVector& values)
+        {
+            radixSort<int, 8>(values);
         });
 
         // We sort all vectors with heap sort and measure the sorting time.
@@ -115,6 +122,7 @@ int main()
                 bubbleSortTime,
                 shellSortTime,
                 countingSortTime,
+                radixSortTime,
                 heapSortTime,
                 mergeSortTime,
                 quickSortTime,
