@@ -16,18 +16,18 @@
 template <typename T>
 void insertionSort(std::vector<T>& data)
 {
-    for (int i = 1; i < data.size(); ++i)
+    for (size_t i = 1; i < data.size(); ++i)
     {
         const T key = data[i];
 
-        int j = i - 1;
-        while (j >= 0 && data[j] > key)
+        size_t j = i;
+        while (j >= 1 && data[j - 1] > key)
         {
-            data[j + 1] = data[j];
+            data[j] = data[j - 1];
             --j;
         }
 
-        data[j + 1] = key;
+        data[j] = key;
     }
 }
 
@@ -50,13 +50,13 @@ void shellSort(std::vector<T>& data)
         {
             const T key = data[i];
 
-            int j = i - h;
-            while (j >= 0 && data[j] > key) {
-                data[j + h] = data[j];
+            size_t j = i;
+            while (j >= h && data[j - h] > key) {
+                data[j] = data[j - h];
                 j -= h;
             }
 
-            data[j + h] = key;
+            data[j] = key;
         }
     }
 }
