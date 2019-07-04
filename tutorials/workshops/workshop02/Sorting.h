@@ -146,13 +146,12 @@ void bubbleSort(std::vector<T>& data)
   *
   * @tparam T Value type.
   * @tparam K Value range size.
-  * @param data Vector of integer values to be sorted.
+  * @param input Vector of integer values to be sorted.
+  * @param output Vector for storing sorted values, must not be the same as input.
   */
 template <typename T, size_t K>
-void countingSort(std::vector<T>& data)
+void countingSort(const std::vector<T>& input, std::vector<T>& output)
 {
-    std::vector<T> input(data);
-
     size_t counts[K] = {0};
 
     for (T val : input)
@@ -164,8 +163,24 @@ void countingSort(std::vector<T>& data)
     for (size_t i = input.size(); i >= 1; --i)
     {
         const T val = input[i - 1];
-        data[--counts[val]] = val;
+        output[--counts[val]] = val;
     }
+}
+
+/**
+  * Sorts an array of integer values into ascending numerical order using the counting sort algorithm.
+  *
+  * Time complexity: {@code Θ(N)}, where N is the length of the array.
+  *
+  * @tparam T Value type.
+  * @tparam K Value range size.
+  * @param data Vector of integer values to be sorted.
+  */
+template <typename T, size_t K>
+void countingSort(std::vector<T>& data)
+{
+    std::vector<T> input(data);
+    countingSort<T, K>(input, data);
 }
 
 /**

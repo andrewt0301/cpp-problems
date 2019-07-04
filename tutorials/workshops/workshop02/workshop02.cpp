@@ -78,7 +78,9 @@ int main()
         const long shellSortTime = calcExecTime(testData, shellSort<int>);
 
         // We sort all vectors with counting sort and measure the sorting time.
-        const long countingSortTime = calcExecTime(testData, countingSort<int, 1000>);
+        const long countingSortTime = calcExecTime(testData, [](IntVector& values) {
+            countingSort<int, 1000>(values);
+        });
 
         // We sort all vectors with heap sort and measure the sorting time.
         const long heapSortTime = calcExecTime(testData, [](IntVector& values)
