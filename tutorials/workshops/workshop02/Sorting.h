@@ -148,14 +148,19 @@ void bubbleSort(std::vector<T>& data)
   * @tparam K Value range size.
   * @param input Vector of integer values to be sorted.
   * @param output Vector for storing sorted values, must not be the same as input.
+  * @param index Function than maps a value into its index in the value range.
+  *              By default, index equals value.
   */
 template <typename T, size_t K>
-void countingSort(const std::vector<T>& input, std::vector<T>& output)
+void countingSort(
+        const std::vector<T>&    input,
+        std::vector<T>&         output,
+        std::function<size_t(T)> index = [](T val) { return val; })
 {
     size_t counts[K] = {0};
 
     for (T val : input)
-        ++counts[val];
+        ++counts[index(val)];
 
     for (size_t i = 1; i < K; ++i)
         counts[i] += counts[i - 1];
@@ -163,7 +168,7 @@ void countingSort(const std::vector<T>& input, std::vector<T>& output)
     for (size_t i = input.size(); i >= 1; --i)
     {
         const T val = input[i - 1];
-        output[--counts[val]] = val;
+        output[--counts[index(val)]] = val;
     }
 }
 
