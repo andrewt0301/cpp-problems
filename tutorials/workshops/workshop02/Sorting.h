@@ -32,6 +32,36 @@ void insertionSort(std::vector<T>& data)
 }
 
 /**
+  * Sorts an array of values into ascending numerical order using the shell sort algorithm.
+  *
+  * Time complexity: {@code O(N^(3/2)}, where N is the length of the array.
+  *
+  * @tparam T Value type.
+  * @param data Array of values to be sorted.
+  */
+template <typename T>
+void shellSort(std::vector<T>& data)
+{
+    const size_t size = data.size();
+
+    for (size_t h = size / 2; h >= 1; h /= 2)
+    {
+        for (size_t i = h; i < size; ++i)
+        {
+            const T key = data[i];
+
+            int j = i - h;
+            while (j >= 0 && data[j] > key) {
+                data[j + h] = data[j];
+                j -= h;
+            }
+
+            data[j + h] = key;
+        }
+    }
+}
+
+/**
   * Sorts an array of values into ascending numerical order using the selection sort algorithm.
   *
   * Time complexity: {@code O(N^2)}, where N is the length of the array.
@@ -110,31 +140,6 @@ void bubbleSort(std::vector<T>& data)
 }
 
 /**
-  * Sorts an array of values into ascending numerical order using the shell sort algorithm.
-  *
-  * Time complexity: {@code O(N^(3/2)}, where N is the length of the array.
-  *
-  * @tparam T Value type.
-  * @param data Array of values to be sorted.
-  */
-template <typename T>
-void shellSort(std::vector<T>& data)
-{
-    const size_t size = data.size();
-
-    for (size_t h = size / 2; h >= 1; h /= 2)
-    {
-        // h-sorts the array.
-        for (size_t i = h; i < size; ++i)
-        {
-            // Inserts data[i] among data[i-h], data[i-2*h], data[i-3*h]... .
-            for (size_t j = i; j >= h && data[j] < data[j-h]; j -= h)
-                std::swap(data[j], data[j-h]);
-        }
-    }
-}
-
-/**
   * Sorts an array of integer values into ascending numerical order using the counting sort algorithm.
   *
   * Time complexity: {@code Θ(N)}, where N is the length of the array.
@@ -143,7 +148,7 @@ void shellSort(std::vector<T>& data)
   * @tparam K Value range size.
   * @param data Vector of integer values to be sorted.
   */
-template <typename T, int K>
+template <typename T, size_t K>
 void countingSort(std::vector<T>& data)
 {
     std::vector<T> input(data);
