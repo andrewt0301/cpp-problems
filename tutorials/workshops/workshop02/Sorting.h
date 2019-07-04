@@ -189,39 +189,43 @@ void countingSort(std::vector<T>& data)
 }
 
 /*
- * TODO:
+  * Sorts an array of integer values into ascending numerical order using the radix sort algorithm.
+  * Values are split into R-bit digits which are sorted from low to high with counting sort.
+  *
+  * Time complexity: {@code Θ(N)}, where N is the length of the array.
+  *
+  * @tparam T Value type.
+  * @tparam R Number of bits in a digit, which will be used for sorting.
+  * @param data Vector of integer values to be sorted.
  */
 template <typename T, size_t R>
 void radixSort(std::vector<T>& data)
 {
-    constexpr size_t K = (1 << R);
-
-    T mask = K - 1;
-    size_t shift = 0;
+    constexpr size_t K    = 1 << R;
+    constexpr T      MASK = K - 1;
+    constexpr size_t BITS = 8 * sizeof(T);
 
     // Temporary vector for storing sorted values.
     std::vector<T> temp(data.size());
 
-    // Input and output will be swapped at each iteration to avoid copying.
+    // 'input' and 'output' will be swapped at each iteration to avoid copying.
     std::vector<T>*  input = &data;
     std::vector<T>* output = &temp;
 
-    while (mask != 0)
+    // Values are sorted by R-bit digits from low to high.
+    for (size_t shift = 0; shift < BITS; shift += R)
     {
         // index is R bits of 'val' located at offset 'shift'.
-        auto index = [mask, shift](T val)
+        auto index = [shift](T val)
         {
-            return (val & mask) >> shift;
+            return (val & (MASK << shift)) >> shift;
         };
 
         countingSort<T, K>(*input, *output, index);
         std::swap(input, output);
-
-        mask <<= R;
-        shift += R;
     }
 
-    // If result is stored in temp, copy it into data.
+    // If the result is stored in 'temp', copy it into 'data'.
     if (output == &temp)
         data = temp;
 }
