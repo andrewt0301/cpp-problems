@@ -10,23 +10,17 @@
   *
   * Time complexity: {@code O(N^2)}, where N is the length of the array.
   *
-  * @tparam T Value type.
-  * @param data Vector of values to be sorted.
+  * @tparam T value type
+  * @param data vector of values to be sorted
   */
 template <typename T>
-void insertionSort(std::vector<T>& data)
-{
-    for (size_t i = 1; i < data.size(); ++i)
-    {
+void insertionSort(std::vector<T>& data) {
+    for (size_t i = 1; i < data.size(); ++i) {
         const T key = data[i];
-
         size_t j = i;
-        while (j >= 1 && data[j - 1] > key)
-        {
+        for (; j >= 1 && data[j - 1] > key; --j) {
             data[j] = data[j - 1];
-            --j;
         }
-
         data[j] = key;
     }
 }
@@ -36,26 +30,19 @@ void insertionSort(std::vector<T>& data)
   *
   * Time complexity: {@code O(N^(3/2)}, where N is the length of the array.
   *
-  * @tparam T Value type.
-  * @param data Array of values to be sorted.
+  * @tparam T value type
+  * @param data array of values to be sorted
   */
 template <typename T>
-void shellSort(std::vector<T>& data)
-{
+void shellSort(std::vector<T>& data) {
     const size_t size = data.size();
-
-    for (size_t h = size / 2; h >= 1; h /= 2)
-    {
-        for (size_t i = h; i < size; ++i)
-        {
+    for (size_t h = size / 2; h >= 1; h /= 2) {
+        for (size_t i = h; i < size; ++i) {
             const T key = data[i];
-
             size_t j = i;
-            while (j >= h && data[j - h] > key) {
+            for (; j >= h && data[j - h] > key; j -= h) {
                 data[j] = data[j - h];
-                j -= h;
             }
-
             data[j] = key;
         }
     }
@@ -216,7 +203,7 @@ void radixSort(std::vector<T>& data)
     for (size_t shift = 0; shift < BITS; shift += R)
     {
         // index is R bits of 'val' located at offset 'shift'.
-        auto index = [shift](T val)
+        auto index = [MASK, shift](T val)
         {
             return (val & (MASK << shift)) >> shift;
         };
@@ -277,17 +264,10 @@ void merge(std::vector<T>& data, std::vector<T>& temp, size_t start, size_t spli
  */
 template <typename T>
 void mergeSort(std::vector<T>& data, std::vector<T>& temp, size_t start, size_t end) {
-
-    if (start < end)
-    {
+    if (start < end) {
         size_t split = (start + end) / 2;
-
-        if (split != start)
-            mergeSort(data, temp, start, split);
-
-        if (split != end)
-            mergeSort(data, temp, split + 1, end);
-
+        mergeSort(data, temp, start, split);
+        mergeSort(data, temp, split + 1, end);
         merge(data, temp, start, split, end);
     }
 }
@@ -301,11 +281,9 @@ void mergeSort(std::vector<T>& data, std::vector<T>& temp, size_t start, size_t 
   * @param data Vector of values to be sorted.
   */
 template <typename T>
-void mergeSort(std::vector<T>& data)
-{
+void mergeSort(std::vector<T>& data) {
     size_t size = data.size();
-    if (size > 1)
-    {
+    if (size > 1) {
         std::vector<T> temp(data);
         mergeSort(data, temp, 0, size - 1);
     }
@@ -319,27 +297,22 @@ void mergeSort(std::vector<T>& data)
  * the second part contains values greater (>) than the pivot element.
  * The pivot element is chosen to be the last element in the range.
  *
- * @tparam T Value type.
- * @param data Array to be partitioned.
- * @param start Range start index (included).
- * @param end Range end index (included).
- * @return Position of the split (index of the pivot element in the rearranged array).
+ * @tparam T value type
+ * @param data array to be partitioned
+ * @param start range start index (included)
+ * @param end range end index (included)
+ * @return position of the split (index of the pivot element in the rearranged array)
  */
 template <typename T>
-size_t partition(std::vector<T>& data, size_t start, size_t end)
-{
+size_t partition(std::vector<T>& data, size_t start, size_t end) {
     const T pivot = data[end];
     size_t split = start;
-
-    for (size_t i = start; i < end; ++i)
-    {
-        if (data[i] <= pivot)
-        {
+    for (size_t i = start; i < end; ++i) {
+        if (data[i] <= pivot) {
             std::swap(data[split], data[i]);
             split++;
         }
     }
-
     std::swap(data[split], data[end]);
     return split;
 }
@@ -351,23 +324,21 @@ size_t partition(std::vector<T>& data, size_t start, size_t end)
   * Time complexity: worst case {@code O(N^2)}, expected {@code O(N log N)},
   * where N is the length of the array.
   *
-  * @tparam T Value type.
-  * @param data Vector of values to be sorted.
-  * @param start Range start index (included).
-  * @param end Range end index (included).
+  * @tparam T value type
+  * @param data vector of values to be sorted
+  * @param start range start index (included)
+  * @param end range end index (included)
   */
 template <typename T>
-void quickSort(std::vector<T>& data, size_t start, size_t end)
-{
-    if (start < end)
-    {
+void quickSort(std::vector<T>& data, size_t start, size_t end) {
+    if (start < end) {
         size_t split = partition(data, start, end);
-
-        if (split != start)
+        if (split != start) {
             quickSort(data, start, split - 1);
-
-        if (split != end)
+        }
+        if (split != end) {
             quickSort(data, split + 1, end);
+        }
     }
 }
 
@@ -377,15 +348,15 @@ void quickSort(std::vector<T>& data, size_t start, size_t end)
   * Time complexity: worst case {@code O(N^2)}, expected {@code O(N log N)},
   * where N is the length of the array.
   *
-  * @tparam T Value type.
-  * @param data Vector of values to be sorted.
+  * @tparam T value type
+  * @param data vector of values to be sorted
   */
 template <typename T>
-void quickSort(std::vector<T>& data)
-{
+void quickSort(std::vector<T>& data) {
     size_t size = data.size();
-    if (size > 1)
+    if (size > 1) {
         quickSort(data, 0, size - 1);
+    }
 }
 
 #endif //TUTORIALS_SORTING_H
