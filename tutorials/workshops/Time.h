@@ -21,16 +21,12 @@ constexpr clock_t CLOCKS_PER_MS = CLOCKS_PER_SEC / 1000;
  * @return Execution time in milliseconds.
  */
 template <typename T>
-long calcExecTime(T func)
-{
+long calcExecTime(T func) {
     clock_t start = clock();
     func();
     clock_t end = clock();
-
     clock_t diff = end - start;
-    long time = diff / CLOCKS_PER_MS;
-
-    return time;
+    return diff / CLOCKS_PER_MS;
 }
 
 /**
@@ -42,20 +38,15 @@ long calcExecTime(T func)
  * @return Average execution time in milliseconds.
  */
  template <typename T>
-long calcAverageExecTime(T func, int repeat)
-{
+long calcAverageExecTime(T func, int repeat) {
     clock_t start = clock();
-
-    for (int i = 0; i < repeat; ++i)
+    for (int i = 0; i < repeat; ++i) {
         func();
-
+    }
     clock_t end = clock();
-
     clock_t diff = end - start;
     clock_t average = diff / repeat;
-    long time = average / CLOCKS_PER_MS;
-
-    return time;
+    return average / CLOCKS_PER_MS;
 }
 
 #endif //TUTORIALS_TIME_H
