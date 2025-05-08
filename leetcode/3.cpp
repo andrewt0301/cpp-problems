@@ -19,7 +19,7 @@ public:
                 maxlen = max(end - start, maxlen);        
                 chars.erase(s[start]);
                 start++;
-            }            
+            }
         }
         return max(end - start, maxlen);
     }
