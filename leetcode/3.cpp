@@ -16,7 +16,7 @@ public:
                 chars.insert(ch);
                 end++;
             } else {
-                maxlen = max(end - start, maxlen);        
+                maxlen = max(end - start, maxlen);
                 chars.erase(s[start]);
                 start++;
             }
